@@ -4,6 +4,7 @@ import sys
 import os
 import subprocess
 import time
+import xml.etree.ElementTree as ET
 
 
 def get_data(ts):
@@ -18,7 +19,16 @@ def get_data(ts):
     return tFile
 
 
+def extract_data(tFile):
+    tree = ET.parse(tFile)
+    tree.dump()
+    root = tree.getroot()
+    for child in root:
+        print("{}, {}".format(child.tag, child.attrib))
+
+
 ts = time.gmtime()
 ts = "{:04}{:02}{:02}GMT{:02}".format(ts.tm_year, ts.tm_mon, ts.tm_mday, ts.tm_hour)
 theFile=get_data(ts)
+extract_data(theFile)
 
