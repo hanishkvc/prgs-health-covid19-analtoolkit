@@ -19,13 +19,40 @@ def get_data(ts):
     return tFile
 
 
-def extract_data(tFile):
+class MyParser:
+    depth = 0
+    maxDepth = 0
+    def start(self, tag, attrib):
+        self.depth += 1
+        if (self.maxDepth < self.depth):
+            self.maxDepth = self.depth
+        print(tag, attrib)
+
+    def end(self, tag):
+        self.depth -= 1
+
+    def data(self, data):
+        pass
+
+    def close(self):
+        return self.maxDepth
+
+
+def extract_data_default(tFile):
     tree = ET.parse(tFile)
     tree.dump()
     root = tree.getroot()
     for child in root:
         print("{}, {}".format(child.tag, child.attrib))
 
+
+def extract_data(tFile):
+    myParser = MyParser()
+    myParser = ET.XMLParser(target=myParser)
+    tData = open(tFile)
+    tData = tData.read()
+    myParser.feed(tData)
+    myParser.close()
 
 ts = time.gmtime()
 ts = "{:04}{:02}{:02}GMT{:02}".format(ts.tm_year, ts.tm_mon, ts.tm_mday, ts.tm_hour)
