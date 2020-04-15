@@ -5,6 +5,7 @@ import os
 import subprocess
 import time
 import xml.etree.ElementTree as ET
+import xmlparser as xp
 
 
 def get_data(ts):
@@ -54,9 +55,56 @@ def extract_data_ETMyParser(tFile):
     myParser.feed(tData)
     myParser.close()
 
-ts = time.gmtime()
-ts = "{:04}{:02}{:02}GMT{:02}".format(ts.tm_year, ts.tm_mon, ts.tm_mday, ts.tm_hour)
-theFile=get_data(ts)
-extract_data_ETMyParser(theFile)
-#extract_data(theFile)
 
+class MyParserHandler:
+
+    smMode = ""
+    dData = {}
+    sState = None
+    iConfirmed = None
+    def error(self, sLine, sErrorType):
+        print("ERROR:{}:{}".format(sErrorType, sLine))
+
+    def tag_start(self, sTag, dAttribs, iTagLvl, sRawTag, sLine):
+        print(sTag, dAttribs)
+        if (sTag.lower() == "div"):
+            if "class" in dAttribs:
+                if self.smMode == "state":
+                    if dAttribs["class"].find("field-item even") != -1:
+                        self.smMode = "state-data"
+                if self.smMode == "confirmed":
+                    if dAttribs["class"].find("field-item even") != -1:
+                        self.smMode = "confirmed-data"
+                if dAttribs["class"].find("field-select-state") != -1:
+                    self.smMode = "state"
+                if dAttribs["class"].find("field-total-confirmed") != -1:
+                    self.smMode = "confirmed"
+
+    def tag_end(self, sTag, dAttribs, iTagLvl, sData, sRawTag, sLine):
+        print(sData)
+        if self.smMode == "state-data":
+            if (self.sState != None) and (self.iConfirmed != None):
+                self.dData[self.sState] = self.iConfirmed
+                self.iConfirmed = None
+            self.sState = sData.strip()
+            self.smMode = ""
+        if self.smMode == "confirmed-data":
+            self.iConfirmed = float(sData.strip())
+            self.smMode = ""
+
+
+def extract_data(tFile):
+    myParser = xp.XMLParser()
+    myHandler = MyParserHandler()
+    myParser.open(tFile)
+    myParser.parse(myHandler)
+    print(myHandler.dData)
+
+
+if len(sys.argv) == 1:
+    ts = time.gmtime()
+    ts = "{:04}{:02}{:02}GMT{:02}".format(ts.tm_year, ts.tm_mon, ts.tm_mday, ts.tm_hour)
+    theFile=get_data(ts)
+else:
+    theFile = sys.argv[1]
+extract_data(theFile)
