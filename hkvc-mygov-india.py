@@ -12,7 +12,7 @@ import xmlparser as xp
 
 
 def get_data(ts):
-    tFile = "{}.html".format(ts)
+    tFile = "data/mygov_in-{}.html".format(ts)
     if os.path.exists(tFile):
         print("WARN:get_data:{} already exists".format(tFile))
         return tFile
