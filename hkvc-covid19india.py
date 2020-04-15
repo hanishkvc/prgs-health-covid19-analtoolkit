@@ -29,6 +29,8 @@ def get_data(ts):
 
 
 def date2float(sDate):
+    if sDate == b'1': # Had to use to skip the genfromtxt names=True related line
+        return "Date"
     sDate = sDate.decode('utf-8')
     sDate = sDate.split('-')
     iDate = (int(sDate[2])+2000)*10000
@@ -38,7 +40,11 @@ def date2float(sDate):
 
 
 def extract_data(tFile):
-    data = np.genfromtxt(tFile, delimiter=',', skip_header=1, converters={0: date2float})
+    # Instead of skipping the header line, load it has the names list
+    data = np.genfromtxt(tFile, delimiter=',', skip_header=0, names=True, converters={0: date2float})
+    legends = data.dtype.names
+    # Needed to convert from the numpy.void rows to a proper nd-array
+    data = np.array(data.tolist())
     # Skip the last column, which is invalid.
     data = data[:,0:-1]
     #data[12,1] = np.nan # For testing below logic to fix missing values is fine
@@ -56,10 +62,10 @@ def extract_data(tFile):
         tWeights = np.ones(iE-iS)*1/6
         data[i] = np.sum(data[iS:iE,i[1]]*tWeights)
         print("\tNEW:{}".format(data[iS:iE,i[1]]))
-    return data
+    return data, legends
 
 
-def _plot_data(axes, theData, sTitle):
+def _plot_data(axes, theData, sTitle, theLegends=None):
     #for i in range(1,theData.shape[1]):
     #    plt.plot(theData[:,i])
     # Skip 0th Col the Date and
@@ -68,12 +74,14 @@ def _plot_data(axes, theData, sTitle):
     axes.set_title(sTitle)
     axes.set_xticks(np.arange(0,theData.shape[0],7))
     axes.set_xticklabels(theData[0::7,0])
+    if theLegends != None:
+        axes.legend(theLegends[2:8])
 
 
-def plot_data(theData):
+def plot_data(theData, theLegends):
 
     fig, axes = plt.subplots(2,2)
-    _plot_data(axes[0,0], theData, "Cases/Day")
+    _plot_data(axes[0,0], theData, "Cases/Day", theLegends)
 
     theDates = theData[:,0]
     theDataCum = np.cumsum(theData, axis=0)
@@ -98,6 +106,6 @@ if len(sys.argv) == 1:
 else:
     theFile = sys.argv[1]
 
-theData = extract_data(theFile)
-plot_data(theData)
+theData, theLegends = extract_data(theFile)
+plot_data(theData, theLegends)
 
