@@ -57,13 +57,34 @@ def extract_data(tFile):
     return data
 
 
-def plot_data(theData):
+def _plot_data(axes, theData, sTitle):
     #for i in range(1,theData.shape[1]):
     #    plt.plot(theData[:,i])
     # Skip 0th Col the Date and
     # Skip 1st Col the Total
-    plt.plot(theData[:,2:])
+    axes.plot(theData[:,2:])
+    axes.set_title(sTitle)
+    axes.set_xticks(np.arange(0,theData.shape[0],7))
+    axes.set_xticklabels(theData[0::7,0])
+
+
+def plot_data(theData):
+
+    fig, axes = plt.subplots(2,2)
+    _plot_data(axes[0,0], theData, "Cases/Day")
+
+    theDates = theData[:,0]
+    theDataCum = np.cumsum(theData, axis=0)
+    theDataCum[:,0] = theDates
+    _plot_data(axes[0,1], theDataCum, "CumuCases")
+
+    tWeight = np.ones(7)*1/7
+    theDataConv = np.zeros((theData.shape[0]-6,theData.shape[1]))
+    for i in range(1,theData.shape[1]):
+        theDataConv[:,i] = np.convolve(theData[:,i], tWeight, 'valid')
+    _plot_data(axes[1,0], theDataConv, "Cases/Day,MovAvg")
     plt.show()
+
 
 
 if len(sys.argv) == 1:
@@ -76,13 +97,4 @@ else:
 
 theData = extract_data(theFile)
 plot_data(theData)
-
-theDataCum = np.cumsum(theData, axis=0)
-plot_data(theDataCum)
-
-tWeight = np.ones(7)*1/7
-theDataConv = np.zeros((theData.shape[0]-6,theData.shape[1]))
-for i in range(1,theData.shape[1]):
-    theDataConv[:,i] = np.convolve(theData[:,i], tWeight, 'valid')
-plot_data(theDataConv)
 
