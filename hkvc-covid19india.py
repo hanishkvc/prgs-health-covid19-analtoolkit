@@ -9,6 +9,7 @@ import time
 import subprocess
 import numpy as np
 import matplotlib.pyplot as plt
+import calendar
 
 
 urlConfirmed = "http://api.covid19india.org/states_daily_csv/confirmed.csv"
@@ -31,6 +32,7 @@ def date2float(sDate):
     sDate = sDate.decode('utf-8')
     sDate = sDate.split('-')
     iDate = (int(sDate[2])+2000)*10000
+    iDate += list(calendar.month_abbr).index(sDate[1])*100
     iDate += int(sDate[0])
     return float(iDate)
 
