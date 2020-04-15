@@ -60,6 +60,8 @@ def extract_data(tFile):
 def plot_data(theData):
     #for i in range(1,theData.shape[1]):
     #    plt.plot(theData[:,i])
+    # Skip 0th Col the Date and
+    # Skip 1st Col the Total
     plt.plot(theData[:,2:])
     plt.show()
 
@@ -74,5 +76,9 @@ else:
 
 theData = extract_data(theFile)
 plot_data(theData)
+
+theDataCum = np.cumsum(theData, axis=0)
+plot_data(theDataCum)
+
 
 
