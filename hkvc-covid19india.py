@@ -26,8 +26,16 @@ def get_data(ts):
     return tFile
 
 
+def date2float(sDate):
+    sDate = sDate.decode('utf-8')
+    sDate = sDate.split('-')
+    iDate = (int(sDate[2])+2000)*10000
+    iDate += int(sDate[0])
+    return iDate
+
 def extract_data(tFile):
-    data = np.loadtxt(tFile, delimiter=',', skiprows=1)
+    #data = np.loadtxt(tFile, delimiter=',', skiprows=1, usecols=tuple(range(24)), converters={0: date2float})
+    data = np.genfromtxt(tFile, delimiter=',', skip_header=1, converters={0: date2float})
     print(data)
 
 
