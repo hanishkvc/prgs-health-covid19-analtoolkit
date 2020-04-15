@@ -8,6 +8,7 @@ import os
 import time
 import subprocess
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 urlConfirmed = "http://api.covid19india.org/states_daily_csv/confirmed.csv"
@@ -56,6 +57,13 @@ def extract_data(tFile):
     return data
 
 
+def plot_data(theData):
+    #for i in range(1,theData.shape[1]):
+    #    plt.plot(theData[:,i])
+    plt.plot(theData[:,2:])
+    plt.show()
+
+
 if len(sys.argv) == 1:
     ts = time.gmtime()
     ts = "{:04}{:02}{:02}".format(ts.tm_year, ts.tm_mon, ts.tm_mday)
@@ -65,5 +73,6 @@ else:
     theFile = sys.argv[1]
 
 theData = extract_data(theFile)
+plot_data(theData)
 
 
