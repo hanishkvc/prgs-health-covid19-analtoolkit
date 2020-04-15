@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+# Covid19 Data extractor from mygov.in html page
+# v20200415IST1850, HanishKVC
+#
 
 import sys
 import os
@@ -62,6 +65,7 @@ class MyParserHandler:
     dData = {}
     sState = None
     iConfirmed = None
+    iCured = None
     def error(self, sLine, sErrorType):
         print("ERROR:{}:{}".format(sErrorType, sLine))
 
@@ -69,27 +73,34 @@ class MyParserHandler:
         print(sTag, dAttribs)
         if (sTag.lower() == "div"):
             if "class" in dAttribs:
-                if self.smMode == "state":
-                    if dAttribs["class"].find("field-item even") != -1:
+                if dAttribs["class"].find("field-item even") != -1:
+                    if self.smMode == "state":
                         self.smMode = "state-data"
-                if self.smMode == "confirmed":
-                    if dAttribs["class"].find("field-item even") != -1:
+                    if self.smMode == "confirmed":
                         self.smMode = "confirmed-data"
+                    if self.smMode == "cured":
+                        self.smMode = "cured-data"
                 if dAttribs["class"].find("field-select-state") != -1:
                     self.smMode = "state"
                 if dAttribs["class"].find("field-total-confirmed") != -1:
                     self.smMode = "confirmed"
+                if dAttribs["class"].find("field-cured") != -1:
+                    self.smMode = "cured"
 
     def tag_end(self, sTag, dAttribs, iTagLvl, sData, sRawTag, sLine):
         print(sData)
         if self.smMode == "state-data":
             if (self.sState != None) and (self.iConfirmed != None):
-                self.dData[self.sState] = self.iConfirmed
+                self.dData[self.sState] = [self.iConfirmed, self.iCured]
                 self.iConfirmed = None
+                self.iCured = None
             self.sState = sData.strip()
             self.smMode = ""
         if self.smMode == "confirmed-data":
             self.iConfirmed = float(sData.strip())
+            self.smMode = ""
+        if self.smMode == "cured-data":
+            self.iCured = float(sData.strip())
             self.smMode = ""
 
 
