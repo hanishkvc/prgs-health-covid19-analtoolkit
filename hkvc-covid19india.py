@@ -31,12 +31,15 @@ def date2float(sDate):
     sDate = sDate.split('-')
     iDate = (int(sDate[2])+2000)*10000
     iDate += int(sDate[0])
-    return iDate
+    return float(iDate)
 
 def extract_data(tFile):
     #data = np.loadtxt(tFile, delimiter=',', skiprows=1, usecols=tuple(range(24)), converters={0: date2float})
     data = np.genfromtxt(tFile, delimiter=',', skip_header=1, converters={0: date2float})
     print(data)
+    print(np.shape(data))
+    data1 = data[:,0:-1]
+    print(data1)
 
 
 if len(sys.argv) == 1:
