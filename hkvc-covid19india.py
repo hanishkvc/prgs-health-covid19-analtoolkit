@@ -80,5 +80,9 @@ plot_data(theData)
 theDataCum = np.cumsum(theData, axis=0)
 plot_data(theDataCum)
 
-
+tWeight = np.ones(7)*1/7
+theDataConv = np.zeros((theData.shape[0]-6,theData.shape[1]))
+for i in range(1,theData.shape[1]):
+    theDataConv[:,i] = np.convolve(theData[:,i], tWeight, 'valid')
+plot_data(theDataConv)
 
