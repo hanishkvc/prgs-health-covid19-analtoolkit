@@ -80,20 +80,25 @@ class MyParserHandler:
                         self.smMode = "confirmed-data"
                     if self.smMode == "cured":
                         self.smMode = "cured-data"
+                    if self.smMode == "deaths":
+                        self.smMode = "deaths-data"
                 if dAttribs["class"].find("field-select-state") != -1:
                     self.smMode = "state"
                 if dAttribs["class"].find("field-total-confirmed") != -1:
                     self.smMode = "confirmed"
                 if dAttribs["class"].find("field-cured") != -1:
                     self.smMode = "cured"
+                if dAttribs["class"].find("field-deaths") != -1:
+                    self.smMode = "deaths"
 
     def tag_end(self, sTag, dAttribs, iTagLvl, sData, sRawTag, sLine):
         print(sData)
         if self.smMode == "state-data":
             if (self.sState != None) and (self.iConfirmed != None):
-                self.dData[self.sState] = [self.iConfirmed, self.iCured]
+                self.dData[self.sState] = [self.iConfirmed, self.iCured, self.iDeaths]
                 self.iConfirmed = None
                 self.iCured = None
+                self.iDeaths = None
             self.sState = sData.strip()
             self.smMode = ""
         if self.smMode == "confirmed-data":
@@ -101,6 +106,9 @@ class MyParserHandler:
             self.smMode = ""
         if self.smMode == "cured-data":
             self.iCured = float(sData.strip())
+            self.smMode = ""
+        if self.smMode == "deaths-data":
+            self.iDeaths = float(sData.strip())
             self.smMode = ""
 
 
