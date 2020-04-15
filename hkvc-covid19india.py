@@ -82,6 +82,7 @@ def plot_data(theData):
     theDataConv = np.zeros((theData.shape[0]-6,theData.shape[1]))
     for i in range(1,theData.shape[1]):
         theDataConv[:,i] = np.convolve(theData[:,i], tWeight, 'valid')
+    theDataConv[:,0] = list(range(theDataConv.shape[0]))
     _plot_data(axes[1,0], theDataConv, "Cases/Day,MovAvg")
     plt.show()
 
