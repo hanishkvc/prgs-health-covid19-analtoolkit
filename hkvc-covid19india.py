@@ -33,13 +33,27 @@ def date2float(sDate):
     iDate += int(sDate[0])
     return float(iDate)
 
+
 def extract_data(tFile):
-    #data = np.loadtxt(tFile, delimiter=',', skiprows=1, usecols=tuple(range(24)), converters={0: date2float})
     data = np.genfromtxt(tFile, delimiter=',', skip_header=1, converters={0: date2float})
-    print(data)
-    print(np.shape(data))
-    data1 = data[:,0:-1]
-    print(data1)
+    # Skip the last column, which is invalid.
+    data = data[:,0:-1]
+    #data[12,1] = np.nan # For testing below logic to fix missing values is fine
+    nans = np.argwhere(np.isnan(data))
+    data[np.isnan(data)] = 0
+    for i in nans:
+        iS = i[0]-3
+        if (iS < 0):
+            iS = 0
+        iE = i[0]+3+1
+        if (iE > data.shape[0]):
+            iE = data.shape[0]
+        print("WARN:extract_data:fix_nan:at={}:using={}-{}".format(i, iS, iE))
+        print("\tIN:{}".format(data[iS:iE,i[1]]))
+        tWeights = np.ones(iE-iS)*1/6
+        data[i] = np.sum(data[iS:iE,i[1]]*tWeights)
+        print("\tNEW:{}".format(data[iS:iE,i[1]]))
+    return data
 
 
 if len(sys.argv) == 1:
@@ -50,6 +64,6 @@ if len(sys.argv) == 1:
 else:
     theFile = sys.argv[1]
 
-extract_data(theFile)
+theData = extract_data(theFile)
 
 
