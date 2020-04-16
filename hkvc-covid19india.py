@@ -10,6 +10,7 @@ import subprocess
 import numpy as np
 import matplotlib.pyplot as plt
 import calendar
+import json
 
 
 urlGeneral = "https://api.covid19india.org/data.json"
@@ -73,12 +74,18 @@ def extract_data_json(tFile):
     nda = np.zeros((len(dD['tested']), 3))
     for i in range(len(dD['tested'])):
         cur = dD['tested'][i]
-        d,m,y = cur['updatetimestamp'].split(' ').split('/')
+        d,m,y = cur['updatetimestamp'].split(' ')[0].split('/')
         cDate = int(y)*10000 + int(m)*100 + int(d)
         nda[i,0] += cDate
-        cPosCases = int(cur['totalpositivecases'])
+        try:
+            cPosCases = int(cur['totalpositivecases'])
+        except ValueError:
+            cPosCases = 0
         nda[i,1] += cPosCases
-        cSamplesTested = int(cur['totalsamplestested'])
+        try:
+            cSamplesTested = int(cur['totalsamplestested'])
+        except ValueError:
+            cSamplesTested = 0
         nda[i,2] += cSamplesTested
     return nda, ['date', 'PosCases', 'Tested']
 
@@ -86,6 +93,8 @@ def extract_data_json(tFile):
 def extract_data(tFile, fileType = "csv"):
     if fileType == "csv":
         return extract_data_csv(tFile)
+    elif fileType == "json":
+        return extract_data_json(tFile)
     else:
         print("Unknown fileType[{}]".format(fileType))
         exit(1)
@@ -150,6 +159,20 @@ def plot_data_confirmed(theData, theLegends, theFile):
     fig.text(0.01, 0.002, "File:{}:DataDate:{}, hkvc".format(theFile, int(theDates[-1])))
     fig.set_tight_layout(True)
     fig.savefig("/tmp/{}.svg".format(os.path.basename(theFile)))
+    plt.show()
+
+
+def plot_data_general(theData, theLegend, theFile):
+
+    pltRows = 2
+    pltCols = 2
+    fig, axes = plt.subplots(pltRows, pltCols)
+    fig.set_figwidth(pltCols*9)
+    fig.set_figheight(pltRows*6)
+
+    theDates = theData[:,0]
+    axes[0,0].plot(theData[:,1])
+    axes[0,1].plot(theData[:,2])
     plt.show()
 
 
