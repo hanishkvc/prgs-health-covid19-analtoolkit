@@ -80,16 +80,16 @@ def _plot_data(axes, theData, sTitle, theLegends=None):
 
 def plot_data(theData, theLegends):
 
-    fig, axes = plt.subplots(2,2)
+    fig, axes = plt.subplots(3,2)
     fig.set_figwidth(18)
-    fig.set_figheight(12)
+    fig.set_figheight(18)
     _plot_data(axes[0,0], theData, "Cases/Day", theLegends)
 
     theDates = theData[:,0]
     theDataCum = np.cumsum(theData, axis=0)
-    the90Percentile = np.percentile(theDataCum[:,2:], 90, axis=1)
+    the90Percentile = np.percentile(theDataCum[-1:,2:], 90, axis=1)
     theDataCum[:,0] = theDates
-    print("theDataCum", theDataCum)
+    print("theDataCumLatest", theDataCum[-1:,:].astype(np.int))
     print("The90thPercentile", the90Percentile)
     _plot_data(axes[0,1], theDataCum, "CumuCases")
 
@@ -100,8 +100,15 @@ def plot_data(theData, theLegends):
     theDataConv[:,0] = list(range(theDataConv.shape[0]))
     _plot_data(axes[1,0], theDataConv, "Cases/Day,MovAvg")
 
-    #print(theData.shape, len(theLegends))
+    # The boxplot of all states
     axes[1,1].boxplot(theData[:,2:],labels=theLegends[2:])
+
+    # Plot only the states with more cases
+    theSevereStates = theDataCum[-1:,:] > the90Percentile[0]
+    theSevereStates[0,0] = False
+    theSevereStates[0,1] = False
+    print("SevereStates", theSevereStates)
+    axes[2,0].plot(theData[:,theSevereStates[0]])
 
     fig.text(0.01, 0.002, "{},hkvc".format(theFile))
     fig.set_tight_layout(True)
