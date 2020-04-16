@@ -70,11 +70,17 @@ def extract_data_csv(tFile):
 def extract_data_json(tFile):
     f = open(tFile)
     dD = json.load(f)
-    for cur in dD['tested']:
+    nda = np.zeros((len(dD['tested']), 3))
+    for i in range(len(dD['tested'])):
+        cur = dD['tested'][i]
         d,m,y = cur['updatetimestamp'].split(' ').split('/')
         cDate = int(y)*10000 + int(m)*100 + int(d)
+        nda[i,0] += cDate
         cPosCases = int(cur['totalpositivecases'])
+        nda[i,1] += cPosCases
         cSamplesTested = int(cur['totalsamplestested'])
+        nda[i,2] += cSamplesTested
+    return nda, ['date', 'PosCases', 'Tested']
 
 
 def extract_data(tFile, fileType = "csv"):
@@ -107,7 +113,7 @@ def _plot_data_selective(axes, theData, theSelection, sTitle, theLegends=None):
         axes.legend(np.array(theLegends)[theSelection[0]])
 
 
-def plot_data(theData, theLegends):
+def plot_data_confirmed(theData, theLegends, theFile):
 
     pltRows = 2
     pltCols = 2
@@ -148,15 +154,28 @@ def plot_data(theData, theLegends):
 
 
 
+ts = time.gmtime()
+ts = "{:04}{:02}{:02}".format(ts.tm_year, ts.tm_mon, ts.tm_mday)
+print(ts)
+
+theFileC = None
+theFile = None
+theFileG = None
 if len(sys.argv) == 1:
-    ts = time.gmtime()
-    ts = "{:04}{:02}{:02}".format(ts.tm_year, ts.tm_mon, ts.tm_mday)
-    print(ts)
-    theFile=get_data(ts, urlConfirmed)
+    theFileC=get_data(ts, urlConfirmed)
+    theFileG = get_data(ts, urlGeneral)
 else:
     theFile = sys.argv[1]
 
-theData, theLegends = extract_data(theFile)
-print(theLegends)
-plot_data(theData, theLegends)
+for tFile in [theFile, theFileC, theFileG]:
+    if tFile == None:
+        continue
+    tExt = tFile.rsplit('.',1)[1]
+    theData, theLegends = extract_data(tFile, tExt)
+    print(theLegends)
+    if tExt == "csv":
+        plot_data_confirmed(theData, theLegends, tFile)
+    if tExt == "json":
+        plot_data_general(theData, theLegends, tFile)
+
 
