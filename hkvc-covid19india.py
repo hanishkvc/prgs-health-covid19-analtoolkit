@@ -18,7 +18,7 @@ urlDeaths = "https://api.covid19india.org/states_daily_csv/deceased.csv"
 
 def get_data(ts):
     tFile = "data/covid19india_org-{}".format(ts)
-    if os.path.exists(tFile):
+    if os.path.exists(tFile) and (os.path.getsize(tFile)>128):
         print("INFO:{}:already downloaded".format(tFile))
         return tFile
     print("INFO:{}:downloading...".format(tFile))
@@ -97,6 +97,8 @@ def plot_data(theData, theLegends):
 
     print(theData.shape, len(theLegends))
     axes[1,1].boxplot(theData[:,2:],labels=theLegends[2:-1])
+
+    fig.text(0.01, 0.005, "{},hkvc".format(theFile))
     plt.show()
 
 
