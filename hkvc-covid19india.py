@@ -22,18 +22,23 @@ urlStatesDailyJSON = "https://api.covid19india.org/states_daily.json"
 def _fix_cumu(ndIn, iMissing):
     print(ndIn[ndIn == iMissing])
     for i in np.argwhere(ndIn == iMissing):
+        iGap = 0
         iPrv = 0
         for j in range(i[0], 0, -1):
             if ndIn[j] != iMissing:
                 iPrv = ndIn[j]
                 break
+            else:
+                iGap += 1
         iNxt = 0
         for j in range(i[0], ndIn.shape[0]):
             if ndIn[j] != iMissing:
                 iNxt = ndIn[j]
                 break
-        ndIn[i] = int((iPrv+iNxt)/2)
-        print("WARN:_fix_cumu: use {} & {} to fix missing data at {} to {}".format(iPrv, iNxt, i, ndIn[i]))
+            else:
+                iGap += 1
+        ndIn[i] = iPrv + int((iNxt-iPrv)/iGap)
+        print("WARN:_fix_cumu: use {} & {} with gap {} to fix missing data at {} to {}".format(iPrv, iNxt, iGap, i, ndIn[i]))
     return ndIn
 
 
