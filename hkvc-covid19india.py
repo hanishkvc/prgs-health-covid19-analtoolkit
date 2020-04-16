@@ -163,13 +163,13 @@ def plot_data_confirmed(theData, theLegends, theFile):
 
 
 def _plot_data_general(axes, theData, sTitle, theLegends=None):
-    print(theData)
+    #print(theData)
     axes.plot(theData[:,1:])
     axes.set_title(sTitle)
     axes.set_xticks(np.arange(0,theData.shape[0],7))
     axes.set_xticklabels(theData[0::7,0].astype(np.int))
     if theLegends != None:
-        axes.legend(theLegends)
+        axes.legend(theLegends[1:])
 
 
 def plot_data_general(theData, theLegend, theFile):
@@ -185,9 +185,9 @@ def plot_data_general(theData, theLegend, theFile):
     _plot_data_general(axes[0,1], theData[:,(0,2)], "Tests")
     print("Cases:mean={}:std={}".format(np.mean(theData[:,1]), np.std(theData[:,1])))
     print("Tests:mean={}:std={}".format(np.mean(theData[:,2]), np.std(theData[:,2])))
-    axes[1,0].plot(theData[:,1]/np.mean(theData[:,1]), label="CasesRel")
-    axes[1,0].plot(theData[:,2]/np.mean(theData[:,2]), label="TestsRel")
-    axes[1,0].legend()
+    theDataRel2Mean = theData/np.mean(theData, axis=0)
+    theDataRel2Mean[:,0] = theDates
+    _plot_data_general(axes[1,0], theDataRel2Mean, "Cases & Tests Relative2Mean", theLegends)
 
     fig.text(0.01, 0.002, "File:{}:DataDate:{}, hkvc".format(theFile, int(theDates[-1])))
     fig.set_tight_layout(True)
