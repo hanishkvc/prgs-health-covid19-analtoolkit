@@ -19,7 +19,7 @@ urlDeaths = "https://api.covid19india.org/states_daily_csv/deceased.csv"
 urlStatesDailyJSON = "https://api.covid19india.org/states_daily.json"
 
 
-def _fix_cumu(ndIn, iMissing):
+def _fix_use_avgs(ndIn, iMissing):
     print(ndIn[ndIn == iMissing])
     for i in np.argwhere(ndIn == iMissing):
         iGap = 0
@@ -40,6 +40,10 @@ def _fix_cumu(ndIn, iMissing):
         ndIn[i] = iPrv + int((iNxt-iPrv)/iGap)
         print("WARN:_fix_cumu: use {} & {} with gap {} to fix missing data at {} to {}".format(iPrv, iNxt, iGap, i, ndIn[i]))
     return ndIn
+
+
+def _fix_cumu(ndIn, iMissing):
+    return _fix_use_avgs(ndIn, iMissing)
 
 
 def _fix_use_movavg(ndIn, iMissing):
