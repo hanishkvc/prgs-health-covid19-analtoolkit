@@ -187,7 +187,12 @@ def plot_data_general(theData, theLegend, theFile):
     print("Tests:mean={}:std={}".format(np.mean(theData[:,2]), np.std(theData[:,2])))
     theDataRel2Mean = theData/np.mean(theData, axis=0)
     theDataRel2Mean[:,0] = theDates
-    _plot_data_general(axes[1,0], theDataRel2Mean, "Cases & Tests Relative2Mean", theLegends)
+    _plot_data_general(axes[1,0], theDataRel2Mean, "Cases & Tests Rel2OwnMean", theLegends)
+
+    theRelData = np.zeros((theData.shape[0],2))
+    theRelData[:,0] = theDates
+    theRelData[:,1] = theData[:,2]/theData[:,1]
+    _plot_data_general(axes[1,1], theRelData, "Tests/Cases")
 
     fig.text(0.01, 0.002, "File:{}:DataDate:{}, hkvc".format(theFile, int(theDates[-1])))
     fig.set_tight_layout(True)
