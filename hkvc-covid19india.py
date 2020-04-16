@@ -73,7 +73,7 @@ def _plot_data(axes, theData, sTitle, theLegends=None):
     axes.plot(theData[:,2:])
     axes.set_title(sTitle)
     axes.set_xticks(np.arange(0,theData.shape[0],7))
-    axes.set_xticklabels(theData[0::7,0])
+    axes.set_xticklabels(theData[0::7,0].astype(np.int))
     if theLegends != None:
         axes.legend(theLegends[2:8])
 
@@ -94,6 +94,9 @@ def plot_data(theData, theLegends):
         theDataConv[:,i] = np.convolve(theData[:,i], tWeight, 'valid')
     theDataConv[:,0] = list(range(theDataConv.shape[0]))
     _plot_data(axes[1,0], theDataConv, "Cases/Day,MovAvg")
+
+    print(theData.shape, len(theLegends))
+    axes[1,1].boxplot(theData[:,2:],labels=theLegends[2:-1])
     plt.show()
 
 
