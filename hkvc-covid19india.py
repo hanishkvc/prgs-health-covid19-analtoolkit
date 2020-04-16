@@ -41,7 +41,7 @@ def date2float(sDate):
     return float(iDate)
 
 
-def extract_data(tFile):
+def extract_data_csv(tFile):
     # Instead of skipping the header line, load it has the names list
     data = np.genfromtxt(tFile, delimiter=',', skip_header=0, names=True, converters={0: date2float})
     legends = data.dtype.names[:-1]
@@ -65,6 +65,14 @@ def extract_data(tFile):
         data[i] = np.sum(data[iS:iE,i[1]]*tWeights)
         print("\tNEW:{}".format(data[iS:iE,i[1]]))
     return data, legends
+
+
+def extract_data(tFile, fileType = "csv"):
+    if fileType == "csv":
+        return extract_data_csv(tFile)
+    else:
+        print("Unknown fileType[{}]".format(fileType))
+        exit(1)
 
 
 def _plot_data(axes, theData, sTitle, theLegends=None):
