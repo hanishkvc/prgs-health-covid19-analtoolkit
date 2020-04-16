@@ -95,10 +95,10 @@ def plot_data(theData, theLegends):
 
     theDates = theData[:,0]
     theDataCum = np.cumsum(theData, axis=0)
-    the90Percentile = np.percentile(theDataCum[-1:,2:], 90, axis=1)
+    the85Percentile = np.percentile(theDataCum[-1:,2:], 85, axis=1)
     theDataCum[:,0] = theDates
     print("theDataCumLatest", theDataCum[-1:,:].astype(np.int))
-    print("The90thPercentile", the90Percentile)
+    print("the85Percentile", the85Percentile)
     _plot_data(axes[0,1], theDataCum, "CumuCases")
 
     tWeight = np.ones(7)*1/7
@@ -112,7 +112,7 @@ def plot_data(theData, theLegends):
     axes[1,1].boxplot(theData[:,2:],labels=theLegends[2:])
 
     # Plot only the states with more cases
-    theSevereStates = theDataCum[-1:,:] > the90Percentile[0]
+    theSevereStates = theDataCum[-1:,:] > the85Percentile[0]
     theSevereStates[0,0] = False
     theSevereStates[0,1] = False
     print("SevereStates", theSevereStates)
