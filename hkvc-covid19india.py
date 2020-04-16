@@ -12,18 +12,19 @@ import matplotlib.pyplot as plt
 import calendar
 
 
+urlGeneral = "https://api.covid19india.org/data.json"
 urlConfirmed = "http://api.covid19india.org/states_daily_csv/confirmed.csv"
 urlDeaths = "https://api.covid19india.org/states_daily_csv/deceased.csv"
 urlStatesDailyJSON = "https://api.covid19india.org/states_daily.json"
 
 
-def get_data(ts):
-    tFile = "data/{}-covid19india_org-confirmed.csv".format(ts)
+def get_data(ts, theUrl):
+    tFile = "data/{}-covid19india_org-{}".format(ts, os.path.basename(theUrl))
     if os.path.exists(tFile) and (os.path.getsize(tFile)>128):
         print("INFO:{}:already downloaded".format(tFile))
         return tFile
     print("INFO:{}:downloading...".format(tFile))
-    tCmd = [ "wget", urlConfirmed, "--output-document={}"]
+    tCmd = [ "wget", theUrl, "--output-document={}"]
     tCmd[2] = tCmd[2].format(tFile)
     subprocess.call(tCmd)
     return tFile
@@ -133,7 +134,7 @@ if len(sys.argv) == 1:
     ts = time.gmtime()
     ts = "{:04}{:02}{:02}".format(ts.tm_year, ts.tm_mon, ts.tm_mday)
     print(ts)
-    theFile=get_data(ts)
+    theFile=get_data(ts, urlConfirmed)
 else:
     theFile = sys.argv[1]
 
