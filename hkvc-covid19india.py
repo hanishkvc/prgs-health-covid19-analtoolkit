@@ -162,6 +162,16 @@ def plot_data_confirmed(theData, theLegends, theFile):
     plt.show()
 
 
+def _plot_data_general(axes, theData, sTitle, theLegends=None):
+    print(theData)
+    axes.plot(theData[:,1:])
+    axes.set_title(sTitle)
+    axes.set_xticks(np.arange(0,theData.shape[0],7))
+    axes.set_xticklabels(theData[0::7,0].astype(np.int))
+    if theLegends != None:
+        axes.legend(theLegends)
+
+
 def plot_data_general(theData, theLegend, theFile):
 
     pltRows = 2
@@ -171,12 +181,10 @@ def plot_data_general(theData, theLegend, theFile):
     fig.set_figheight(pltRows*6)
 
     theDates = theData[:,0]
-    axes[0,0].plot(theData[:,1])
-    axes[0,0].set_title("Cases")
-    axes[0,1].plot(theData[:,2])
-    axes[0,1].set_title("Tests")
-    print("Cases:mean={}:std={}", np.mean(theData[:,1]), np.std(theData[:,1]))
-    print("Tests:mean={}:std={}", np.mean(theData[:,2]), np.std(theData[:,2]))
+    _plot_data_general(axes[0,0], theData[:,(0,1)], "Cases")
+    _plot_data_general(axes[0,1], theData[:,(0,2)], "Tests")
+    print("Cases:mean={}:std={}".format(np.mean(theData[:,1]), np.std(theData[:,1])))
+    print("Tests:mean={}:std={}".format(np.mean(theData[:,2]), np.std(theData[:,2])))
     axes[1,0].plot(theData[:,1]/np.mean(theData[:,1]), label="CasesRel")
     axes[1,0].plot(theData[:,2]/np.mean(theData[:,2]), label="TestsRel")
     axes[1,0].legend()
