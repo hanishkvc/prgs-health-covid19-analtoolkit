@@ -14,6 +14,7 @@ import calendar
 
 urlConfirmed = "http://api.covid19india.org/states_daily_csv/confirmed.csv"
 urlDeaths = "https://api.covid19india.org/states_daily_csv/deceased.csv"
+urlStatesDailyJSON = "https://api.covid19india.org/states_daily.json"
 
 
 def get_data(ts):
@@ -106,15 +107,16 @@ def plot_data(theData, theLegends):
     theSevereStates[0,0] = False
     theSevereStates[0,1] = False
     print("SevereStates", theSevereStates)
-    _plot_data_selective(axes[0,0], theData, theSevereStates, "MoreCasesStates, Cases/Day", theLegends)
-    _plot_data_selective(axes[0,1], theDataCum, theSevereStates, "MoreCasesStates, CasesCumu", theLegends)
+    print("SevereStates",  np.array(theLegends)[theSevereStates[0]])
+    _plot_data_selective(axes[0,0], theData, theSevereStates, "MoreCasesStates,85p, Cases/Day", theLegends)
+    _plot_data_selective(axes[0,1], theDataCum, theSevereStates, "MoreCasesStates,85p, CasesCumu", theLegends)
 
     tWeight = np.ones(7)*1/7
     theDataConv = np.zeros((theData.shape[0]-6,theData.shape[1]))
     for i in range(1,theData.shape[1]):
         theDataConv[:,i] = np.convolve(theData[:,i], tWeight, 'valid')
     theDataConv[:,0] = list(range(theDataConv.shape[0]))
-    _plot_data_selective(axes[1,0], theDataConv, theSevereStates, "MoreCasesStates, Cases/Day,MovAvg", theLegends)
+    _plot_data_selective(axes[1,0], theDataConv, theSevereStates, "MoreCasesStates,85p, Cases/Day,MovAvg", theLegends)
 
     # The boxplot of all states
     axes[1,1].boxplot(theData[:,2:],labels=theLegends[2:])
