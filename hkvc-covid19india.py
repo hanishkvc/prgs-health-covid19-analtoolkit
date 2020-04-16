@@ -17,7 +17,7 @@ urlDeaths = "https://api.covid19india.org/states_daily_csv/deceased.csv"
 
 
 def get_data(ts):
-    tFile = "data/covid19india_org-{}".format(ts)
+    tFile = "data/{}-covid19india_org-confirmed.csv".format(ts)
     if os.path.exists(tFile) and (os.path.getsize(tFile)>128):
         print("INFO:{}:already downloaded".format(tFile))
         return tFile
@@ -77,6 +77,7 @@ def _plot_data(axes, theData, sTitle, theLegends=None):
     if theLegends != None:
         axes.legend(theLegends[2:8])
 
+
 def _plot_data_selective(axes, theData, theSelection, sTitle, theLegends=None):
     axes.plot(theData[:,theSelection[0]])
     axes.set_title(sTitle)
@@ -119,7 +120,7 @@ def plot_data(theData, theLegends):
     axes[1,1].boxplot(theData[:,2:],labels=theLegends[2:])
 
 
-    fig.text(0.01, 0.002, "{},hkvc".format(theFile))
+    fig.text(0.01, 0.002, "File:{}:DataDate:{}, hkvc".format(theFile, int(theDates[-1])))
     fig.set_tight_layout(True)
     fig.savefig("/tmp/{}.svg".format(os.path.basename(theFile)))
     plt.show()
