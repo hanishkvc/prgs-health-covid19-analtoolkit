@@ -19,6 +19,22 @@ urlDeaths = "https://api.covid19india.org/states_daily_csv/deceased.csv"
 urlStatesDailyJSON = "https://api.covid19india.org/states_daily.json"
 
 
+def _fix_cumu(ndIn, iMissing):
+    print(ndIn[ndIn == iMissing])
+    for i in np.argwhere(ndIn == iMissing):
+        iPrv = 0
+        for j in range(i, 0, -1):
+            if ndIn[j] != iMissing:
+                iPrv = nda[:,1][j]
+                break
+        iNxt = 0
+        for j in range(i, nda.shape[0], -1):
+            if nda[:,1][j] != iMissing:
+                iNxt = nda[:,1][j]
+                break
+        nda[:,1][i] = int((iPrv+iNxt)/2)
+
+
 def get_data(ts, theUrl):
     tFile = "data/{}-covid19india_org-{}".format(ts, os.path.basename(theUrl))
     if os.path.exists(tFile) and (os.path.getsize(tFile)>128):
@@ -81,14 +97,15 @@ def extract_data_json(tFile):
             cPosCases = int(cur['totalpositivecases'])
         except ValueError:
             print("WARN:Fix missing +Cases data on {}".format(cDate))
-            cPosCases = 0
+            cPosCases = -999
         nda[i,1] += cPosCases
         try:
             cSamplesTested = int(cur['totalsamplestested'])
         except ValueError:
             print("WARN:Fix missing Tests data on {}".format(cDate))
-            cSamplesTested = 0
+            cSamplesTested = -999
         nda[i,2] += cSamplesTested
+    nda[:,1] = _fix_cumu(nda[:,1], -999)
     return nda, ['date', 'PosCases', 'Tested']
 
 
