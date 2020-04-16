@@ -42,7 +42,7 @@ def date2float(sDate):
 def extract_data(tFile):
     # Instead of skipping the header line, load it has the names list
     data = np.genfromtxt(tFile, delimiter=',', skip_header=0, names=True, converters={0: date2float})
-    legends = data.dtype.names
+    legends = data.dtype.names[:-1]
     # Needed to convert from the numpy.void rows to a proper nd-array
     data = np.array(data.tolist())
     # Skip the last column, which is invalid.
@@ -87,7 +87,10 @@ def plot_data(theData, theLegends):
 
     theDates = theData[:,0]
     theDataCum = np.cumsum(theData, axis=0)
+    the90Percentile = np.percentile(theDataCum[:,2:], 90, axis=1)
     theDataCum[:,0] = theDates
+    print("theDataCum", theDataCum)
+    print("The90thPercentile", the90Percentile)
     _plot_data(axes[0,1], theDataCum, "CumuCases")
 
     tWeight = np.ones(7)*1/7
@@ -97,8 +100,8 @@ def plot_data(theData, theLegends):
     theDataConv[:,0] = list(range(theDataConv.shape[0]))
     _plot_data(axes[1,0], theDataConv, "Cases/Day,MovAvg")
 
-    print(theData.shape, len(theLegends))
-    axes[1,1].boxplot(theData[:,2:],labels=theLegends[2:-1])
+    #print(theData.shape, len(theLegends))
+    axes[1,1].boxplot(theData[:,2:],labels=theLegends[2:])
 
     fig.text(0.01, 0.002, "{},hkvc".format(theFile))
     fig.set_tight_layout(True)
@@ -116,5 +119,6 @@ else:
     theFile = sys.argv[1]
 
 theData, theLegends = extract_data(theFile)
+print(theLegends)
 plot_data(theData, theLegends)
 
