@@ -43,22 +43,24 @@ def _fix_cumu(ndIn, iMissing):
 
 
 def _fix_use_movavg(ndIn, iMissing):
-    nans = np.argwhere(np.isnan(data))
-    data[np.isnan(data)] = 0
-    for i in nans:
+    if np.isnan(iMissing):
+        lMissing = np.argwhere(np.isnan(ndIn))
+    else:
+        lMissing = np.argwhere(ndIn == iMissing)
+    ndIn[lMissing] = 0
+    for i in lMissing:
         iS = i[0]-3
         if (iS < 0):
             iS = 0
         iE = i[0]+3+1
-        if (iE > data.shape[0]):
-            iE = data.shape[0]
-        print("WARN:extract_data:fix_nan:at={}:using={}-{}".format(i, iS, iE))
-        print("\tIN:{}".format(data[iS:iE,i[1]]))
+        if (iE > ndIn.shape[0]):
+            iE = ndIn.shape[0]
+        print("WARN:_fix_use_movavg:at={}:using data from {}-{}".format(i, iS, iE))
+        print("\tIN:{}".format(ndIn[iS:iE,i[1]]))
         tWeights = np.ones(iE-iS)*1/6
-        data[i] = np.sum(data[iS:iE,i[1]]*tWeights)
-        print("\tNEW:{}".format(data[iS:iE,i[1]]))
-
-
+        ndIn[i] = np.sum(ndIn[iS:iE,i[1]]*tWeights)
+        print("\tNEW:{}".format(ndIn[iS:iE,i[1]]))
+    return ndIn
 
 
 def get_data(ts, theUrl):
@@ -93,6 +95,7 @@ def extract_data_csv(tFile):
     # Skip the last column, which is invalid.
     data = data[:,0:-1]
     #data[12,1] = np.nan # For testing below logic to fix missing values is fine
+    data = _fix_use_movavg(data, np.nan)
     return data, legends
 
 
