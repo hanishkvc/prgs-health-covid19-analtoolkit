@@ -88,12 +88,11 @@ def _plot_data_selective(axes, theData, theSelection, sTitle, theLegends=None):
 
 def plot_data(theData, theLegends):
 
-    pltRows = 3
+    pltRows = 2
     pltCols = 2
     fig, axes = plt.subplots(pltRows, pltCols)
     fig.set_figwidth(pltCols*9)
     fig.set_figheight(pltRows*6)
-    _plot_data(axes[0,0], theData, "Cases/Day")
 
     theDates = theData[:,0]
     theDataCum = np.cumsum(theData, axis=0)
@@ -101,25 +100,24 @@ def plot_data(theData, theLegends):
     theDataCum[:,0] = theDates
     print("theDataCumLatest", theDataCum[-1:,:].astype(np.int))
     print("the85Percentile", the85Percentile)
-    _plot_data(axes[0,1], theDataCum, "CumuCases")
+    # Plot only the states with more cases
+    theSevereStates = theDataCum[-1:,:] > the85Percentile[0]
+    theSevereStates[0,0] = False
+    theSevereStates[0,1] = False
+    print("SevereStates", theSevereStates)
+    _plot_data_selective(axes[0,0], theData, theSevereStates, "MoreCasesStates, Cases/Day", theLegends)
+    _plot_data_selective(axes[0,1], theDataCum, theSevereStates, "MoreCasesStates, CasesCumu", theLegends)
 
     tWeight = np.ones(7)*1/7
     theDataConv = np.zeros((theData.shape[0]-6,theData.shape[1]))
     for i in range(1,theData.shape[1]):
         theDataConv[:,i] = np.convolve(theData[:,i], tWeight, 'valid')
     theDataConv[:,0] = list(range(theDataConv.shape[0]))
-    _plot_data(axes[1,0], theDataConv, "Cases/Day,MovAvg")
+    _plot_data_selective(axes[1,0], theDataConv, theSevereStates, "MoreCasesStates, Cases/Day,MovAvg", theLegends)
 
     # The boxplot of all states
     axes[1,1].boxplot(theData[:,2:],labels=theLegends[2:])
 
-    # Plot only the states with more cases
-    theSevereStates = theDataCum[-1:,:] > the85Percentile[0]
-    theSevereStates[0,0] = False
-    theSevereStates[0,1] = False
-    print("SevereStates", theSevereStates)
-    _plot_data_selective(axes[2,0], theData, theSevereStates, "MoreCasesStates, Cases/Day", theLegends)
-    _plot_data_selective(axes[2,1], theDataConv, theSevereStates, "MoreCasesStates, Cases/Day,MovAvg", theLegends)
 
     fig.text(0.01, 0.002, "{},hkvc".format(theFile))
     fig.set_tight_layout(True)
