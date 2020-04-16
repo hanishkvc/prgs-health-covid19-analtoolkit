@@ -91,7 +91,7 @@ def plot_data(theData, theLegends):
     fig, axes = plt.subplots(3,2)
     fig.set_figwidth(18)
     fig.set_figheight(18)
-    _plot_data(axes[0,0], theData, "Cases/Day", theLegends)
+    _plot_data(axes[0,0], theData, "Cases/Day")
 
     theDates = theData[:,0]
     theDataCum = np.cumsum(theData, axis=0)
@@ -116,7 +116,8 @@ def plot_data(theData, theLegends):
     theSevereStates[0,0] = False
     theSevereStates[0,1] = False
     print("SevereStates", theSevereStates)
-    _plot_data_selective(axes[2,0], theData, theSevereStates, "SevereStates, Cases/Day", theLegends)
+    _plot_data_selective(axes[2,0], theData, theSevereStates, "MoreCasesStates, Cases/Day", theLegends)
+    _plot_data_selective(axes[2,1], theDataConv, theSevereStates, "MoreCasesStates, Cases/Day,MovAvg", theLegends)
 
     fig.text(0.01, 0.002, "{},hkvc".format(theFile))
     fig.set_tight_layout(True)
