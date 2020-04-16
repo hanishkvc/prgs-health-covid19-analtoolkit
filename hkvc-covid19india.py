@@ -45,10 +45,15 @@ def _fix_cumu(ndIn, iMissing):
 def _fix_use_movavg(ndIn, iMissing):
     if np.isnan(iMissing):
         lMissing = np.argwhere(np.isnan(ndIn))
+        ndIn[np.isnan(ndIn)] = 0
     else:
         lMissing = np.argwhere(ndIn == iMissing)
-    ndIn[lMissing] = 0
+        ndIn[ndIn == iMissing] = 0
+    print("lMissing", lMissing)
+    print("theData:", ndIn[1:3,:])
+    print("theData:", ndIn[24:27,:])
     for i in lMissing:
+        print("i",i)
         iS = i[0]-3
         if (iS < 0):
             iS = 0
@@ -58,7 +63,7 @@ def _fix_use_movavg(ndIn, iMissing):
         print("WARN:_fix_use_movavg:at={}:using data from {}-{}".format(i, iS, iE))
         print("\tIN:{}".format(ndIn[iS:iE,i[1]]))
         tWeights = np.ones(iE-iS)*1/6
-        ndIn[i] = np.sum(ndIn[iS:iE,i[1]]*tWeights)
+        ndIn[tuple(i)] = np.sum(ndIn[iS:iE,i[1]]*tWeights)
         print("\tNEW:{}".format(ndIn[iS:iE,i[1]]))
     return ndIn
 
