@@ -80,11 +80,13 @@ def extract_data_json(tFile):
         try:
             cPosCases = int(cur['totalpositivecases'])
         except ValueError:
+            print("WARN:Fix missing +Cases data on {}".format(cDate))
             cPosCases = 0
         nda[i,1] += cPosCases
         try:
             cSamplesTested = int(cur['totalsamplestested'])
         except ValueError:
+            print("WARN:Fix missing Tests data on {}".format(cDate))
             cSamplesTested = 0
         nda[i,2] += cSamplesTested
     return nda, ['date', 'PosCases', 'Tested']
@@ -194,7 +196,7 @@ def plot_data_general(theData, theLegend, theFile):
     theRelData[:,1] = theData[:,2]/theData[:,1]
     _plot_data_general(axes[1,1], theRelData, "Tests/Cases")
 
-    fig.text(0.01, 0.002, "File:{}:DataDate:{}, hkvc".format(theFile, int(theDates[-1])))
+    fig.text(0.01, 0.002, "File:{}:DataDate:{}, Needs bit cleaning, hkvc".format(theFile, int(theDates[-1])))
     fig.set_tight_layout(True)
     fig.savefig("/tmp/{}.svg".format(os.path.basename(theFile)))
     plt.show()
@@ -219,7 +221,8 @@ for tFile in [theFile, theFileC, theFileG]:
         continue
     tExt = tFile.rsplit('.',1)[1]
     theData, theLegends = extract_data(tFile, tExt)
-    print(theLegends)
+    print("Data", theData)
+    print("Legends", theLegends)
     if tExt == "csv":
         plot_data_confirmed(theData, theLegends, tFile)
     if tExt == "json":
