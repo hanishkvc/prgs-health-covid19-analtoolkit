@@ -77,6 +77,14 @@ def _plot_data(axes, theData, sTitle, theLegends=None):
     if theLegends != None:
         axes.legend(theLegends[2:8])
 
+def _plot_data_selective(axes, theData, theSelection, sTitle, theLegends=None):
+    axes.plot(theData[:,theSelection[0]])
+    axes.set_title(sTitle)
+    axes.set_xticks(np.arange(0,theData.shape[0],7))
+    axes.set_xticklabels(theData[0::7,0].astype(np.int))
+    if theLegends != None:
+        axes.legend(np.array(theLegends)[theSelection[0]])
+
 
 def plot_data(theData, theLegends):
 
@@ -108,7 +116,7 @@ def plot_data(theData, theLegends):
     theSevereStates[0,0] = False
     theSevereStates[0,1] = False
     print("SevereStates", theSevereStates)
-    axes[2,0].plot(theData[:,theSevereStates[0]])
+    _plot_data_selective(axes[2,0], theData, theSevereStates, "SevereStates, Cases/Day", theLegends)
 
     fig.text(0.01, 0.002, "{},hkvc".format(theFile))
     fig.set_tight_layout(True)
