@@ -88,9 +88,11 @@ def _plot_data_selective(axes, theData, theSelection, sTitle, theLegends=None):
 
 def plot_data(theData, theLegends):
 
-    fig, axes = plt.subplots(3,2)
-    fig.set_figwidth(18)
-    fig.set_figheight(18)
+    pltRows = 3
+    pltCols = 2
+    fig, axes = plt.subplots(pltRows, pltCols)
+    fig.set_figwidth(pltCols*9)
+    fig.set_figheight(pltRows*6)
     _plot_data(axes[0,0], theData, "Cases/Day")
 
     theDates = theData[:,0]
