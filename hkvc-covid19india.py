@@ -50,10 +50,7 @@ def _fix_use_movavg(ndIn, iMissing):
         lMissing = np.argwhere(ndIn == iMissing)
         ndIn[ndIn == iMissing] = 0
     print("lMissing", lMissing)
-    print("theData:", ndIn[1:3,:])
-    print("theData:", ndIn[24:27,:])
     for i in lMissing:
-        print("i",i)
         iS = i[0]-3
         if (iS < 0):
             iS = 0
