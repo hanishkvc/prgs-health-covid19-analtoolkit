@@ -20,7 +20,11 @@ urlStatesDailyJSON = "https://api.covid19india.org/states_daily.json"
 
 
 def _fix_use_avgs(ndIn, iMissing):
-    print(ndIn[ndIn == iMissing])
+    """ Works with 1D arrays
+        Will not work if iMissing is np.nan
+        """
+    lMissing = np.argwhere(ndIn == iMissing)
+    print("lMissing", lMissing)
     for i in np.argwhere(ndIn == iMissing):
         iGap = 0
         iPrv = 0
@@ -47,6 +51,10 @@ def _fix_cumu(ndIn, iMissing):
 
 
 def _fix_use_movavg(ndIn, iMissing):
+    """ Works with 2D arrays
+        Need to check for arrays of higher and lower dimension
+        Assumes each column has related data. ie similar to using axis=0
+        """
     if np.isnan(iMissing):
         lMissing = np.argwhere(np.isnan(ndIn))
         ndIn[np.isnan(ndIn)] = 0
