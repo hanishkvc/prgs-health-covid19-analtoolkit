@@ -172,7 +172,18 @@ def plot_data_general(theData, theLegend, theFile):
 
     theDates = theData[:,0]
     axes[0,0].plot(theData[:,1])
+    axes[0,0].set_title("Cases")
     axes[0,1].plot(theData[:,2])
+    axes[0,1].set_title("Tests")
+    print("Cases:mean={}:std={}", np.mean(theData[:,1]), np.std(theData[:,1]))
+    print("Tests:mean={}:std={}", np.mean(theData[:,2]), np.std(theData[:,2]))
+    axes[1,0].plot(theData[:,1]/np.mean(theData[:,1]), label="CasesRel")
+    axes[1,0].plot(theData[:,2]/np.mean(theData[:,2]), label="TestsRel")
+    axes[1,0].legend()
+
+    fig.text(0.01, 0.002, "File:{}:DataDate:{}, hkvc".format(theFile, int(theDates[-1])))
+    fig.set_tight_layout(True)
+    fig.savefig("/tmp/{}.svg".format(os.path.basename(theFile)))
     plt.show()
 
 
