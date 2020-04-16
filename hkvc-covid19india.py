@@ -23,16 +23,18 @@ def _fix_cumu(ndIn, iMissing):
     print(ndIn[ndIn == iMissing])
     for i in np.argwhere(ndIn == iMissing):
         iPrv = 0
-        for j in range(i, 0, -1):
+        for j in range(i[0], 0, -1):
             if ndIn[j] != iMissing:
-                iPrv = nda[:,1][j]
+                iPrv = ndIn[j]
                 break
         iNxt = 0
-        for j in range(i, nda.shape[0], -1):
-            if nda[:,1][j] != iMissing:
-                iNxt = nda[:,1][j]
+        for j in range(i[0], ndIn.shape[0]):
+            if ndIn[j] != iMissing:
+                iNxt = ndIn[j]
                 break
-        nda[:,1][i] = int((iPrv+iNxt)/2)
+        ndIn[i] = int((iPrv+iNxt)/2)
+        print("WARN:_fix_cumu: use {} & {} to fix missing data at {} to {}".format(iPrv, iNxt, i, ndIn[i]))
+    return ndIn
 
 
 def get_data(ts, theUrl):
@@ -106,6 +108,7 @@ def extract_data_json(tFile):
             cSamplesTested = -999
         nda[i,2] += cSamplesTested
     nda[:,1] = _fix_cumu(nda[:,1], -999)
+    nda[:,2] = _fix_cumu(nda[:,2], -999)
     return nda, ['date', 'PosCases', 'Tested']
 
 
@@ -213,7 +216,7 @@ def plot_data_general(theData, theLegend, theFile):
     theRelData[:,1] = theData[:,2]/theData[:,1]
     _plot_data_general(axes[1,1], theRelData, "Tests/Cases")
 
-    fig.text(0.01, 0.002, "File:{}:DataDate:{}, Needs bit cleaning, hkvc".format(theFile, int(theDates[-1])))
+    fig.text(0.01, 0.002, "File:{}:DataDate:{}, hkvc".format(theFile, int(theDates[-1])))
     fig.set_tight_layout(True)
     fig.savefig("/tmp/{}.svg".format(os.path.basename(theFile)))
     plt.show()
