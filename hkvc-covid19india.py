@@ -67,6 +67,16 @@ def extract_data_csv(tFile):
     return data, legends
 
 
+def extract_data_json(tFile):
+    f = open(tFile)
+    dD = json.load(f)
+    for cur in dD['tested']:
+        d,m,y = cur['updatetimestamp'].split(' ').split('/')
+        cDate = int(y)*10000 + int(m)*100 + int(d)
+        cPosCases = int(cur['totalpositivecases'])
+        cSamplesTested = int(cur['totalsamplestested'])
+
+
 def extract_data(tFile, fileType = "csv"):
     if fileType == "csv":
         return extract_data_csv(tFile)
