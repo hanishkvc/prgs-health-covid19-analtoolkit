@@ -81,6 +81,8 @@ def _plot_data(axes, theData, sTitle, theLegends=None):
 def plot_data(theData, theLegends):
 
     fig, axes = plt.subplots(2,2)
+    fig.set_figwidth(18)
+    fig.set_figheight(12)
     _plot_data(axes[0,0], theData, "Cases/Day", theLegends)
 
     theDates = theData[:,0]
@@ -98,7 +100,9 @@ def plot_data(theData, theLegends):
     print(theData.shape, len(theLegends))
     axes[1,1].boxplot(theData[:,2:],labels=theLegends[2:-1])
 
-    fig.text(0.01, 0.005, "{},hkvc".format(theFile))
+    fig.text(0.01, 0.002, "{},hkvc".format(theFile))
+    fig.set_tight_layout(True)
+    fig.savefig("/tmp/{}.svg".format(os.path.basename(theFile)))
     plt.show()
 
 
