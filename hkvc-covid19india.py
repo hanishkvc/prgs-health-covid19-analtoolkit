@@ -24,25 +24,37 @@ def _fix_use_avgs(ndIn, iMissing):
         Will not work if iMissing is np.nan
         """
     lMissing = np.argwhere(ndIn == iMissing)
-    print("lMissing", lMissing)
+    print("INFO:_fix_use_avgs:lMissing", lMissing)
     for i in np.argwhere(ndIn == iMissing):
         iGap = 0
         iPrv = 0
+        bFoundPrv = False
         for j in range(i[0], 0, -1):
             if ndIn[j] != iMissing:
                 iPrv = ndIn[j]
+                bFoundPrv = True
                 break
             else:
                 iGap += 1
         iNxt = 0
+        bFoundNxt = False
         for j in range(i[0], ndIn.shape[0]):
             if ndIn[j] != iMissing:
                 iNxt = ndIn[j]
+                bFoundNxt = True
                 break
             else:
                 iGap += 1
+        if not bFoundPrv and bFoundNxt:
+            iPrv = iNxt
+            print("WARN:_fix_use_avgs: No Prv so fixed Prv to Nxt for guessing data at position {}".format(i))
+        if not bFoundNxt and bFoundPrv:
+            iNxt = iPrv
+            print("WARN:_fix_use_avgs: No Nxt so fixed Nxt to Prv for guessing data at position {}".format(i))
+        if not bFoundPrv and not bFoundNxt:
+            print("ERRR:_fix_use_avgs: Neither Prv nor Nxt found for position {}".format(i))
         ndIn[i] = iPrv + int((iNxt-iPrv)/iGap)
-        print("WARN:_fix_cumu: use {} & {} with gap {} to fix missing data at {} to {}".format(iPrv, iNxt, iGap, i, ndIn[i]))
+        print("INFO:_fix_use_avgs: use {} & {} with gap {} to fix missing data at {} to {}".format(iPrv, iNxt, iGap, i, ndIn[i]))
     return ndIn
 
 
