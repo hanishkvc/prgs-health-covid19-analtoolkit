@@ -135,13 +135,13 @@ def extract_data_json(tFile):
         cDate = int(y)*10000 + int(m)*100 + int(d)
         nda[i,0] += cDate
         try:
-            cPosCases = int(cur['totalpositivecases'])
+            cPosCases = int(cur['totalpositivecases'].replace(",",""))
         except ValueError:
             print("WARN:Fix missing +Cases data on {}".format(cDate))
             cPosCases = -999
         nda[i,1] += cPosCases
         try:
-            cSamplesTested = int(cur['totalsamplestested'])
+            cSamplesTested = int(cur['totalsamplestested'].replace(",",""))
         except ValueError:
             print("WARN:Fix missing Tests data on {}".format(cDate))
             cSamplesTested = -999
