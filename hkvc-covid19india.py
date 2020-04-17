@@ -208,8 +208,10 @@ def plot_data_confirmed(theData, theLegends, theFile):
     inset = axes[0,1].inset_axes([0.13,0.55,0.64,0.4])
     inset.bar(list(range(len(theDataCum[-1,2:]))), theDataCum[-1,2:])
     inset.set_xticks(np.arange(len(theLegends[2:])))
+    inset.set_yticks(np.linspace(0,np.max(theDataCum[-1,2:]),4))
     inset.tick_params(labelrotation=90)
     inset.set_xticklabels(theLegends[2:])
+    inset.grid(True, axis='y')
 
     tWeight = np.ones(7)*1/7
     theDataConv = np.zeros((theData.shape[0]-6,theData.shape[1]))
