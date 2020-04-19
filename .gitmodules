@@ -1,0 +1,3 @@
+[submodule "libs/xmlparser"]
+	path = libs/xmlparser
+	url = https://github.com/hanishkvc/libs-python-xmlparser.git

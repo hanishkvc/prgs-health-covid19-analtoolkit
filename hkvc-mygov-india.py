@@ -8,7 +8,7 @@ import os
 import subprocess
 import time
 import xml.etree.ElementTree as ET
-import xmlparser as xp
+import libs.xmlparser.xmlparser as xp
 
 
 def get_data(ts):
