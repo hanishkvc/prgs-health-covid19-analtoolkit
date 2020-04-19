@@ -175,12 +175,12 @@ def _plot_data(axes, theData, sTitle, theLegends=None):
 
 
 def _plot_data_selective(axes, theData, theSelection, sTitle, theLegends=None):
-    axes.plot(theData[:,theSelection[0]])
+    axes.plot(theData[:,theSelection])
     axes.set_title(sTitle)
     axes.set_xticks(np.arange(0,theData.shape[0],7))
     axes.set_xticklabels(theData[0::7,0].astype(np.int))
     if theLegends != None:
-        axes.legend(np.array(theLegends)[theSelection[0]])
+        axes.legend(np.array(theLegends)[theSelection])
 
 
 def plot_data_confirmed(theData, theLegends, theFile):
@@ -198,11 +198,11 @@ def plot_data_confirmed(theData, theLegends, theFile):
     print("theDataCumLatest", theDataCum[-1:,:].astype(np.int))
     print("the85Percentile", the85Percentile)
     # Plot only the states with more cases
-    theSevereStates = theDataCum[-1:,:] > the85Percentile[0]
-    theSevereStates[0,0] = False
-    theSevereStates[0,1] = False
+    theSevereStates = theDataCum[-1,:] > the85Percentile[0]
+    theSevereStates[0] = False
+    theSevereStates[1] = False
     print("SevereStates", theSevereStates)
-    print("SevereStates",  np.array(theLegends)[theSevereStates[0]])
+    print("SevereStates",  np.array(theLegends)[theSevereStates])
     _plot_data_selective(axes[0,0], theData, theSevereStates, "StatesWithMoreCases, >85p, Cases/Day", theLegends)
     _plot_data_selective(axes[0,1], theDataCum, theSevereStates, "StatesWithMoreCases, >85p, CasesCumu", theLegends)
     inset = axes[0,1].inset_axes([0.13,0.55,0.64,0.4])
@@ -237,11 +237,11 @@ def plot_data_confirmed(theData, theLegends, theFile):
     theImprovingStates = theDataDiff[-1,:] < theDiffP[0]
     theWorseningStates = theDataDiff[-1,:] > theDiffP[1]
     print("INFO:ImprovingOr???:{}".format(theImprovingStates))
-    _plot_data_selective(axes[2,0], theDataConv, [theImprovingStates], "???Rel2Self-ImprovingOr???States, Cases/Day, MovAvg", theLegends)
+    _plot_data_selective(axes[2,0], theDataConv, theImprovingStates, "???Rel2Self-ImprovingOr???States, Cases/Day, MovAvg", theLegends)
     inset = axes[2,0].inset_axes([0.13,0.55,0.64,0.4])
     inset.plot(theDataDiff[:,theImprovingStates])
     print("INFO:WorseningOr???:{}".format(theWorseningStates))
-    _plot_data_selective(axes[2,1], theDataConv, [theWorseningStates], "???Rel2Self-WorseningOr???States, Cases/Day, MovAvg", theLegends)
+    _plot_data_selective(axes[2,1], theDataConv, theWorseningStates, "???Rel2Self-WorseningOr???States, Cases/Day, MovAvg", theLegends)
     inset = axes[2,1].inset_axes([0.13,0.55,0.64,0.4])
     inset.plot(theDataDiff[:,theWorseningStates])
 
