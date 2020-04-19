@@ -185,7 +185,7 @@ def _plot_data_selective(axes, theData, theSelection, sTitle, theLegends=None):
 
 def plot_data_confirmed(theData, theLegends, theFile):
 
-    pltRows = 2
+    pltRows = 3
     pltCols = 2
     fig, axes = plt.subplots(pltRows, pltCols)
     fig.set_figwidth(pltCols*9)
@@ -213,6 +213,7 @@ def plot_data_confirmed(theData, theLegends, theFile):
     inset.set_xticklabels(theLegends[2:])
     inset.grid(True, axis='y')
 
+    # Moving Average
     tWeight = np.ones(7)*1/7
     theDataConv = np.zeros((theData.shape[0]-6,theData.shape[1]))
     for i in range(1,theData.shape[1]):
@@ -223,6 +224,20 @@ def plot_data_confirmed(theData, theLegends, theFile):
     # The boxplot of all states
     axes[1,1].boxplot(theData[:,2:],labels=theLegends[2:])
     axes[1,1].set_title("Cases/Day")
+
+    # The Worsening??? & Improving??? States from moving avg
+    theDataDiff = np.diff(theDataConv[:,:], axis=0)
+    theDataDiff[-1,0] = np.mean(theDataDiff[-1,2:])
+    theDataDiff[-1,1] = theDataDiff[-1,0]
+    print("theDataDiff:{}".format(theDataDiff[-1,:]))
+    #theDiffP1 = np.percentile(theDataDiff[-1:,:], [15,85], axis=1)
+    #print("DiffP1:{}".format(theDiffP1))
+    theDiffP = np.percentile(theDataDiff[-1:,:], [15,85])
+    print("DiffP:{}".format(theDiffP))
+    theImprovingStates = theDataDiff[-1:,:] < theDiffP[0]
+    theWorseningStates = theDataDiff[-1:,:] > theDiffP[1]
+    _plot_data_selective(axes[2,0], theDataConv, theImprovingStates, "???ImprovingOr???States, Cases/Day, MovAvg", theLegends)
+    _plot_data_selective(axes[2,1], theDataConv, theWorseningStates, "???WorseningOr???States, Cases/Day, MovAvg", theLegends)
 
     fig.text(0.01, 0.002, "File:{}:DataDate:{}, hkvc".format(theFile, int(theDates[-1])))
     fig.set_tight_layout(True)
