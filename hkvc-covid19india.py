@@ -203,8 +203,8 @@ def plot_data_confirmed(theData, theLegends, theFile):
     theSevereStates[0,1] = False
     print("SevereStates", theSevereStates)
     print("SevereStates",  np.array(theLegends)[theSevereStates[0]])
-    _plot_data_selective(axes[0,0], theData, theSevereStates, "MoreCasesStates,85p, Cases/Day", theLegends)
-    _plot_data_selective(axes[0,1], theDataCum, theSevereStates, "MoreCasesStates,85p, CasesCumu", theLegends)
+    _plot_data_selective(axes[0,0], theData, theSevereStates, "StatesWithMoreCases, >85p, Cases/Day", theLegends)
+    _plot_data_selective(axes[0,1], theDataCum, theSevereStates, "StatesWithMoreCases, >85p, CasesCumu", theLegends)
     inset = axes[0,1].inset_axes([0.13,0.55,0.64,0.4])
     inset.bar(list(range(len(theDataCum[-1,2:]))), theDataCum[-1,2:])
     inset.set_xticks(np.arange(len(theLegends[2:])))
@@ -219,7 +219,7 @@ def plot_data_confirmed(theData, theLegends, theFile):
     for i in range(1,theData.shape[1]):
         theDataConv[:,i] = np.convolve(theData[:,i], tWeight, 'valid')
     theDataConv[:,0] = list(range(theDataConv.shape[0]))
-    _plot_data_selective(axes[1,0], theDataConv, theSevereStates, "MoreCasesStates,85p, Cases/Day,MovAvg", theLegends)
+    _plot_data_selective(axes[1,0], theDataConv, theSevereStates, "StatesWithMoreCases, >85p, Cases/Day,MovAvg", theLegends)
 
     # The boxplot of all states
     axes[1,1].boxplot(theData[:,2:],labels=theLegends[2:])
