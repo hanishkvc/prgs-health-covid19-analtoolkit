@@ -237,12 +237,12 @@ def plot_data_confirmed(theData, theLegends, theFile):
     theImprovingStates = theDataDiff[-1,:] < theDiffP[0]
     theWorseningStates = theDataDiff[-1,:] > theDiffP[1]
     print("INFO:ImprovingOr???:{}".format(theImprovingStates))
-    _plot_data_selective(axes[2,0], theDataConv, theImprovingStates, "???Rel2Self-ImprovingOr???States, Cases/Day, MovAvg", theLegends)
-    inset = axes[2,0].inset_axes([0.13,0.55,0.64,0.4])
+    _plot_data_selective(axes[2,1], theDataConv, theImprovingStates, "???Rel2Self-ImprovingOr???States, Cases/Day, MovAvg", theLegends)
+    inset = axes[2,1].inset_axes([0.13,0.55,0.64,0.4])
     inset.plot(theDataDiff[:,theImprovingStates])
     print("INFO:WorseningOr???:{}".format(theWorseningStates))
-    _plot_data_selective(axes[2,1], theDataConv, theWorseningStates, "???Rel2Self-WorseningOr???States, Cases/Day, MovAvg", theLegends)
-    inset = axes[2,1].inset_axes([0.13,0.55,0.64,0.4])
+    _plot_data_selective(axes[2,0], theDataConv, theWorseningStates, "???Rel2Self-WorseningOr???States, Cases/Day, MovAvg", theLegends)
+    inset = axes[2,0].inset_axes([0.13,0.55,0.64,0.4])
     inset.plot(theDataDiff[:,theWorseningStates])
 
     fig.text(0.01, 0.002, "File:{}:DataDate:{}, hkvc".format(theFile, int(theDates[-1])))
