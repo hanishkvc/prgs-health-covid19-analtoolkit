@@ -13,7 +13,7 @@ import libs.xmlparser.xmlparser as xp
 
 def get_data(ts):
     tFile = "data/mygov_in-{}.html".format(ts)
-    if os.path.exists(tFile):
+    if os.path.exists(tFile) and (os.path.getsize(tFile) > 1024):
         print("WARN:get_data:{} already exists".format(tFile))
         return tFile
     tCmd = [ "wget", "https://www.mygov.in/corona-data/covid19-statewise-status", "--output-document={}"]
