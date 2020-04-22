@@ -183,6 +183,7 @@ def _plot_data_selective(axes, theData, theSelection, sTitle, theLegends=None):
         axes.legend(np.array(theLegends)[theSelection])
 
 
+bInsetBoxplot = True
 def plot_data_confirmed(theData, theLegends, theFile):
 
     pltRows = 3
@@ -224,14 +225,16 @@ def plot_data_confirmed(theData, theLegends, theFile):
     # The boxplot of all states
     axes[1,1].boxplot(theData[:,2:],labels=theLegends[2:])
     axes[1,1].set_title("Cases/Day")
-    inset = axes[1,1].inset_axes([0.05,0.5,0.90,0.5])
-    inset.boxplot(theData[:,2:],labels=theLegends[2:])
-    inset.set_yscale("log")
-    for l in inset.lines:
-        l.set_alpha(0.2)
-    #inset.set_alpha(0.5)
-    inset.set_facecolor([1,1,1,0.1])
-    inset.tick_params(color=[1,0,0,0.2], labelcolor=[1,0,0,0.2])
+    if bInsetBoxplot:
+        inset = axes[1,1].inset_axes([0.0,0.5,1.0,0.5])
+        inset.boxplot(theData[:,2:],labels=theLegends[2:])
+        inset.set_yscale("log")
+        for l in inset.lines:
+            l.set_alpha(0.2)
+        #inset.set_alpha(0.5)
+        inset.set_facecolor([1,1,1,0.1])
+        inset.tick_params(color=[1,0,0,0.2], labelcolor=[1,0,0,0.2])
+        inset.grid(True, axis='y')
 
     # The Worsening??? & Improving??? States from moving avg
     theDataDiff = np.diff(theDataConv[:,:], axis=0)
@@ -324,3 +327,4 @@ for tFile in [theFile, theFileC, theFileG]:
         plot_data_general(theData, theLegends, tFile)
 
 
+# vim: set softtabstop=4 expandtab: #
