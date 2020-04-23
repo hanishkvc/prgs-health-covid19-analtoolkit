@@ -251,14 +251,17 @@ def plot_data_confirmed(theData, theLegends, theFile):
     _plot_data_selective(axes[2,1], theDataConv, theImprovingStates, "???Rel2Self-ImprovingOr???States, Cases/Day, MovAvg", theLegends)
     inset = axes[2,1].inset_axes([0.13,0.55,0.64,0.4])
     inset.plot(theDataDiff[:,theImprovingStates])
+    inset.set_facecolor([1,1,1,0.1])
     print("INFO:WorseningOr???:{}".format(theWorseningStates))
     _plot_data_selective(axes[2,0], theDataConv, theWorseningStates, "???Rel2Self-WorseningOr???States, Cases/Day, MovAvg", theLegends)
     inset = axes[2,0].inset_axes([0.13,0.55,0.64,0.4])
     inset.plot(theDataDiff[:,theWorseningStates])
+    inset.set_facecolor([1,1,1,0.1])
 
     fig.text(0.01, 0.002, "File:{}:DataDate:{}, hkvc".format(theFile, int(theDates[-1])))
     fig.set_tight_layout(True)
     fig.savefig("/tmp/{}.svg".format(os.path.basename(theFile)))
+    fig.savefig("/tmp/{}.png".format(os.path.basename(theFile)))
     plt.show()
 
 
@@ -297,6 +300,7 @@ def plot_data_general(theData, theLegend, theFile):
     fig.text(0.01, 0.002, "File:{}:DataDate:{}, hkvc".format(theFile, int(theDates[-1])))
     fig.set_tight_layout(True)
     fig.savefig("/tmp/{}.svg".format(os.path.basename(theFile)))
+    fig.savefig("/tmp/{}.png".format(os.path.basename(theFile)))
     plt.show()
 
 
