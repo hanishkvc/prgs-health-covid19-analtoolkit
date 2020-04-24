@@ -89,42 +89,6 @@ def _fix_use_movavg(ndIn, iMissing):
     return ndIn
 
 
-def get_data(ts, theUrl):
-    tFile = "data/{}-covid19india_org-{}".format(ts, os.path.basename(theUrl))
-    if os.path.exists(tFile) and (os.path.getsize(tFile)>128):
-        print("INFO:{}:already downloaded".format(tFile))
-        return tFile
-    print("INFO:{}:downloading...".format(tFile))
-    tCmd = [ "wget", theUrl, "--output-document={}"]
-    tCmd[2] = tCmd[2].format(tFile)
-    subprocess.call(tCmd)
-    return tFile
-
-
-def date2float(sDate):
-    if sDate == b'1': # Had to use to skip the genfromtxt names=True related line
-        return "Date"
-    sDate = sDate.decode('utf-8')
-    sDate = sDate.split('-')
-    iDate = (int(sDate[2])+2000)*10000
-    iDate += list(calendar.month_abbr).index(sDate[1])*100
-    iDate += int(sDate[0])
-    return float(iDate)
-
-
-def extract_data_csv(tFile):
-    # Instead of skipping the header line, load it has the names list
-    data = np.genfromtxt(tFile, delimiter=',', skip_header=0, names=True, converters={0: date2float})
-    legends = data.dtype.names[:-1]
-    # Needed to convert from the numpy.void rows to a proper nd-array
-    data = np.array(data.tolist())
-    # Skip the last column, which is invalid.
-    data = data[:,0:-1]
-    #data[12,1] = np.nan # For testing below logic to fix missing values is fine
-    data = _fix_use_movavg(data, np.nan)
-    return data, legends
-
-
 def extract_data_json(tFile):
     f = open(tFile)
     dD = json.load(f)
