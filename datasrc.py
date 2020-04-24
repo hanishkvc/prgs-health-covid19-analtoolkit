@@ -8,6 +8,7 @@ import time
 import subprocess
 import numpy
 import sys
+import calendar
 
 
 class DataSrc:
@@ -56,12 +57,17 @@ class DataSrc:
         raise NotImplementedError("DataSrc: Conv data to csv...")
 
 
-    def conv_date_str2int(self, sDate, delimiter="-", iY = 0, iM=1, iD=2, mType="int"):
+    def conv_date_str2int(self, sDate, delimiter="-", iY = 0, iM=1, iD=2, mType="int", bYear2Digit=False):
         sDate = sDate.decode('utf-8')
         sDate = sDate.split(delimiter)
         iDate = int(sDate[iY])*10000
+        if bYear2Digit:
+            iDate += 20000000
         print(iDate)
-        iDate += int(sDate[iM])*100
+        if mType == "int":
+            iDate += int(sDate[iM])*100
+        else:
+            iDate += list(calendar.month_abbr).index(sDate[iM])*100
         iDate += int(sDate[iD])
         return iDate
 
@@ -92,7 +98,7 @@ class Cov19InDataSrc(DataSrc):
 
 
     def load_data(self, fileName=None):
-        converters = { 0: self.conv_date_str2int }
+        converters = { 0: lambda x: self.conv_date_str2int(x, iY=2, iD=0, mType="abbr", bYear2Digit=True) }
         super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters)
 
 
