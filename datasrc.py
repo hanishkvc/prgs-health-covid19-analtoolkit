@@ -16,22 +16,27 @@ class DataSrc:
     bTestForceMissing = False
 
     def fix_missing_localmean(self, axis=0, iNear=3):
+        """ Fix missing value(s) using local mean among adjacent neighbours
+            Supports 2D array
+            """
         if self.bTestForceMissing:
             self.data[5,0] = numpy.NAN
         lNan = numpy.argwhere(numpy.isnan(self.data))
         for iCur in lNan:
+            iS = iCur[axis] - iNear
+            if iS < 0:
+                iS = 0
+            iE = iCur[axis] + iNear + 1
+            if iE > self.data.shape[axis]:
+                iE = self.data.shape[axis]
             if axis == 0:
-                iS = iCur[axis] - iNear
-                if iS < 0:
-                    iS = 0
-                iE = iCur[axis] + iNear + 1
-                if iE > self.data.shape[axis]:
-                    iE = self.data.shape[axis]
                 tData = self.data[iS:iE, iCur[1]]
-                self.data[tuple(iCur)] = 0
-                iMean = numpy.sum(tData)/(iE-iS-1)
-                print("INFO:DataSrc:fix_missing:pos={}:cur={}:new={}".format(iCur, tData, iMean))
-                self.data[tuple(iCur)] = iMean
+            else:
+                tData = self.data[iCur[0], iS:iE]
+            self.data[tuple(iCur)] = 0
+            iMean = numpy.sum(tData)/(iE-iS-1)
+            print("INFO:DataSrc:fix_missing:pos={}:curarea={}:new={}".format(iCur, tData, iMean))
+            self.data[tuple(iCur)] = iMean
 
 
     def download(self, theUrl = None, localFileName = None):
