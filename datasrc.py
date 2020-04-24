@@ -6,17 +6,20 @@
 import os
 import time
 import subprocess
+import numpy
+import sys
+
 
 class DataSrc:
 
-    def download(self, theUrl = None, dstFileName = None):
+    def download(self, theUrl = None, localFileName = None):
         if theUrl == None:
             theUrl = self.url
-        if dstFileName == None:
-            dstFileName = self.dstFileName
+        if localFileName == None:
+            localFileName = self.localFileName
         print("INFO:DataSrc:{}:downloading...".format(theUrl))
         tCmd = [ "wget", theUrl, "--output-document={}"]
-        tCmd[2] = tCmd[2].format(dstFileName)
+        tCmd[2] = tCmd[2].format(localFileName)
         subprocess.call(tCmd)
 
 
@@ -43,34 +46,51 @@ class DataSrc:
     def fetch_data(self, day=None, month=None, year=None):
         self._set_fetch_date(day, month, year)
         self._fix_url_filenames()
-        if os.path.exists(self.dstFileName) and (os.path.getsize(self.dstFileName)>128):
-            print("INFO:DataSrc:{}:already downloaded".format(self.dstFileName))
+        if os.path.exists(self.localFileName) and (os.path.getsize(self.localFileName)>128):
+            print("INFO:DataSrc:{}:already downloaded".format(self.localFileName))
             return True
         self.download()
+
+
+    def conv_data(self):
+        raise NotImplementedError("DataSrc: Conv data to csv...")
+
+
+    def load_data(self, fileName=None):
+        if fileName == None:
+            fileName = self.localFileName
+        print("INFO:DataSrc:Loading:{}".format(fileName))
+        self.data = numpy.genfromtxt(fileName, skip_header=1)
 
 
 
 class Cov19InDataSrc(DataSrc):
 
     #urlFmt = "http://api.covid19india.org/states_daily_csv/confirmed.csv"
-    fileNameFmt = "confirmed.csv"
+    nwFileNameFmt = "confirmed.csv"
     urlFmt = "http://api.covid19india.org/states_daily_csv/{}"
-    dstFileNameFmt = "data/{}-{}{:02}{:02}-{}"
+    localFileNameFmt = "data/{}-{}{:02}{:02}-{}"
 
     def __init__(self):
         self.name = "Cov19In"
 
 
     def _fix_url_filenames(self):
-        self.fileName = self.fileNameFmt
-        self.url = self.urlFmt.format(self.fileName)
-        self.dstFileName = self.dstFileNameFmt.format(self.name, self.fd_year, self.fd_month, self.fd_day, self.fileName)
+        self.nwFileName = self.nwFileNameFmt
+        self.url = self.urlFmt.format(self.nwFileName)
+        self.localFileName = self.localFileNameFmt.format(self.name, self.fd_year, self.fd_month, self.fd_day, self.nwFileName)
 
 
 
 if __name__ == "__main__":
     theDataSrc = Cov19InDataSrc()
-    theDataSrc.fetch_data()
+    fileName = None
+    if len(sys.argv) == 1:
+        theDataSrc.fetch_data()
+    else:
+        fileName = sys.argv[1]
+    theDataSrc.load_data(fileName)
+    print(theDataSrc.data)
 
 
 
