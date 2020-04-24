@@ -57,20 +57,20 @@ class DataSrc:
 
 
     def conv_date_str2int(self, sDate, delimiter="-", iY = 0, iM=1, iD=2, mType="int"):
-        print(type(sDate))
         sDate = sDate.decode('utf-8')
         sDate = sDate.split(delimiter)
         iDate = int(sDate[iY])*10000
+        print(iDate)
         iDate += int(sDate[iM])*100
         iDate += int(sDate[iD])
         return iDate
 
 
-    def load_data(self, fileName=None, converters=None):
+    def load_data(self, fileName=None, delimiter=None, skip_header=None, converters=None):
         if fileName == None:
             fileName = self.localFileName
         print("INFO:DataSrc:Loading:{}".format(fileName))
-        self.data = numpy.genfromtxt(fileName, delimiter=",", skip_header=1, converters=converters)
+        self.data = numpy.genfromtxt(fileName, delimiter=delimiter, skip_header=skip_header, converters=converters)
 
 
 
@@ -93,7 +93,7 @@ class Cov19InDataSrc(DataSrc):
 
     def load_data(self, fileName=None):
         converters = { 0: self.conv_date_str2int }
-        super().load_data(fileName=fileName, converters=converters)
+        super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters)
 
 
 
