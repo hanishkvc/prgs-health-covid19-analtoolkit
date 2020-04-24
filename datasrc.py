@@ -63,7 +63,6 @@ class DataSrc:
         iDate = int(sDate[iY])*10000
         if bYear2Digit:
             iDate += 20000000
-        print(iDate)
         if mType == "int":
             iDate += int(sDate[iM])*100
         else:
@@ -97,8 +96,12 @@ class Cov19InDataSrc(DataSrc):
         self.localFileName = self.localFileNameFmt.format(self.name, self.fd_year, self.fd_month, self.fd_day, self.nwFileName)
 
 
+    def conv_date(self, sDate):
+        return float(self.conv_date_str2int(sDate, iY=2, iD=0, mType="abbr", bYear2Digit=True))
+
+
     def load_data(self, fileName=None):
-        converters = { 0: lambda x: self.conv_date_str2int(x, iY=2, iD=0, mType="abbr", bYear2Digit=True) }
+        converters = { 0: lambda x: self.conv_date(x) }
         super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters)
 
 
