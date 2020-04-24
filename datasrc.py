@@ -56,11 +56,21 @@ class DataSrc:
         raise NotImplementedError("DataSrc: Conv data to csv...")
 
 
-    def load_data(self, fileName=None):
+    def conv_date_str2int(self, sDate, delimiter="-", iY = 0, iM=1, iD=2, mType="int"):
+        print(type(sDate))
+        sDate = sDate.decode('utf-8')
+        sDate = sDate.split(delimiter)
+        iDate = int(sDate[iY])*10000
+        iDate += int(sDate[iM])*100
+        iDate += int(sDate[iD])
+        return iDate
+
+
+    def load_data(self, fileName=None, converters=None):
         if fileName == None:
             fileName = self.localFileName
         print("INFO:DataSrc:Loading:{}".format(fileName))
-        self.data = numpy.genfromtxt(fileName, skip_header=1)
+        self.data = numpy.genfromtxt(fileName, delimiter=",", skip_header=1, converters=converters)
 
 
 
@@ -79,6 +89,11 @@ class Cov19InDataSrc(DataSrc):
         self.nwFileName = self.nwFileNameFmt
         self.url = self.urlFmt.format(self.nwFileName)
         self.localFileName = self.localFileNameFmt.format(self.name, self.fd_year, self.fd_month, self.fd_day, self.nwFileName)
+
+
+    def load_data(self, fileName=None):
+        converters = { 0: self.conv_date_str2int }
+        super().load_data(fileName=fileName, converters=converters)
 
 
 
