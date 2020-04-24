@@ -13,6 +13,27 @@ import calendar
 
 class DataSrc:
 
+    bTestForceMissing = False
+
+    def fix_missing_localmean(self, axis=0, iNear=3):
+        if self.bTestForceMissing:
+            self.data[5,0] = numpy.NAN
+        lNan = numpy.argwhere(numpy.isnan(self.data))
+        for iCur in lNan:
+            if axis == 0:
+                iS = iCur[axis] - iNear
+                if iS < 0:
+                    iS = 0
+                iE = iCur[axis] + iNear + 1
+                if iE > self.data.shape[axis]:
+                    iE = self.data.shape[axis]
+                tData = self.data[iS:iE, iCur[1]]
+                self.data[tuple(iCur)] = 0
+                iMean = numpy.sum(tData)/(iE-iS-1)
+                print("INFO:DataSrc:fix_missing:pos={}:cur={}:new={}".format(iCur, tData, iMean))
+                self.data[tuple(iCur)] = iMean
+
+
     def download(self, theUrl = None, localFileName = None):
         if theUrl == None:
             theUrl = self.url
@@ -130,6 +151,7 @@ if __name__ == "__main__":
     theDataSrc.load_data(fileName)
     print(theDataSrc.hdr)
     print(theDataSrc.data)
+    theDataSrc.fix_missing_localmean()
 
 
 
