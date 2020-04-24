@@ -71,10 +71,22 @@ class DataSrc:
         return iDate
 
 
-    def load_data(self, fileName=None, delimiter=None, skip_header=None, converters=None):
+    def load_data(self, fileName=None, delimiter=None, skip_header=None, converters=None, iHdrLine=None):
+        """
+            iHdrLine: the column header line among the skip_header lines, starts at 0
+            """
         if fileName == None:
             fileName = self.localFileName
         print("INFO:DataSrc:Loading:{}".format(fileName))
+        if skip_header != None:
+            f = open(fileName)
+            i = 0
+            for l in f:
+                if i >= skip_header:
+                    break
+                if (iHdrLine != None) and (i == iHdrLine):
+                    self.hdr = l.split(delimiter)
+                i += 1
         self.data = numpy.genfromtxt(fileName, delimiter=delimiter, skip_header=skip_header, converters=converters)
 
 
@@ -102,7 +114,9 @@ class Cov19InDataSrc(DataSrc):
 
     def load_data(self, fileName=None):
         converters = { 0: lambda x: self.conv_date(x) }
-        super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters)
+        super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters, iHdrLine=0)
+        self.hdr = self.hdr[:-1]
+        self.data = self.data[:,:-1]
 
 
 
@@ -114,6 +128,7 @@ if __name__ == "__main__":
     else:
         fileName = sys.argv[1]
     theDataSrc.load_data(fileName)
+    print(theDataSrc.hdr)
     print(theDataSrc.data)
 
 
