@@ -146,17 +146,47 @@ class Cov19InDataSrc(DataSrc):
 
 
 
+class EUWorldDataSrc(DataSrc):
+
+    #url="https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-2020-03-20.xlsx"
+    nwFileNameFmt = "COVID-19-geographic-disbtribution-worldwide-{}-{:02}-{:02}.xlsx"
+    urlFmt = "https://www.ecdc.europa.eu/sites/default/files/documents/{}"
+    #localFileNameFmt = "data/{}-{}{:02}{:02}-{}"
+    localFileNameFmt = "data/{}-{}{:02}{:02}"
+
+    def __init__(self):
+        self.name = "EUWorld"
+
+
+    def _fix_url_filenames(self):
+        self.nwFileName = self.nwFileNameFmt.format(self.fd_year, self.fd_month, self.fd_day)
+        self.url = self.urlFmt.format(self.nwFileName)
+        self.localFileName = self.localFileNameFmt.format(self.name, self.fd_year, self.fd_month, self.fd_day)
+
+
+    def conv_date(self, sDate):
+        return float(self.conv_date_str2int(sDate, iY=2, iD=0, mType="abbr", bYear2Digit=True))
+
+
+    def load_data(self, fileName=None):
+        converters = { 0: lambda x: self.conv_date(x) }
+        super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters, iHdrLine=0)
+        self.hdr = self.hdr[:-1]
+        self.data = self.data[:,:-1]
+
+
+
 if __name__ == "__main__":
-    theDataSrc = Cov19InDataSrc()
-    fileName = None
-    if len(sys.argv) == 1:
-        theDataSrc.fetch_data()
-    else:
-        fileName = sys.argv[1]
-    theDataSrc.load_data(fileName)
-    print(theDataSrc.hdr)
-    print(theDataSrc.data)
-    theDataSrc.fix_missing_localmean()
+    for theDataSrc in [ Cov19InDataSrc(), EUWorldDataSrc()]:
+        fileName = None
+        if len(sys.argv) == 1:
+            theDataSrc.fetch_data()
+        else:
+            fileName = sys.argv[1]
+        theDataSrc.load_data(fileName)
+        print(theDataSrc.hdr)
+        print(theDataSrc.data)
+        theDataSrc.fix_missing_localmean()
 
 
 
