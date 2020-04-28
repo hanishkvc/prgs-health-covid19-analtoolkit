@@ -9,6 +9,7 @@ import subprocess
 import numpy
 import sys
 import calendar
+import matplotlib.pyplot as plt
 
 
 class DataSrc:
@@ -246,7 +247,7 @@ class EUWorldDataSrc(DataSrc):
         numRows = maxDate-minDate+1
         numRows = len(numpy.unique(self.data[:,0]))
         numCols = self.data[:,2].max()+1
-        data = numpy.ones((numRows, numCols))
+        data = numpy.ones((numRows, numCols)) * numpy.nan
         iDate = 0
         for date in numpy.arange(minDate, maxDate+1):
             dateData = self.data[self.data[:,0] == date]
@@ -256,7 +257,8 @@ class EUWorldDataSrc(DataSrc):
             if len(dateData) >= 1:
                 iDate += 1
         print(minDate, maxDate)
-        self.oldData = self.Data
+        self.olddata = self.data
+        self.hdr = [ "date" ] + self.geoIds
         self.data = data
 
 
@@ -268,9 +270,10 @@ class EUWorldDataSrc(DataSrc):
 
 
     def load_data(self, fileName=None):
-        super().load_data(fileName=fileName, delimiter=",", skip_header=1, iHdrLine=0)
-        self.hdr = self.hdr[:-1]
-        self.data = self.data[:,:-1]
+        #super().load_data(fileName=fileName, delimiter=",", skip_header=1, iHdrLine=0)
+        #self.hdr = self.hdr[:-1]
+        #self.data = self.data[:,:-1]
+        None
 
 
 
@@ -288,7 +291,7 @@ if __name__ == "__main__":
         theDataSrc.load_data(fileName)
         print(theDataSrc.hdr)
         print(theDataSrc.data)
-        theDataSrc.fix_missing_localmean()
+        #theDataSrc.fix_missing_localmean()
 
 
 
