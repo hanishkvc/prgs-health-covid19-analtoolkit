@@ -212,6 +212,8 @@ class EUWorldDataSrc(DataSrc):
 
 
     def _fetchconv_postproc(self):
+        """ dumb, but simple for now
+            """
         fIn = open(self.localFileName)
         fOutName = "{}.tmp".format(self.localFileName)
         fOut = open(fOutName, "w+")
@@ -239,8 +241,23 @@ class EUWorldDataSrc(DataSrc):
         converters = { 0: lambda x: self.conv_date(x), cols[2]: lambda x: self.conv_geoid(x) }
         print(cols)
         super().load_data(fileName=fileName, dtype=int, delimiter=",", skip_header=1, converters=converters, iHdrLine=0, usecols=cols)
-        print(self.data)
-        input("DBG: CHeck postproc data")
+        minDate = self.data[:,0].min()
+        maxDate = self.data[:,0].max()
+        numRows = maxDate-minDate+1
+        numRows = len(numpy.unique(self.data[:,0]))
+        numCols = self.data[:,2].max()+1
+        data = numpy.ones((numRows, numCols))
+        iDate = 0
+        for date in numpy.arange(minDate, maxDate+1):
+            dateData = self.data[self.data[:,0] == date]
+            for cur in dateData:
+                data[iDate,0] = date
+                data[iDate,cur[2]] = cur[1]
+            if len(dateData) >= 1:
+                iDate += 1
+        print(minDate, maxDate)
+        self.oldData = self.Data
+        self.data = data
 
 
     def conv_date(self, sDate):
