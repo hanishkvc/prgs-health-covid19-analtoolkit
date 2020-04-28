@@ -295,7 +295,11 @@ if __name__ == "__main__":
         print(theDataSrc.hdr)
         print(theDataSrc.data)
         #theDataSrc.fix_missing_localmean()
+        plt.subplot(2,1,1)
         plt.plot(theDataSrc.data[:,2:])
+        plt.yscale("log")
+        plt.subplot(2,1,2)
+        plt.boxplot(theDataSrc.data[:,2:])
         plt.show()
 
 
