@@ -202,6 +202,15 @@ class EUWorldDataSrc(DataSrc):
             if l.find('"') == -1:
                 fOut.write(l)
                 continue
+            bInDQuote = False
+            lOut = ""
+            for c in l:
+                if c == '"':
+                    bInDQuote = not bInDQuote
+                if bInDQuote and (c == ','):
+                    c = '_'
+                lOut += c
+            fOut.write(lOut)
         fIn.close()
         fOut.close()
         os.rename(fOutName, self.localFileName)
