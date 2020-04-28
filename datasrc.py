@@ -153,7 +153,7 @@ class EUWorldDataSrc(DataSrc):
     nwFileNameFmt = "COVID-19-geographic-disbtribution-worldwide-{}-{:02}-{:02}.xlsx"
     urlFmt = "https://www.ecdc.europa.eu/sites/default/files/documents/{}"
     #localFileNameFmt = "data/{}-{}{:02}{:02}-{}"
-    localFileNameFmt = "data/{}-{}{:02}{:02}"
+    localFileNameFmt = "data/{}-{}{:02}{:02}.xlsx"
 
     def __init__(self):
         self.name = "EUWorld"
