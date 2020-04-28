@@ -140,7 +140,7 @@ class DataSrc:
         if fileName == None:
             fileName = self.localFileName
         print("INFO:DataSrc:Loading:{}".format(fileName))
-        self.data = numpy.genfromtxt(fileName, delimiter=delimiter, skip_header=skip_header, converters=converters, usecols=None)
+        self.data = numpy.genfromtxt(fileName, delimiter=delimiter, skip_header=skip_header, converters=converters, usecols=usecols)
         if (skip_header != None) and (iHdrLine != None):
             if (iHdrLine < skip_header):
                 self.hdr = self._load_hdr(fileName, delimiter, iHdrLine)
@@ -225,14 +225,18 @@ class EUWorldDataSrc(DataSrc):
         cols = []
         for i in self.fields:
             cols.append(hdr.index(i))
+        cols = tuple(cols)
         converters = { 0: lambda x: self.conv_date(x) }
+        print(cols)
         super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters, iHdrLine=0, usecols=cols)
         print(self.data)
         input("DBG: CHeck postproc data")
 
 
     def conv_date(self, sDate):
-        return float(self.conv_date_str2int(sDate, delimiter="/", iY=2, iD=0, mType="int", bYear2Digit=True))
+        fDate = float(self.conv_date_str2int(sDate, delimiter="/", iY=2, iD=0, mType="int", bYear2Digit=False))
+        #print(sDate, fDate)
+        return fDate
 
 
     def load_data(self, fileName=None):
