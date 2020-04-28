@@ -123,6 +123,16 @@ class DataSrc:
         return iDate
 
 
+    def _load_hdr(self, fileName, delimiter, iHdrLine):
+        f = open(fileName)
+        i = 0
+        for l in f:
+            if (i == iHdrLine):
+                return l.split(delimiter)
+            i += 1
+        raise ImportError("DataSrc:_load_hdr: No header found")
+
+
     def load_data(self, fileName=None, delimiter=None, skip_header=None, converters=None, iHdrLine=None):
         """
             iHdrLine: the column header line among the skip_header lines, starts at 0
@@ -130,16 +140,12 @@ class DataSrc:
         if fileName == None:
             fileName = self.localFileName
         print("INFO:DataSrc:Loading:{}".format(fileName))
-        if skip_header != None:
-            f = open(fileName)
-            i = 0
-            for l in f:
-                if i >= skip_header:
-                    break
-                if (iHdrLine != None) and (i == iHdrLine):
-                    self.hdr = l.split(delimiter)
-                i += 1
         self.data = numpy.genfromtxt(fileName, delimiter=delimiter, skip_header=skip_header, converters=converters)
+        if (skip_header != None) and (iHdrLine != None):
+            if (iHdrLine < skip_header):
+                self.hdr = self._load_hdr(fileName, delimiter, iHdrLine)
+            else:
+                raise ImportError("DataSrc:load_data: HeaderLine {} >= SkipHeader {}".format(iHdrLine, skip_header))
 
 
 
@@ -247,4 +253,4 @@ if __name__ == "__main__":
 
 
 
-# vim: set softtabstop=4 expandtab: #
+# vim: set softtabstop=4 expandtab shiftwidth=4: #
