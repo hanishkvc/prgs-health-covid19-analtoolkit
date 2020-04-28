@@ -71,7 +71,7 @@ class DataSrc:
             self.fd_year = year
 
 
-    def fetch_data(self, day=None, month=None, year=None):
+    def _fetch_data(self, day=None, month=None, year=None):
         self._set_fetch_date(day, month, year)
         self._fix_url_filenames()
         if os.path.exists(self.localFileName) and (os.path.getsize(self.localFileName)>128):
@@ -80,8 +80,31 @@ class DataSrc:
         self.download()
 
 
+    def conv_xls2csv(self, xls, csv):
+        # For now use as a program, later may change to use as a library
+        tCmd = [ "./libs/hkvc_pyuno_toolkit/hkvc_pyuno_toolkit.py", "ss2csv", xls, csv ]
+        if subprocess.call(tCmd) != 0:
+            raise OSError("DataSrc:ConvXls2Csv:{}".format(tCmd))
+
+
+    def _conv_postproc(self):
+        raise NotImplementedError("DataSrc:_conv_postproc: of data converted to csv...")
+
+
     def conv_data(self):
-        raise NotImplementedError("DataSrc: Conv data to csv...")
+        if self.localFileType == "xls":
+            xlsFN = self.localFileName
+            (tBase, tExt) = os.path.splitext(xlsFN)
+            csvFN = "{}.csv".format(tBase)
+            self.conv_xls2csv(xlsFN, csvFN)
+            self.localFileName = csvFN
+            self.localFileType = "csv"
+            self._conv_postproc()
+
+
+    def fetch_data(self, day=None, month=None, year=None):
+        _fetch_data(self, day, month, year)
+        conv_data()
 
 
     def conv_date_str2int(self, sDate, delimiter="-", iY = 0, iM=1, iD=2, mType="int", bYear2Digit=False):
@@ -133,6 +156,7 @@ class Cov19InDataSrc(DataSrc):
         self.nwFileName = self.nwFileNameFmt
         self.url = self.urlFmt.format(self.nwFileName)
         self.localFileName = self.localFileNameFmt.format(self.name, self.fd_year, self.fd_month, self.fd_day, self.nwFileName)
+        self.localFileType = "csv"
 
 
     def conv_date(self, sDate):
@@ -163,6 +187,7 @@ class EUWorldDataSrc(DataSrc):
         self.nwFileName = self.nwFileNameFmt.format(self.fd_year, self.fd_month, self.fd_day)
         self.url = self.urlFmt.format(self.nwFileName)
         self.localFileName = self.localFileNameFmt.format(self.name, self.fd_year, self.fd_month, self.fd_day)
+        self.localFileType = "xls"
 
 
     def conv_date(self, sDate):
