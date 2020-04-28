@@ -133,14 +133,14 @@ class DataSrc:
         raise ImportError("DataSrc:_load_hdr: No header found")
 
 
-    def load_data(self, fileName=None, delimiter=None, skip_header=None, converters=None, iHdrLine=None):
+    def load_data(self, fileName=None, delimiter=None, skip_header=None, converters=None, iHdrLine=None, usecols=None):
         """
             iHdrLine: the column header line among the skip_header lines, starts at 0
             """
         if fileName == None:
             fileName = self.localFileName
         print("INFO:DataSrc:Loading:{}".format(fileName))
-        self.data = numpy.genfromtxt(fileName, delimiter=delimiter, skip_header=skip_header, converters=converters)
+        self.data = numpy.genfromtxt(fileName, delimiter=delimiter, skip_header=skip_header, converters=converters, usecols=None)
         if (skip_header != None) and (iHdrLine != None):
             if (iHdrLine < skip_header):
                 self.hdr = self._load_hdr(fileName, delimiter, iHdrLine)
@@ -190,6 +190,7 @@ class EUWorldDataSrc(DataSrc):
 
     def __init__(self):
         self.name = "EUWorld"
+        self.fields = [ "dateRep", "cases", "geoId" ]
 
 
     def _fix_url_filenames(self):
@@ -220,8 +221,14 @@ class EUWorldDataSrc(DataSrc):
         fIn.close()
         fOut.close()
         os.rename(fOutName, self.localFileName)
+        hdr = self._load_hdr(self.localFileName, ",", 0)
+        cols = []
+        for i in self.fields:
+            cols.append(hdr.index(i))
         converters = { 0: lambda x: self.conv_date(x) }
-        super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters, iHdrLine=0)
+        super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters, iHdrLine=0, usecols=cols)
+        print(self.data)
+        input("DBG: CHeck postproc data")
 
 
     def conv_date(self, sDate):
