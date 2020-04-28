@@ -245,7 +245,7 @@ class EUWorldDataSrc(DataSrc):
         maxDate = self.data[:,0].max()
         numRows = maxDate-minDate+1
         numRows = len(numpy.unique(self.data[:,0]))
-        numCols = self.data[:,2].max()+1
+        numCols = self.data[:,2].max()+1+2
         #data = numpy.ones((numRows, numCols)) * numpy.nan
         data = numpy.zeros((numRows, numCols))
         iDate = 0
@@ -253,12 +253,12 @@ class EUWorldDataSrc(DataSrc):
             dateData = self.data[self.data[:,0] == date]
             for cur in dateData:
                 data[iDate,0] = date
-                data[iDate,cur[2]] = cur[1]
+                data[iDate,cur[2]+2] = cur[1]
             if len(dateData) >= 1:
                 iDate += 1
         print(minDate, maxDate)
         self.olddata = self.data
-        self.hdr = [ "date" ] + self.geoIds
+        self.hdr = [ "date", "Total2Calc" ] + self.geoIds
         self.data = data
 
 
@@ -295,7 +295,7 @@ if __name__ == "__main__":
         print(theDataSrc.hdr)
         print(theDataSrc.data)
         #theDataSrc.fix_missing_localmean()
-        plt.plot(theDataSrc.data[:,1:])
+        plt.plot(theDataSrc.data[:,2:])
         plt.show()
 
 
