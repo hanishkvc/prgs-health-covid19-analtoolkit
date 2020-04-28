@@ -47,7 +47,8 @@ class DataSrc:
         print("INFO:DataSrc:{}:downloading...".format(theUrl))
         tCmd = [ "wget", theUrl, "--output-document={}"]
         tCmd[2] = tCmd[2].format(localFileName)
-        subprocess.call(tCmd)
+        if subprocess.call(tCmd) != 0:
+            raise ConnectionError("DataSrc:{}: Download data from net failed".format(theUrl))
 
 
     def _fix_url_filenames(self):
@@ -179,10 +180,14 @@ class EUWorldDataSrc(DataSrc):
 if __name__ == "__main__":
     for theDataSrc in [ Cov19InDataSrc(), EUWorldDataSrc()]:
         fileName = None
-        if len(sys.argv) == 1:
-            theDataSrc.fetch_data()
-        else:
-            fileName = sys.argv[1]
+        try:
+            if len(sys.argv) == 1:
+                theDataSrc.fetch_data()
+            else:
+                fileName = sys.argv[1]
+        except ConnectionError as e:
+            print("ERRR:{}".format(e))
+            continue
         theDataSrc.load_data(fileName)
         print(theDataSrc.hdr)
         print(theDataSrc.data)
