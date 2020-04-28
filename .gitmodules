@@ -1,3 +1,6 @@
 [submodule "libs/xmlparser"]
 	path = libs/xmlparser
 	url = https://github.com/hanishkvc/libs-python-xmlparser.git
+[submodule "libs/hkvc_pyuno_toolkit"]
+	path = libs/hkvc_pyuno_toolkit
+	url = https://github.com/hanishkvc/prgs-libreoffice-pyuno_toolkit.git
