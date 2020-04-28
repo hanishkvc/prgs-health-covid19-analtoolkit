@@ -100,13 +100,13 @@ class DataSrc:
             self.localFileName = csvFN
             self.localFileType = "proc"
 
-        if self.localFileType == "proc"
+        if self.localFileType == "proc":
             self._fetchconv_postproc()
 
 
     def fetch_data(self, day=None, month=None, year=None):
-        _fetch_data(self, day, month, year)
-        conv_data()
+        self._fetch_data(day, month, year)
+        self.conv_data()
 
 
     def conv_date_str2int(self, sDate, delimiter="-", iY = 0, iM=1, iD=2, mType="int", bYear2Digit=False):
@@ -158,6 +158,7 @@ class Cov19InDataSrc(DataSrc):
         self.nwFileName = self.nwFileNameFmt
         self.url = self.urlFmt.format(self.nwFileName)
         self.localFileName = self.localFileNameFmt.format(self.name, self.fd_year, self.fd_month, self.fd_day, self.nwFileName)
+        # fetched file is csv and has data in required way, so no need for postproc; so set to "csv"
         self.localFileType = "csv"
 
 
@@ -189,7 +190,12 @@ class EUWorldDataSrc(DataSrc):
         self.nwFileName = self.nwFileNameFmt.format(self.fd_year, self.fd_month, self.fd_day)
         self.url = self.urlFmt.format(self.nwFileName)
         self.localFileName = self.localFileNameFmt.format(self.name, self.fd_year, self.fd_month, self.fd_day)
+        # fetched file is xlsx and also needs postproc; Set to "xls"
         self.localFileType = "xls"
+
+
+    def _fetchconv_postproc(self):
+        None
 
 
     def conv_date(self, sDate):
