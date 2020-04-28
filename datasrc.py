@@ -191,6 +191,7 @@ class EUWorldDataSrc(DataSrc):
     def __init__(self):
         self.name = "EUWorld"
         self.fields = [ "dateRep", "cases", "geoId" ]
+        self.geoIds = []
 
 
     def _fix_url_filenames(self):
@@ -199,6 +200,15 @@ class EUWorldDataSrc(DataSrc):
         self.localFileName = self.localFileNameFmt.format(self.name, self.fd_year, self.fd_month, self.fd_day)
         # fetched file is xlsx and also needs postproc; Set to "xls"
         self.localFileType = "xls"
+
+
+    def conv_geoid(self, sGeoId):
+        try:
+            i = self.geoIds.index(sGeoId)
+        except ValueError:
+            self.geoIds.append(sGeoId)
+            i = len(self.geoIds) - 1
+        return i
 
 
     def _fetchconv_postproc(self):
@@ -226,7 +236,7 @@ class EUWorldDataSrc(DataSrc):
         for i in self.fields:
             cols.append(hdr.index(i))
         cols = tuple(cols)
-        converters = { 0: lambda x: self.conv_date(x) }
+        converters = { 0: lambda x: self.conv_date(x), cols[2]: lambda x: self.conv_geoid(x) }
         print(cols)
         super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters, iHdrLine=0, usecols=cols)
         print(self.data)
@@ -234,9 +244,10 @@ class EUWorldDataSrc(DataSrc):
 
 
     def conv_date(self, sDate):
-        fDate = float(self.conv_date_str2int(sDate, delimiter="/", iY=2, iD=0, mType="int", bYear2Digit=False))
+        iDate = self.conv_date_str2int(sDate, delimiter="/", iY=2, iD=0, mType="int", bYear2Digit=False)
+        fDate = float(iDate)
         #print(sDate, fDate)
-        return fDate
+        return iDate
 
 
     def load_data(self, fileName=None):
