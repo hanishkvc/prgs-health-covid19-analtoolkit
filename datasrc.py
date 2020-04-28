@@ -195,16 +195,16 @@ class EUWorldDataSrc(DataSrc):
 
 
     def _fetchconv_postproc(self):
-        None
+        converters = { 0: lambda x: self.conv_date(x) }
+        super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters, iHdrLine=0)
 
 
     def conv_date(self, sDate):
-        return float(self.conv_date_str2int(sDate, iY=2, iD=0, mType="abbr", bYear2Digit=True))
+        return float(self.conv_date_str2int(sDate, delimiter="/", iY=2, iD=0, mType="int", bYear2Digit=True))
 
 
     def load_data(self, fileName=None):
-        converters = { 0: lambda x: self.conv_date(x) }
-        super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters, iHdrLine=0)
+        super().load_data(fileName=fileName, delimiter=",", skip_header=1, iHdrLine=0)
         self.hdr = self.hdr[:-1]
         self.data = self.data[:,:-1]
 
