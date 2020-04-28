@@ -195,6 +195,16 @@ class EUWorldDataSrc(DataSrc):
 
 
     def _fetchconv_postproc(self):
+        fIn = open(self.localFileName)
+        fOutName = "{}.tmp".format(self.localFileName)
+        fOut = open(fOutName, "w+")
+        for l in fIn:
+            if l.find('"') == -1:
+                fOut.write(l)
+                continue
+        fIn.close()
+        fOut.close()
+        os.rename(fOutName, self.localFileName)
         converters = { 0: lambda x: self.conv_date(x) }
         super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters, iHdrLine=0)
 
