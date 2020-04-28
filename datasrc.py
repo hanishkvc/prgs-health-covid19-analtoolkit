@@ -87,8 +87,8 @@ class DataSrc:
             raise OSError("DataSrc:ConvXls2Csv:{}".format(tCmd))
 
 
-    def _conv_postproc(self):
-        raise NotImplementedError("DataSrc:_conv_postproc: of data converted to csv...")
+    def _fetchconv_postproc(self):
+        raise NotImplementedError("DataSrc:_fetchconv_postproc: of data fetched and or converted to csv...")
 
 
     def conv_data(self):
@@ -98,8 +98,10 @@ class DataSrc:
             csvFN = "{}.csv".format(tBase)
             self.conv_xls2csv(xlsFN, csvFN)
             self.localFileName = csvFN
-            self.localFileType = "csv"
-            self._conv_postproc()
+            self.localFileType = "proc"
+
+        if self.localFileType == "proc"
+            self._fetchconv_postproc()
 
 
     def fetch_data(self, day=None, month=None, year=None):
