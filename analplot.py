@@ -35,6 +35,19 @@ class AnalPlot:
         self.data["{}.rel2sumColHdr".format(dataSel)] = dCH
 
 
+    def calc_movavg(self, dataSel="raw", avgOver=7):
+        d = self.data[dataSel]
+        dCH = self.data["{}ColHdr".format(dataSel)]
+        dRH = self.data["{}RowHdr".format(dataSel)]
+        tWeight = np.ones(avgOver)/avgOver
+        dataConv = np.zeros((d.shape[0]-(avgOver-1),d.shape[1]))
+        for i in range(1,d.shape[1]):
+            dataConv[:,i] = np.convolve(d[:,i], tWeight, 'valid')
+        self.data["{}.movavg".format(dataSel)] = dataConv
+        self.data["{}.movavgRowHdr".format(dataSel)] = list(range(dataConv.shape[0]))
+        self.data["{}.movavgColHdr".format(dataSel)] = dCH
+
+
     def plot(self, ax, dataSel, plotSel=None, plotLegend=None, plotXTickGap=None):
         d = self.data[dataSel]
         dCH = self.data["{}ColHdr".format(dataSel)]
