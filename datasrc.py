@@ -240,7 +240,7 @@ class EUWorldDataSrc(DataSrc):
         cols = tuple(cols)
         converters = { 0: lambda x: self.conv_date(x), cols[2]: lambda x: self.conv_geoid(x) }
         print(cols)
-        super().load_data(fileName=fileName, dtype=int, delimiter=",", skip_header=1, converters=converters, iHdrLine=0, usecols=cols)
+        super().load_data(fileName=self.localFileName, dtype=int, delimiter=",", skip_header=1, converters=converters, iHdrLine=0, usecols=cols)
         minDate = self.data[:,0].min()
         maxDate = self.data[:,0].max()
         numRows = maxDate-minDate+1
