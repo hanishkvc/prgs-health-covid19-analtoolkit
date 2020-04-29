@@ -7,6 +7,7 @@ import sys
 import datasrc as ds
 import analplot
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 
@@ -17,6 +18,7 @@ ap = analplot.AnalPlot()
 
 fig, axes = plt.subplots(4,2)
 iCur = 0
+sGlobalMsg = ""
 for ds in [ dsC19In, dsEU ]:
     ds.fetch_data()
     ds.load_data()
@@ -28,8 +30,14 @@ for ds in [ dsC19In, dsEU ]:
     ap.plot(axes[2,iCur], "raw.rel2sum")
     ap.calc_movavg()
     ap.plot(axes[3,iCur], "raw.movavg")
+    sGlobalMsg += " {}:DataDate:{}-{};".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
     iCur += 1
 
+sGlobalMsg += " hkvc"
+fig.text(0.01, 0.002, sGlobalMsg)
+fig.set_tight_layout(True)
+tFName = sGlobalMsg.replace(";","_N_").replace(" ","_")
+fig.savefig("/tmp/{}.svg".format(tFName))
 plt.show()
 
 
