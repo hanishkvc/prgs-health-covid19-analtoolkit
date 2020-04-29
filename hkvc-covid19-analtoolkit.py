@@ -15,7 +15,7 @@ dsC19In = ds.Cov19InDataSrc()
 
 ap = analplot.AnalPlot()
 
-fig, axes = plt.subplots(2,2)
+fig, axes = plt.subplots(3,2)
 iCur = 0
 for ds in [ dsC19In, dsEU ]:
     ds.fetch_data()
@@ -24,6 +24,8 @@ for ds in [ dsC19In, dsEU ]:
     ap.plot(axes[0,iCur], "raw")
     ap.calc_rel2mean()
     ap.plot(axes[1,iCur], "raw.rel2mean")
+    ap.calc_rel2sum()
+    ap.plot(axes[2,iCur], "raw.rel2sum")
     iCur += 1
 
 plt.show()

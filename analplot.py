@@ -26,6 +26,15 @@ class AnalPlot:
         self.data["{}.rel2meanColHdr".format(dataSel)] = dCH
 
 
+    def calc_rel2sum(self, dataSel="raw"):
+        d = self.data[dataSel]
+        dCH = self.data["{}ColHdr".format(dataSel)]
+        dRH = self.data["{}RowHdr".format(dataSel)]
+        self.data["{}.rel2sum".format(dataSel)] = d/np.sum(d, axis=0)
+        self.data["{}.rel2sumRowHdr".format(dataSel)] = dRH
+        self.data["{}.rel2sumColHdr".format(dataSel)] = dCH
+
+
     def plot(self, ax, dataSel, plotSel=None, plotLegend=None, plotXTickGap=None):
         d = self.data[dataSel]
         dCH = self.data["{}ColHdr".format(dataSel)]
