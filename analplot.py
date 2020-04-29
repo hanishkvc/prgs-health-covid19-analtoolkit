@@ -17,6 +17,13 @@ class AnalPlot:
         self.data["rawColHdr"] = colHdr
 
 
+    def calc_rel2mean(self):
+        d = self.data["raw"]
+        self.data["rel2mean"] = d/np.mean(d, axis=0)
+        self.data["rel2meanRowHdr"] = self.data["rawRowHdr"]
+        self.data["rel2meanColHdr"] = self.data["rawColHdr"]
+
+
     def plot(self, ax, dataSel, plotSel=None, plotLegend=None, plotXTickGap=None):
         d = self.data[dataSel]
         dCH = self.data["{}ColHdr".format(dataSel)]
