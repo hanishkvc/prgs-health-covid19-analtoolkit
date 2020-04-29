@@ -23,7 +23,7 @@ for ds in [ dsC19In, dsEU ]:
     ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr)
     ap.plot(axes[0,iCur], "raw")
     ap.calc_rel2mean()
-    ap.plot(axes[1,iCur], "rel2mean")
+    ap.plot(axes[1,iCur], "raw.rel2mean")
     iCur += 1
 
 plt.show()
