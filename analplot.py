@@ -20,28 +20,29 @@ class AnalPlot:
         self.data["rawColHdr"] = colHdr
 
 
-    def calc_rel2mean(self, dataSel="raw"):
+    def get_basedata(self, dataSel="raw"):
         d = self.data[dataSel]
         dCH = self.data["{}ColHdr".format(dataSel)]
         dRH = self.data["{}RowHdr".format(dataSel)]
+        return d, dCH, dRH
+
+
+    def calc_rel2mean(self, dataSel="raw"):
+        d, dCH, dRH = self.get_basedata(dataSel)
         self.data["{}.rel2mean".format(dataSel)] = d/np.mean(d, axis=0)
         self.data["{}.rel2meanRowHdr".format(dataSel)] = dRH
         self.data["{}.rel2meanColHdr".format(dataSel)] = dCH
 
 
     def calc_rel2sum(self, dataSel="raw"):
-        d = self.data[dataSel]
-        dCH = self.data["{}ColHdr".format(dataSel)]
-        dRH = self.data["{}RowHdr".format(dataSel)]
+        d, dCH, dRH = self.get_basedata(dataSel)
         self.data["{}.rel2sum".format(dataSel)] = d/np.sum(d, axis=0)
         self.data["{}.rel2sumRowHdr".format(dataSel)] = dRH
         self.data["{}.rel2sumColHdr".format(dataSel)] = dCH
 
 
     def calc_movavg(self, dataSel="raw", avgOver=7):
-        d = self.data[dataSel]
-        dCH = self.data["{}ColHdr".format(dataSel)]
-        dRH = self.data["{}RowHdr".format(dataSel)]
+        d, dCH, dRH = self.get_basedata(dataSel)
         tWeight = np.ones(avgOver)/avgOver
         dataConv = np.zeros((d.shape[0]-(avgOver-1),d.shape[1]))
         for i in range(1,d.shape[1]):
@@ -73,9 +74,7 @@ class AnalPlot:
 
 
     def plot(self, ax, dataSel, plotSelCols=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None):
-        d = self.data[dataSel]
-        dCH = self.data["{}ColHdr".format(dataSel)]
-        dRH = self.data["{}RowHdr".format(dataSel)]
+        d, dCH, dRH = self.get_basedata(dataSel)
         if type(plotSelCols) == type(None):
             tD = d
             tDCH = dCH
@@ -98,9 +97,7 @@ class AnalPlot:
 
 
     def boxplot(self, ax, dataSel, plotSelCols=None, title=None, bInsetBoxPlot=False):
-        d = self.data[dataSel]
-        dCH = self.data["{}ColHdr".format(dataSel)]
-        dRH = self.data["{}RowHdr".format(dataSel)]
+        d, dCH, dRH = self.get_basedata(dataSel)
         if type(plotSelCols) == type(None):
             tD = d
             tDCH = dCH
