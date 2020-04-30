@@ -29,7 +29,8 @@ for ds in [ dsC19In, dsEU ]:
     ap.calc_rel2sum()
     ap.plot(axes[2,iCur], "raw.rel2sum")
     ap.calc_movavg()
-    ap.plot(axes[3,iCur], "raw.movavg")
+    selCols = ap.selcols_percentiles("raw.movavg")
+    ap.plot(axes[3,iCur], "raw.movavg", plotSelCols=selCols)
     sGlobalMsg += " {}:DataDate:{}-{};".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
     iCur += 1
 

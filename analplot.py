@@ -48,16 +48,24 @@ class AnalPlot:
         self.data["{}.movavgColHdr".format(dataSel)] = dCH
 
 
-    def plot(self, ax, dataSel, plotSel=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1):
+    def selcols_percentiles(self, dataSel="raw", selRow=-1, selPers=[0,100]):
+        d = self.data[dataSel]
+        #thePercentiles = np.percentile(d[selRow:,:], selPers, axis=1)
+        thePercentiles = np.percentile(d[selRow:,:], selPers, axis=1)
+        selCols = (d[selRow,:] > thePercentiles[0]) & (d[selRow,:] < thePercentiles[1])
+        return selCols
+
+
+    def plot(self, ax, dataSel, plotSelCols=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1):
         d = self.data[dataSel]
         dCH = self.data["{}ColHdr".format(dataSel)]
         dRH = self.data["{}RowHdr".format(dataSel)]
-        if plotSel == None:
+        if plotSelCols == None:
             tD = d
             tDCH = dCH
         else:
-            tD = d[:,plotSel]
-            tDCH = dCH[plotSel]
+            tD = d[:,plotSelCols]
+            tDCH = dCH[plotSelCols]
         ax.plot(tD)
         if plotLegend != None:
             ax.legend(tDCH)
