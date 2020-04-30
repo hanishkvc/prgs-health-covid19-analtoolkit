@@ -104,8 +104,30 @@ class DataSrc:
             self._fetchconv_postproc()
 
 
+    def _prev_day(self, day, month, year):
+        for i in range(4):
+            day = day - 1
+            if (day == 0):
+                day = 31
+                month = month - 1
+                if month == 0:
+                    year = year - 1
+            try:
+                calendar.datetime.date(year, month, day)
+                return day, month, year
+            except ValueError:
+                continue
+        raise ValueError("DataSrc:_prev_day:DBG: Couldnt find valid prev day for {}-{}-{}".format(year, month, day))
+
+
     def fetch_data(self, day=None, month=None, year=None):
-        self._fetch_data(day, month, year)
+        for i in range(4):
+            try:
+                self._fetch_data(day, month, year)
+                break
+            except ConnectionError:
+                day, month, year = self._prev_day(self.fd_day, self.fd_month, self.fd_year)
+                print("INFO:DataSrc:fetch_data: Failed fetching data for {}-{}-{}, so trying for {}-{}-{}".format(self.fd_year, self.fd_month, self.fd_day, year, month, day))
         self.conv_data()
 
 
