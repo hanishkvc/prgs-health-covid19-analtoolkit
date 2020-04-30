@@ -50,7 +50,8 @@ def plot_sel():
         selCols = ap.selcols_percentiles("raw.movavg", selPers=[0,15])
         ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True)
         """
-        selCols = ap.selcols_percentiles("raw.movavg", selPers=[85,100])
+        i15p = (15/len(ds.hdr))*100 #.shape[0]
+        selCols = ap.selcols_percentiles("raw.movavg", selPers=[(100-i15p),100])
         ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True)
         sGlobalMsg += " {}:DataDate:{}-{};".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
