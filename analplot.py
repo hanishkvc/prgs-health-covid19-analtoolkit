@@ -50,11 +50,14 @@ class AnalPlot:
         self.data["{}.movavgColHdr".format(dataSel)] = dCH
 
 
-    def selcols_percentiles(self, dataSel="raw", selRow=-1, selPers=[0,100]):
+    def selcols_percentiles(self, dataSel="raw", selRow=-1, selPers=[0,100], bSelInclusive=True):
         d = self.data[dataSel]
         #thePercentiles = np.percentile(d[selRow:,:], selPers, axis=1)
         thePercentiles = np.percentile(d[selRow:,:], selPers, axis=1)
-        selCols = (d[selRow,:] > thePercentiles[0]) & (d[selRow,:] < thePercentiles[1])
+        if bSelInclusive:
+            selCols = (d[selRow,:] >= thePercentiles[0]) & (d[selRow,:] <= thePercentiles[1])
+        else:
+            selCols = (d[selRow,:] > thePercentiles[0]) & (d[selRow,:] < thePercentiles[1])
         return selCols
 
 
