@@ -44,7 +44,7 @@ def plot_sel():
     iCur = 0
     sGlobalMsg = ""
     for ds in [ dsC19In, dsEU ]:
-        dprint("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[5])))
+        dprint("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[-2])))
         # The Raw data
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:])
         ap.plot(axes[0,iCur], "raw", numXTicks=4, xtickMultOf=7)

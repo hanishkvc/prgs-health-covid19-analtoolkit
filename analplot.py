@@ -88,7 +88,7 @@ class AnalPlot:
         else:
             tD = d[:,plotSelCols]
             tDCH = dCH[plotSelCols]
-        dprint("DBUG:AnalPlot:plot:hdr-type:%s" %(type(tDCH[5])))
+        dprint("DBUG:AnalPlot:plot:hdr-type:%s" %(type(tDCH[-2])))
         ax.plot(tD)
         if plotLegend != None:
             ax.legend(tDCH)

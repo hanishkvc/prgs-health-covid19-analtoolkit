@@ -288,7 +288,7 @@ class EUWorldDataSrc(DataSrc):
 
 
     def load_data(self, fileName=None):
-        dprint("DBUG:DataSrc:EU:load_data:hdr-type:%s" %(type(self.hdr[5])))
+        dprint("DBUG:DataSrc:EU:load_data:hdr-type:%s" %(type(self.hdr[-2])))
         #super().load_data(fileName=fileName, delimiter=",", skip_header=1, iHdrLine=0)
         #self.hdr = self.hdr[:-1]
         #self.data = self.data[:,:-1]
