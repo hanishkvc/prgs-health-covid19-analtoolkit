@@ -60,7 +60,7 @@ class AnalPlot:
         d = self.data[dataSel]
         dCH = self.data["{}ColHdr".format(dataSel)]
         dRH = self.data["{}RowHdr".format(dataSel)]
-        if plotSelCols == None:
+        if type(plotSelCols) == type(None):
             tD = d
             tDCH = dCH
         else:
