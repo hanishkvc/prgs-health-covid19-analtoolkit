@@ -52,9 +52,9 @@ class AnalPlot:
         d = self.data[dataSel]
         dCH = self.data["{}ColHdr".format(dataSel)]
         dRH = self.data["{}RowHdr".format(dataSel)]
-        ax.plot(d)
+        ax.plot(d[:,plotSel])
         if plotLegend != None:
-            ax.legend(dCH)
+            ax.legend(dCH[plotSel])
         if plotXTickGap != None:
             ax.set_xticks(np.arange(0, dRH.shape[0], plotXTickGap))
             ax.set_xticklabels(dRH[0::plotXTickGap])
