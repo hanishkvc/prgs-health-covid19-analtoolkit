@@ -48,7 +48,7 @@ class AnalPlot:
         self.data["{}.movavgColHdr".format(dataSel)] = dCH
 
 
-    def plot(self, ax, dataSel, plotSel=None, plotLegend=None, plotXTickGap=None):
+    def plot(self, ax, dataSel, plotSel=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1):
         d = self.data[dataSel]
         dCH = self.data["{}ColHdr".format(dataSel)]
         dRH = self.data["{}RowHdr".format(dataSel)]
@@ -61,6 +61,10 @@ class AnalPlot:
         ax.plot(tD)
         if plotLegend != None:
             ax.legend(tDCH)
+        if (numXTicks != None):
+            if plotXTickGap != None:
+                print("WARN:analplot.plot: numXTicks overrides plotXTickGap")
+            plotXTickGap = int(((d.shape[0]/numXTicks)/xtickMultOf)+1)*xtickMultOf
         if plotXTickGap != None:
             ax.set_xticks(np.arange(0, dRH.shape[0], plotXTickGap))
             ax.set_xticklabels(dRH[0::plotXTickGap])
