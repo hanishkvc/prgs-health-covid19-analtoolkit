@@ -39,17 +39,19 @@ def plot_simple():
 
 
 def plot_sel():
-    fig, axes = plt.subplots(3,2)
+    fig, axes = plt.subplots(2,2)
     iCur = 0
     sGlobalMsg = ""
     for ds in [ dsC19In, dsEU ]:
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:])
         ap.plot(axes[0,iCur], "raw", numXTicks=4, xtickMultOf=7)
         ap.calc_movavg()
-        selCols = ap.selcols_percentiles("raw.movavg", selPers=[0,20])
+        """
+        selCols = ap.selcols_percentiles("raw.movavg", selPers=[0,15])
         ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True)
-        selCols = ap.selcols_percentiles("raw.movavg", selPers=[80,100])
-        ap.plot(axes[2,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True)
+        """
+        selCols = ap.selcols_percentiles("raw.movavg", selPers=[85,100])
+        ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True)
         sGlobalMsg += " {}:DataDate:{}-{};".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
     save_fig(fig, sGlobalMsg)
