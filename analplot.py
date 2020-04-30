@@ -122,5 +122,11 @@ class AnalPlot:
             inset.grid(True, axis='y')
 
 
+    def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
+        fig, axes = plt.subplots(pltRows, pltCols)
+        fig.set_figwidth(pltCols*colWidth)
+        fig.set_figheight(pltRows*rowHeight)
+        return fig, axes
+
 
 # vim: set softtabstop=4 shiftwidth=4 expandtab: #

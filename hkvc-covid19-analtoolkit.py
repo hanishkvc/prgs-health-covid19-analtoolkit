@@ -21,7 +21,7 @@ def fetch():
 
 
 def plot_simple():
-    fig, axes = plt.subplots(4,2)
+    fig, axes = ap.subplots(plt,4,2)
     iCur = 0
     sGlobalMsg = ""
     for ds in [ dsC19In, dsEU ]:
@@ -40,7 +40,7 @@ def plot_simple():
 
 
 def plot_sel():
-    fig, axes = plt.subplots(3,2)
+    fig, axes = ap.subplots(plt,3,2)
     iCur = 0
     sGlobalMsg = ""
     for ds in [ dsC19In, dsEU ]:
