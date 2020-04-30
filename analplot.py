@@ -41,6 +41,13 @@ class AnalPlot:
         self.data["{}.rel2sumColHdr".format(dataSel)] = dCH
 
 
+    def calc_diff(self, dataSel="raw"):
+        d, dCH, dRH = self.get_basedata(dataSel)
+        self.data["{}.diff".format(dataSel)] = np.diff(d, axis=0)
+        self.data["{}.diffRowHdr".format(dataSel)] = dRH[1:]
+        self.data["{}.diffColHdr".format(dataSel)] = dCH
+
+
     def calc_movavg(self, dataSel="raw", avgOver=7):
         d, dCH, dRH = self.get_basedata(dataSel)
         tWeight = np.ones(avgOver)/avgOver
