@@ -7,6 +7,9 @@ covid19 data about India and World.
 
 hkvc-covid19-analtoolkit.py
 
+NOTE: Remember to look at the saved image. The Plot window shown
+will be messed up due to too many plots which wont fit the screen.
+
 To test datasrc class/module on its own
 
 python datasrc.py
