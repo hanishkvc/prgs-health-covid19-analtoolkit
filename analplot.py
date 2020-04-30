@@ -55,10 +55,10 @@ class AnalPlot:
         if (topN != None) and (botN != None):
             print("WARN:AnalPlot:selcols_percentile: botN takes priority if both topN & botN specified")
         if topN != None:
-            iPercentile = (topN/d.shape[0])*100
+            iPercentile = (topN/d.shape[1])*100
             selPers = [(100-iPercentile), 100]
         if botN != None:
-            iPercentile = (botN/d.shape[0])*100
+            iPercentile = (botN/d.shape[1])*100
             selPers = [0, iPercentile]
         if (topN != None) or (botN != None):
             print("INFO:AnalPlot:selcols_percentile:range:{}".format(selPers))
