@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # Analyse Plot data sets
-# v20200429IST1936, HanishKVC
+# v20200430IST1743, HanishKVC
 # 
 
 import numpy as np
+from helpers import *
 
 
 
@@ -71,7 +72,7 @@ class AnalPlot:
         return selCols, selPers
 
 
-    def plot(self, ax, dataSel, plotSelCols=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1):
+    def plot(self, ax, dataSel, plotSelCols=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None):
         d = self.data[dataSel]
         dCH = self.data["{}ColHdr".format(dataSel)]
         dRH = self.data["{}RowHdr".format(dataSel)]
@@ -81,7 +82,7 @@ class AnalPlot:
         else:
             tD = d[:,plotSelCols]
             tDCH = dCH[plotSelCols]
-        print("DBUG:AnalPlot:plot:hdr-type:%s" %(type(tDCH[5])))
+        dprint("DBUG:AnalPlot:plot:hdr-type:%s" %(type(tDCH[5])))
         ax.plot(tD)
         if plotLegend != None:
             ax.legend(tDCH)
@@ -92,6 +93,8 @@ class AnalPlot:
         if plotXTickGap != None:
             ax.set_xticks(np.arange(0, dRH.shape[0], plotXTickGap))
             ax.set_xticklabels(dRH[0::plotXTickGap])
+        if yscale != None:
+            ax.set_yscale(yscale)
 
 
 # vim: set softtabstop=4 shiftwidth=4 expandtab: #

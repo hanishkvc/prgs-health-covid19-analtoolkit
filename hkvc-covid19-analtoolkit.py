@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Covid19 AnalToolkit
-# v20200429IST2053, HanishKVC
+# v20200430IST1746, HanishKVC
 #
 
 import sys
@@ -8,6 +8,7 @@ import datasrc as dsrc
 import analplot
 import matplotlib.pyplot as plt
 import numpy as np
+from helpers import *
 
 
 def fetch():
@@ -43,7 +44,7 @@ def plot_sel():
     iCur = 0
     sGlobalMsg = ""
     for ds in [ dsC19In, dsEU ]:
-        print("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[5])))
+        dprint("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[5])))
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:])
         ap.plot(axes[0,iCur], "raw", numXTicks=4, xtickMultOf=7)
         ap.calc_movavg()
@@ -52,7 +53,7 @@ def plot_sel():
         ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True)
         """
         selCols, selPers = ap.selcols_percentiles("raw.movavg", topN=15)
-        ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True)
+        ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True, yscale="log")
         sGlobalMsg += " {}:DataDate:{}-{};".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
     save_fig(fig, sGlobalMsg)

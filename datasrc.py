@@ -1,6 +1,6 @@
 #
 # DataSrc Base Class plus additional Classes
-# v20200423IST2313, HanishKVC
+# v20200430IST1742, HanishKVC
 #
 
 import os
@@ -9,6 +9,8 @@ import subprocess
 import numpy
 import sys
 import calendar
+from helpers import *
+
 
 
 class DataSrc:
@@ -150,7 +152,7 @@ class DataSrc:
         i = 0
         for l in f:
             if (i == iHdrLine):
-                print("DBUG:DataSrc:_load_hdr:type:%s" %(type(l)))
+                dprint("DBUG:DataSrc:_load_hdr:type:%s" %(type(l)))
                 return l.split(delimiter)
             i += 1
         raise ImportError("DataSrc:_load_hdr: No header found")
@@ -245,15 +247,7 @@ class EUWorldDataSrc(DataSrc):
             if l.find('"') == -1:
                 fOut.write(l)
                 continue
-            bInDQuote = False
-            lOut = ""
-            for c in l:
-                if c == '"':
-                    bInDQuote = not bInDQuote
-                if bInDQuote and (c == ','):
-                    c = '_'
-                lOut += c
-            fOut.write(lOut)
+            fOut.write(replace_ifwithin(l, '"', ',', '_'))
         fIn.close()
         fOut.close()
         os.rename(fOutName, self.localFileName)
@@ -294,7 +288,7 @@ class EUWorldDataSrc(DataSrc):
 
 
     def load_data(self, fileName=None):
-        print("DBUG:DataSrc:EU:load_data:hdr-type:%s" %(type(self.hdr[5])))
+        dprint("DBUG:DataSrc:EU:load_data:hdr-type:%s" %(type(self.hdr[5])))
         #super().load_data(fileName=fileName, delimiter=",", skip_header=1, iHdrLine=0)
         #self.hdr = self.hdr[:-1]
         #self.data = self.data[:,:-1]
