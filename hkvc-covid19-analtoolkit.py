@@ -53,7 +53,9 @@ def plot_sel():
         ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True)
         """
         selCols, selPers = ap.selcols_percentiles("raw.movavg", topN=12)
-        ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True, yscale="log")
+        yscale = "log"
+        yscale = None
+        ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True, yscale=yscale)
         ap.boxplot(axes[2,iCur], "raw", plotSelCols=selCols, bInsetBoxPlot=True)
         sGlobalMsg += " {}:DataDate:{}-{};".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
