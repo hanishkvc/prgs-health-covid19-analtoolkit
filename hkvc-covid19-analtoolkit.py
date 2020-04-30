@@ -45,8 +45,10 @@ def plot_sel():
     sGlobalMsg = ""
     for ds in [ dsC19In, dsEU ]:
         dprint("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[5])))
+        # The Raw data
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:])
         ap.plot(axes[0,iCur], "raw", numXTicks=4, xtickMultOf=7)
+        # The moving avg
         ap.calc_movavg()
         """
         selCols, selPers = ap.selcols_percentiles("raw.movavg", selPers=[0,15])
@@ -56,7 +58,9 @@ def plot_sel():
         yscale = "log"
         yscale = None
         ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True, yscale=yscale)
+        # Boxplot Raw data
         ap.boxplot(axes[2,iCur], "raw", plotSelCols=selCols, bInsetBoxPlot=True)
+        # Diff of Raw data
         ap.calc_diff()
         selCols, selPers = ap.selcols_percentiles("raw.diff", topN=8)
         ap.plot(axes[3,iCur], "raw.diff", plotSelCols=selCols, plotLegend=True)
