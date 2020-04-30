@@ -14,6 +14,8 @@ class AnalPlot:
         self.data = {}
         self.data["raw"] = data
         self.data["rawRowHdr"] = rowHdr
+        if type(colHdr) == type(list()):
+            colHdr = np.array(colHdr)
         self.data["rawColHdr"] = colHdr
 
 

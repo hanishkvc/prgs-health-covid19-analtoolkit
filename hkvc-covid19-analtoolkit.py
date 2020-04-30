@@ -22,7 +22,7 @@ sGlobalMsg = ""
 for ds in [ dsC19In, dsEU ]:
     ds.fetch_data()
     ds.load_data()
-    ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr)
+    ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:])
     ap.plot(axes[0,iCur], "raw", numXTicks=4, xtickMultOf=7)
     ap.calc_rel2mean()
     ap.plot(axes[1,iCur], "raw.rel2mean")
