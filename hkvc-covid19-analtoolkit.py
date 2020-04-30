@@ -31,7 +31,7 @@ def plot_simple():
         ap.calc_rel2sum()
         ap.plot(axes[2,iCur], "raw.rel2sum")
         ap.calc_movavg()
-        selCols = ap.selcols_percentiles("raw.movavg")
+        selCols, selPers = ap.selcols_percentiles("raw.movavg")
         ap.plot(axes[3,iCur], "raw.movavg", plotSelCols=selCols)
         sGlobalMsg += " {}:DataDate:{}-{};".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
@@ -48,11 +48,10 @@ def plot_sel():
         ap.plot(axes[0,iCur], "raw", numXTicks=4, xtickMultOf=7)
         ap.calc_movavg()
         """
-        selCols = ap.selcols_percentiles("raw.movavg", selPers=[0,15])
+        selCols, selPers = ap.selcols_percentiles("raw.movavg", selPers=[0,15])
         ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True)
         """
-        i15p = (15/len(ds.hdr))*100 #.shape[0]
-        selCols = ap.selcols_percentiles("raw.movavg", selPers=[(100-i15p),100])
+        selCols, selPers = ap.selcols_percentiles("raw.movavg", topN=10)
         ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True)
         sGlobalMsg += " {}:DataDate:{}-{};".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1

@@ -50,15 +50,25 @@ class AnalPlot:
         self.data["{}.movavgColHdr".format(dataSel)] = dCH
 
 
-    def selcols_percentiles(self, dataSel="raw", selRow=-1, selPers=[0,100], bSelInclusive=True):
+    def selcols_percentiles(self, dataSel="raw", selRow=-1, selPers=[0,100], bSelInclusive=True, topN=None, botN=None):
         d = self.data[dataSel]
+        if (topN != None) and (botN != None):
+            print("WARN:AnalPlot:selcols_percentile: botN takes priority if both topN & botN specified")
+        if topN != None:
+            iPercentile = (topN/d.shape[0])*100
+            selPers = [(100-iPercentile), 100]
+        if botN != None:
+            iPercentile = (botN/d.shape[0])*100
+            selPers = [0, iPercentile]
+        if (topN != None) or (botN != None):
+            print("INFO:AnalPlot:selcols_percentile:range:{}".format(selPers))
         #thePercentiles = np.percentile(d[selRow:,:], selPers, axis=1)
-        thePercentiles = np.percentile(d[selRow:,:], selPers, axis=1)
+        thePercentiles = np.percentile(d[selRow,:], selPers)
         if bSelInclusive:
             selCols = (d[selRow,:] >= thePercentiles[0]) & (d[selRow,:] <= thePercentiles[1])
         else:
             selCols = (d[selRow,:] > thePercentiles[0]) & (d[selRow,:] < thePercentiles[1])
-        return selCols
+        return selCols, selPers
 
 
     def plot(self, ax, dataSel, plotSelCols=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1):
