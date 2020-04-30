@@ -97,4 +97,30 @@ class AnalPlot:
             ax.set_yscale(yscale)
 
 
+    def boxplot(self, ax, dataSel, plotSelCols=None, title=None, bInsetBoxPlot=False):
+        d = self.data[dataSel]
+        dCH = self.data["{}ColHdr".format(dataSel)]
+        dRH = self.data["{}RowHdr".format(dataSel)]
+        if type(plotSelCols) == type(None):
+            tD = d
+            tDCH = dCH
+        else:
+            tD = d[:,plotSelCols]
+            tDCH = dCH[plotSelCols]
+        ax.boxplot(tD,labels=tDCH)
+        if title != None:
+            ax.set_title(title)
+        if bInsetBoxPlot:
+            inset = ax.inset_axes([0.0,0.5,1.0,0.5])
+            inset.boxplot(tD,labels=tDCH)
+            inset.set_yscale("log")
+            for l in inset.lines:
+                l.set_alpha(0.2)
+            #inset.set_alpha(0.5)
+            inset.set_facecolor([1,1,1,0.1])
+            inset.tick_params(color=[1,0,0,0.2], labelcolor=[1,0,0,0.2])
+            inset.grid(True, axis='y')
+
+
+
 # vim: set softtabstop=4 shiftwidth=4 expandtab: #

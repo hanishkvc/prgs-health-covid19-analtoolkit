@@ -40,7 +40,7 @@ def plot_simple():
 
 
 def plot_sel():
-    fig, axes = plt.subplots(2,2)
+    fig, axes = plt.subplots(3,2)
     iCur = 0
     sGlobalMsg = ""
     for ds in [ dsC19In, dsEU ]:
@@ -54,6 +54,7 @@ def plot_sel():
         """
         selCols, selPers = ap.selcols_percentiles("raw.movavg", topN=15)
         ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True, yscale="log")
+        ap.boxplot(axes[2,iCur], "raw", plotSelCols=selCols, bInsetBoxPlot=True)
         sGlobalMsg += " {}:DataDate:{}-{};".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
     save_fig(fig, sGlobalMsg)
