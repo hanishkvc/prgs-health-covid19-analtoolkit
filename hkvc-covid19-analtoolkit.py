@@ -43,6 +43,7 @@ def plot_sel():
     iCur = 0
     sGlobalMsg = ""
     for ds in [ dsC19In, dsEU ]:
+        print("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[5])))
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:])
         ap.plot(axes[0,iCur], "raw", numXTicks=4, xtickMultOf=7)
         ap.calc_movavg()

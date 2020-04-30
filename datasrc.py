@@ -150,6 +150,7 @@ class DataSrc:
         i = 0
         for l in f:
             if (i == iHdrLine):
+                print("DBUG:DataSrc:_load_hdr:type:%s" %(type(l)))
                 return l.split(delimiter)
             i += 1
         raise ImportError("DataSrc:_load_hdr: No header found")
@@ -226,6 +227,7 @@ class EUWorldDataSrc(DataSrc):
 
     def conv_geoid(self, sGeoId):
         try:
+            sGeoId = str(sGeoId)
             i = self.geoIds.index(sGeoId)
         except ValueError:
             self.geoIds.append(sGeoId)
@@ -292,6 +294,7 @@ class EUWorldDataSrc(DataSrc):
 
 
     def load_data(self, fileName=None):
+        print("DBUG:DataSrc:EU:load_data:hdr-type:%s" %(type(self.hdr[5])))
         #super().load_data(fileName=fileName, delimiter=",", skip_header=1, iHdrLine=0)
         #self.hdr = self.hdr[:-1]
         #self.data = self.data[:,:-1]
