@@ -59,6 +59,20 @@ class AnalPlot:
         self.data["{}.movavgColHdr".format(dataSel)] = dCH
 
 
+    def calc_movavg_ex(self, dataSel="raw", avgOver=7, times=2):
+        d, dCH, dRH = self.get_basedata(dataSel)
+        tWeight = np.ones(avgOver)/avgOver
+        dCur = d
+        for time in range(times):
+            dataConv = np.zeros((dCur.shape[0]-(avgOver-1),dCur.shape[1]))
+            for i in range(1,dCur.shape[1]):
+                dataConv[:,i] = np.convolve(dCur[:,i], tWeight, 'valid')
+            dCur = dataConv
+        self.data["{}.movavgT{}".format(dataSel,times)] = dataConv
+        self.data["{}.movavgT{}RowHdr".format(dataSel,times)] = list(range(dataConv.shape[0]))
+        self.data["{}.movavgT{}ColHdr".format(dataSel,times)] = dCH
+
+
     def selcols_percentiles(self, dataSel="raw", selRow=-1, selPers=[0,100], bSelInclusive=True, topN=None, botN=None):
         d = self.data[dataSel]
         if (topN != None) and (botN != None):
