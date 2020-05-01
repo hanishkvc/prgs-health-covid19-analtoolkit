@@ -27,16 +27,38 @@ class AnalPlot:
         return d, dCH, dRH
 
 
-    def calc_rel2mean(self, dataSel="raw"):
+    def get_cols_withval(self, dataSel="raw", val = 0):
+        """ Find cols which contain the given val in all its rows
+            """
+        #d, dCH, dRH = self.get_basedata(dataSel)
+        d = self.data[dataSel]
+        colsWithVal = []
+        for i in range(d.shape[1]):
+            tMin = np.min(d[:,i])
+            tMax = np.max(d[:,i])
+            if (tMin == val) and (tMax == val):
+                colsWithVal.append(i)
+        return colsWithVal
+
+
+    def calc_rel2mean(self, dataSel="raw", bHandleColsWith0=True):
         d, dCH, dRH = self.get_basedata(dataSel)
+        if bHandleColsWith0:
+            colsWith0 = self.get_cols_withval(dataSel, 0)
         self.data["{}.rel2mean".format(dataSel)] = d/np.mean(d, axis=0)
+        if bHandleColsWith0:
+            self.data["{}.rel2mean".format(dataSel)][:,colsWith0] = 0
         self.data["{}.rel2meanRowHdr".format(dataSel)] = dRH
         self.data["{}.rel2meanColHdr".format(dataSel)] = dCH
 
 
-    def calc_rel2sum(self, dataSel="raw"):
+    def calc_rel2sum(self, dataSel="raw", bHandleColsWith0=True):
         d, dCH, dRH = self.get_basedata(dataSel)
+        if bHandleColsWith0:
+            colsWith0 = self.get_cols_withval(dataSel, 0)
         self.data["{}.rel2sum".format(dataSel)] = d/np.sum(d, axis=0)
+        if bHandleColsWith0:
+            self.data["{}.rel2sum".format(dataSel)][:,colsWith0] = 0
         self.data["{}.rel2sumRowHdr".format(dataSel)] = dRH
         self.data["{}.rel2sumColHdr".format(dataSel)] = dCH
 
