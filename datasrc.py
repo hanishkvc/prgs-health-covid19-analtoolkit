@@ -320,7 +320,7 @@ class EUWorldDataSrc(DataSrc):
         for sCol in self.hdr:
             sHdr += "{},".format(sCol)
         sHdr = sHdr.rstrip(',')
-        numpy.savetxt(fOutName, self.data.astype(int), delimiter=",", header=sHdr, comments="")
+        numpy.savetxt(fOutName, self.data, delimiter=",", header=sHdr, comments="", fmt="%d")
         os.rename(fOutName, self.localFileName)
 
 
