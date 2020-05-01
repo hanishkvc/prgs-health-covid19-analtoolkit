@@ -40,7 +40,7 @@ def plot_simple():
 
 
 def plot_sel():
-    fig, axes = ap.subplots(plt,5,2)
+    fig, axes = ap.subplots(plt,4,2)
     iCur = 0
     sGlobalMsg = ""
     for ds in [ dsC19In, dsEU ]:
@@ -64,8 +64,9 @@ def plot_sel():
         ap.calc_diff()
         ap.calc_movavg(dataSel="raw.diff")
         selCols, selPers = ap.selcols_percentiles("raw.diff.movavg", topN=8)
-        ap.plot(axes[3,iCur], "raw.diff", plotSelCols=selCols, plotLegend=True, title="%s-Cases/Day_Diff-DiffMovAvgTop8"%(ds.name))
-        ap.plot(axes[4,iCur], "raw.diff.movavg", plotSelCols=selCols, plotLegend=True, title="%s-Cases/Day_DiffMovAvg-DiffMovAvgTop8"%(ds.name))
+        ap.plot(axes[3,iCur], "raw.diff.movavg", plotSelCols=selCols, plotLegend=True, title="%s-Cases/Day_DiffMovAvg-DiffMovAvgTop8"%(ds.name))
+        inset = axes[3,iCur].inset_axes([0.13,0.55,0.64,0.4])
+        ap.plot(inset, "raw.diff", plotSelCols=selCols, bTranslucent=True, title="%s-Cases/Day_Diff-DiffMovAvgTop8"%(ds.name))
         sGlobalMsg += " {}:DataDate:{}-{};".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
     save_fig(fig, sGlobalMsg)

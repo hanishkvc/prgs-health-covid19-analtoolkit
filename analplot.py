@@ -80,7 +80,7 @@ class AnalPlot:
         return selCols, selPers
 
 
-    def plot(self, ax, dataSel, plotSelCols=None, title=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None):
+    def plot(self, ax, dataSel, plotSelCols=None, title=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None, bTranslucent=False):
         d, dCH, dRH = self.get_basedata(dataSel)
         if type(plotSelCols) == type(None):
             tD = d
@@ -103,6 +103,8 @@ class AnalPlot:
             ax.set_xticklabels(dRH[0::plotXTickGap])
         if yscale != None:
             ax.set_yscale(yscale)
+        if bTranslucent:
+            ax.set_facecolor([1,1,1,0.1])
 
 
     def boxplot(self, ax, dataSel, plotSelCols=None, title=None, bInsetBoxPlot=False):
