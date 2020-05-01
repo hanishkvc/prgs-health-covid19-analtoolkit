@@ -17,14 +17,25 @@ class DataSrc:
 
     bTestForceMissing = False
 
-    def fix_missing_localmean(self, axis=0, iNear=3):
+    def fix_missing_value(self, missing=numpy.NAN, value=0):
+        if numpy.isnan(missing):
+            lMissing = numpy.argwhere(numpy.isnan(self.data))
+            self.data[numpy.isnan(self.data)] = value
+        else:
+            lMissing = numpy.argwhere(self.data == missing)
+            self.data[self.data == missing] = value
+        print("INFO:DataSrc:fix_missing_value:lMissing:", lMissing)
+        return lMissing
+
+
+    def fix_missing_localmean(self, missing=numpy.NAN, axis=0, iNear=3):
         """ Fix missing value(s) using local mean among adjacent neighbours
             Supports 2D array
             """
         if self.bTestForceMissing:
-            self.data[5,0] = numpy.NAN
-        lNan = numpy.argwhere(numpy.isnan(self.data))
-        for iCur in lNan:
+            self.data[5,0] = missing
+        lMissing = self.fix_missing_value(missing, 0)
+        for iCur in lMissing:
             iS = iCur[axis] - iNear
             if iS < 0:
                 iS = 0
@@ -158,14 +169,27 @@ class DataSrc:
         raise ImportError("DataSrc:_load_hdr: No header found")
 
 
-    def load_data(self, fileName=None, dtype=float, delimiter=None, skip_header=None, converters=None, iHdrLine=None, usecols=None):
+    def load_data(self, fileName=None, dtype=float, delimiter=None, skip_header=None, converters=None, iHdrLine=None, usecols=None, fixMissing=None):
         """
             iHdrLine: the column header line among the skip_header lines, starts at 0
+            fixMissing: None or { "type": <type>, "missing": <missing>, "value": <value> }
+                <type>: "value" or "localmean"
+                    if  "value" give <missing> and <value>
+                    if "localmean" give <missing>
+                <missing>: the value in the data to be treated as missing value
+                <value>: the value to use in place of missing value
             """
         if fileName == None:
             fileName = self.localFileName
         print("INFO:DataSrc:Loading:{}".format(fileName))
         self.data = numpy.genfromtxt(fileName, dtype = dtype, delimiter=delimiter, skip_header=skip_header, converters=converters, usecols=usecols)
+        if fixMissing != None:
+            if fixMissing["type"] == "localmean":
+                self.fix_missing_localmean(missing=fixMissing["missing"])
+            elif fixMissing["type"] == "value":
+                self.fix_missing_value(missing=fixMissing["missing"], value=fixMissing["value"])
+            else:
+                raise NotImplementedError("DataSrc:load_data:fixMissingType:{}".format(fixMissing["type"]))
         if (skip_header != None) and (iHdrLine != None):
             if (iHdrLine < skip_header):
                 self.hdr = self._load_hdr(fileName, delimiter, iHdrLine)
@@ -197,9 +221,9 @@ class Cov19InDataSrc(DataSrc):
         return float(self.conv_date_str2int(sDate, iY=2, iD=0, mType="abbr", bYear2Digit=True))
 
 
-    def load_data(self, fileName=None):
+    def load_data(self, fileName=None, fixMissing=None):
         converters = { 0: lambda x: self.conv_date(x) }
-        super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters, iHdrLine=0)
+        super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters, iHdrLine=0, fixMissing=fixMissing)
         self.hdr = self.hdr[:-1]
         self.data = self.data[:,:-1]
 
