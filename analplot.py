@@ -80,7 +80,7 @@ class AnalPlot:
         return selCols, selPers
 
 
-    def plot(self, ax, dataSel, plotSelCols=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None):
+    def plot(self, ax, dataSel, plotSelCols=None, title=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None):
         d, dCH, dRH = self.get_basedata(dataSel)
         if type(plotSelCols) == type(None):
             tD = d
@@ -90,6 +90,8 @@ class AnalPlot:
             tDCH = dCH[plotSelCols]
         dprint("DBUG:AnalPlot:plot:hdr-type:%s" %(type(tDCH[-2])))
         ax.plot(tD)
+        if title != None:
+            ax.set_title(title)
         if plotLegend != None:
             ax.legend(tDCH)
         if (numXTicks != None):
