@@ -143,7 +143,7 @@ class AnalPlot:
                 l.set_alpha(0.2)
             #inset.set_alpha(0.5)
             inset.set_facecolor([1,1,1,0.1])
-            inset.tick_params(color=[1,0,0,0.2], labelcolor=[1,0,0,0.2])
+            inset.tick_params(color=[1,0,0,0.4], labelcolor=[1,0,0,0.4])
             inset.grid(True, axis='y')
 
 

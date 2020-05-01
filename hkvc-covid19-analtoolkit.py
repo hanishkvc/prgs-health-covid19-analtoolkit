@@ -34,7 +34,7 @@ def plot_simple():
         ap.calc_movavg()
         selCols, selPers = ap.selcols_percentiles("raw.movavg")
         ap.plot(axes[3,iCur], "raw.movavg", plotSelCols=selCols, title="%s-Cases/Day_MovAvg"%(ds.name))
-        sGlobalMsg += " {}:DataDate:{}-{};".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
+        sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
     save_fig(fig, sGlobalMsg)
 
@@ -68,14 +68,14 @@ def plot_sel():
         selCols, selPers = ap.selcols_percentiles("raw.diff.movavgT2", topN=8)
         ap.plot(axes[3,iCur], "raw.diff.movavgT3", plotSelCols=selCols, plotLegend=True, title="%s-DiffOfCases/Day_MovAvgT3-DiffMovAvgT2Top8"%(ds.name))
         inset = axes[3,iCur].inset_axes([0.13,0.55,0.64,0.4])
-        ap.plot(inset, "raw.diff", plotSelCols=selCols, bTranslucent=True, title="%s-DiffOfCases/Day-DiffMovAvgT2Top8"%(ds.name))
-        sGlobalMsg += " {}:DataDate:{}-{};".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
+        ap.plot(inset, "raw.diff", plotSelCols=selCols, plotLegend=None, bTranslucent=True, title="%s-DiffOfCases/Day-DiffMovAvgT2Top8"%(ds.name))
+        sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
     save_fig(fig, sGlobalMsg)
 
 
 def save_fig(fig, sMsg):
-    sMsg += " hkvc"
+    sMsg += "-hkvc"
     fig.text(0.01, 0.002, sMsg)
     fig.set_tight_layout(True)
     tFName = sMsg.replace(";","_N_").replace(" ","_")
@@ -85,7 +85,7 @@ def save_fig(fig, sMsg):
 
 dsEU, dsC19In = fetch()
 ap = analplot.AnalPlot()
-plot_simple()
+#plot_simple()
 plot_sel()
 
 # vim: set softtabstop=4 expandtab shiftwidth=4: #
