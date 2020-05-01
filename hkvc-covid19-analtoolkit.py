@@ -59,7 +59,8 @@ def plot_sel():
         yscale = None
         ap.plot(axes[1,iCur], "raw.movavg", plotSelCols=selCols, plotLegend=True, yscale=yscale, title="%s-Cases/Day_MovAvg-MovAvgTop12"%(ds.name))
         # Boxplot Raw data
-        ap.boxplot(axes[2,iCur], "raw", plotSelCols=selCols, bInsetBoxPlot=True, title="%s-Cases/Day-MovAvgTop12"%(ds.name))
+        selCols, selPers = ap.selcols_percentiles("raw.movavg", topN=15)
+        ap.boxplot(axes[2,iCur], "raw", plotSelCols=selCols, bInsetBoxPlot=True, title="%s-Cases/Day-MovAvgTop15"%(ds.name))
         # Diff of Raw data
         ap.calc_diff()
         ap.calc_movavg_ex(dataSel="raw.diff", times=2)
