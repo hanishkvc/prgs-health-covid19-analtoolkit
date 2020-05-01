@@ -49,6 +49,10 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataSel="raw", sBaseDataMsg="Cases
     inset = axes[iARow,iACol].inset_axes([0.13,0.55,0.64,0.4])
     ap.plot(inset, "%s.diff"%(dataSel), plotSelCols=selCols, plotLegend=None, bTranslucent=True,
                 title="%s-DiffOf%s-DiffMovAvgT2Top8"%(ds.name, sBaseDataMsg))
+    ap.calc_rel2sum(dataSel)
+    ap.calc_movavg_ex(dataSel="%s.rel2sum"%(dataSel), times=2)
+    ap.plot(axes[iARow+1,iACol], "%s.rel2sum.movavgT2"%(dataSel), plotSelCols=selCols, plotLegend=True,
+                title="%s-MovAvgT2OfRel2SumOf%s-DiffMovAvgT2Top8"%(ds.name, sBaseDataMsg))
 
 
 def plot_sel(allDS):
@@ -75,8 +79,8 @@ def plot_sel(allDS):
         ap.boxplot(axes[2,iCur], "raw", plotSelCols=selCols, bInsetBoxPlot=True, title="%s-Cases/Day-MovAvgTop15"%(ds.name))
         # Diff of Raw data
         plot_diffdata(ds, ap, axes, 3, iCur)
-        ap.calc_rel2sum()
-        plot_diffdata(ds, ap, axes, 4, iCur, dataSel="raw.rel2sum", sBaseDataMsg="Rel2SumOfCases/Day")
+        #ap.calc_rel2sum()
+        #plot_diffdata(ds, ap, axes, 4, iCur, dataSel="raw.rel2sum", sBaseDataMsg="Rel2SumOfCases/Day")
         sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
     save_fig(fig, sGlobalMsg)
