@@ -17,14 +17,14 @@ def fetch():
     for ds in [ dsC19In, dsEU ]:
         ds.fetch_data()
         ds.load_data()
-    return dsEU, dsC19In
+    return [ dsEU, dsC19In ]
 
 
-def plot_simple():
+def plot_simple(allDS):
     fig, axes = ap.subplots(plt,4,2)
     iCur = 0
     sGlobalMsg = ""
-    for ds in [ dsC19In, dsEU ]:
+    for ds in allDS:
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:])
         ap.plot(axes[0,iCur], "raw", numXTicks=4, xtickMultOf=7, title="%s-Cases/Day"%(ds.name))
         ap.calc_rel2mean()
@@ -39,11 +39,11 @@ def plot_simple():
     save_fig(fig, sGlobalMsg)
 
 
-def plot_sel():
+def plot_sel(allDS):
     fig, axes = ap.subplots(plt,4,2)
     iCur = 0
     sGlobalMsg = ""
-    for ds in [ dsC19In, dsEU ]:
+    for ds in allDS:
         dprint("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[-2])))
         # The Raw data
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:])
@@ -83,9 +83,35 @@ def save_fig(fig, sMsg):
     plt.show()
 
 
-dsEU, dsC19In = fetch()
+def load_fromargs(args):
+    iArg = 1
+    dsAll = []
+    while iArg < len(args):
+        if args[iArg] == "--covid19in":
+            iArg += 1
+            ds = dsrc.Cov19InDataSrc()
+            ds.load(args[iArg])
+            iArg += 1
+            dsAll.append(ds)
+        elif args[iArg] == "--euworld":
+            iArg += 1
+            ds = dsrc.EUWorldDataSrc()
+            ds.load(args[iArg])
+            iArg += 1
+            dsAll.append(ds)
+        else:
+            print("ERRR:Main:load_fromargs:UnknownArg:%s"%(args[iArg]))
+    return dsAll
+
+
+
+if len(sys.argv) <= 1:
+    allDS = fetch()
+else:
+    allDS = load_fromargs(sys.argv)
+
 ap = analplot.AnalPlot()
-#plot_simple()
-plot_sel()
+#plot_simple(allDS)
+plot_sel(allDS)
 
 # vim: set softtabstop=4 expandtab shiftwidth=4: #
