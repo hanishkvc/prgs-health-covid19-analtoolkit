@@ -314,11 +314,14 @@ class EUWorldDataSrc(DataSrc):
         self.olddata = self.data
         self.hdr = [ "date", "Total2Calc" ] + self.geoIds
         self.data = data
+        # Save to csv file
+        fOutName = "{}.tmp2".format(self.localFileName)
         sHdr = ""
         for sCol in self.hdr:
             sHdr += "{},".format(sCol)
         sHdr = sHdr.rstrip(',')
-        numpy.savetxt("{}.tmp2".format(self.localFileName), self.data, delimiter=",", header=sHdr, comments="")
+        numpy.savetxt(fOutName, self.data, delimiter=",", header=sHdr, comments="")
+        os.rename(fOutName, self.localFileName)
 
 
     def conv_date(self, sDate):
@@ -330,12 +333,9 @@ class EUWorldDataSrc(DataSrc):
 
     def load_data(self, fileName=None, fixMissing=None):
         dprint("DBUG:DataSrc:EU:load_data:hdr-type:%s" %(type(self.hdr[-2])))
-        #super().load_data(fileName=fileName, delimiter=",", skip_header=1, iHdrLine=0)
-        #self.hdr = self.hdr[:-1]
-        #self.data = self.data[:,:-1]
         if fixMissing == None:
             fixMissing = { "type": "value", "missing": numpy.NAN, "value": 0 }
-        self.fix_missing(fixMissing)
+        super().load_data(fileName=fileName, delimiter=",", skip_header=1, iHdrLine=0, fixMissing=fixMissing)
 
 
 
