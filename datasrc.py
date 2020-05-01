@@ -265,7 +265,7 @@ class EUWorldDataSrc(DataSrc):
 
     def conv_geoid(self, sGeoId):
         try:
-            sGeoId = str(sGeoId)
+            sGeoId = sGeoId.decode()
             i = self.geoIds.index(sGeoId)
         except ValueError:
             self.geoIds.append(sGeoId)
