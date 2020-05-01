@@ -48,8 +48,29 @@ class DataSrc:
                 tData = self.data[iCur[0], iS:iE]
             self.data[tuple(iCur)] = 0
             iMean = numpy.sum(tData)/(iE-iS-1)
-            print("INFO:DataSrc:fix_missing:pos={}:curarea={}:new={}".format(iCur, tData, iMean))
+            print("INFO:DataSrc:fix_missing_localmean:pos={}:curarea={}:new={}".format(iCur, tData, iMean))
             self.data[tuple(iCur)] = iMean
+
+
+    def fix_missing(self, fixMissing=None):
+        """ fix missing values if required as specified
+            fixMissing: None or { "type": <type>, "missing": <missing>, "value": <value> }
+                <type>: "value" or "localmean" or "none"
+                    if  "value" give <missing> and <value>
+                    if "localmean" give <missing>
+                    if "none" do nothing
+                <missing>: the value in the data to be treated as missing value
+                <value>: the value to use in place of missing value
+            """
+        if fixMissing != None:
+            if fixMissing["type"] == "localmean":
+                self.fix_missing_localmean(missing=fixMissing["missing"])
+            elif fixMissing["type"] == "value":
+                self.fix_missing_value(missing=fixMissing["missing"], value=fixMissing["value"])
+            elif fixMissing["type"] == "None":
+                pass
+            else:
+                raise NotImplementedError("DataSrc:fix_missing:type:{}".format(fixMissing["type"]))
 
 
     def download(self, theUrl = None, localFileName = None):
@@ -170,26 +191,15 @@ class DataSrc:
 
 
     def load_data(self, fileName=None, dtype=float, delimiter=None, skip_header=None, converters=None, iHdrLine=None, usecols=None, fixMissing=None):
-        """
+        """ load data from specified csv file
             iHdrLine: the column header line among the skip_header lines, starts at 0
-            fixMissing: None or { "type": <type>, "missing": <missing>, "value": <value> }
-                <type>: "value" or "localmean"
-                    if  "value" give <missing> and <value>
-                    if "localmean" give <missing>
-                <missing>: the value in the data to be treated as missing value
-                <value>: the value to use in place of missing value
+            fixMissing: None or as specified by fix_missing function
             """
         if fileName == None:
             fileName = self.localFileName
         print("INFO:DataSrc:Loading:{}".format(fileName))
         self.data = numpy.genfromtxt(fileName, dtype = dtype, delimiter=delimiter, skip_header=skip_header, converters=converters, usecols=usecols)
-        if fixMissing != None:
-            if fixMissing["type"] == "localmean":
-                self.fix_missing_localmean(missing=fixMissing["missing"])
-            elif fixMissing["type"] == "value":
-                self.fix_missing_value(missing=fixMissing["missing"], value=fixMissing["value"])
-            else:
-                raise NotImplementedError("DataSrc:load_data:fixMissingType:{}".format(fixMissing["type"]))
+        self.fix_missing(fixMissing)
         if (skip_header != None) and (iHdrLine != None):
             if (iHdrLine < skip_header):
                 self.hdr = self._load_hdr(fileName, delimiter, iHdrLine)
@@ -223,6 +233,8 @@ class Cov19InDataSrc(DataSrc):
 
     def load_data(self, fileName=None, fixMissing=None):
         converters = { 0: lambda x: self.conv_date(x) }
+        if fixMissing == None:
+            fixMissing = { "type": "value", "missing": numpy.NAN, "value": 0 }
         super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters, iHdrLine=0, fixMissing=fixMissing)
         self.hdr = self.hdr[:-1]
         self.data = self.data[:,:-1]
@@ -311,12 +323,14 @@ class EUWorldDataSrc(DataSrc):
         return iDate
 
 
-    def load_data(self, fileName=None):
+    def load_data(self, fileName=None, fixMissing=None):
         dprint("DBUG:DataSrc:EU:load_data:hdr-type:%s" %(type(self.hdr[-2])))
         #super().load_data(fileName=fileName, delimiter=",", skip_header=1, iHdrLine=0)
         #self.hdr = self.hdr[:-1]
         #self.data = self.data[:,:-1]
-        None
+        if fixMissing == None:
+            fixMissing = { "type": "value", "missing": numpy.NAN, "value": 0 }
+        self.fix_missing(fixMissing)
 
 
 
