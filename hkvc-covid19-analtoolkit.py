@@ -39,8 +39,20 @@ def plot_simple(allDS):
     save_fig(fig, sGlobalMsg)
 
 
+def plot_diffdata(ds, ap, axes, iARow, iACol, dataSel="raw", sBaseDataMsg="Cases/Day"):
+    ap.calc_diff(dataSel)
+    ap.calc_movavg_ex(dataSel="%s.diff"%(dataSel), times=2)
+    ap.calc_movavg_ex(dataSel="%s.diff"%(dataSel), times=3)
+    selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataSel), topN=8)
+    ap.plot(axes[iARow,iACol], "%s.diff.movavgT3"%(dataSel), plotSelCols=selCols, plotLegend=True,
+                title="%s-DiffOf%s_MovAvgT3-DiffMovAvgT2Top8"%(ds.name, sBaseDataMsg))
+    inset = axes[iARow,iACol].inset_axes([0.13,0.55,0.64,0.4])
+    ap.plot(inset, "%s.diff"%(dataSel), plotSelCols=selCols, plotLegend=None, bTranslucent=True,
+                title="%s-DiffOf%s-DiffMovAvgT2Top8"%(ds.name, sBaseDataMsg))
+
+
 def plot_sel(allDS):
-    fig, axes = ap.subplots(plt,4,2)
+    fig, axes = ap.subplots(plt,5,2)
     iCur = 0
     sGlobalMsg = ""
     for ds in allDS:
@@ -62,13 +74,9 @@ def plot_sel(allDS):
         selCols, selPers = ap.selcols_percentiles("raw.movavg", topN=15)
         ap.boxplot(axes[2,iCur], "raw", plotSelCols=selCols, bInsetBoxPlot=True, title="%s-Cases/Day-MovAvgTop15"%(ds.name))
         # Diff of Raw data
-        ap.calc_diff()
-        ap.calc_movavg_ex(dataSel="raw.diff", times=2)
-        ap.calc_movavg_ex(dataSel="raw.diff", times=3)
-        selCols, selPers = ap.selcols_percentiles("raw.diff.movavgT2", topN=8)
-        ap.plot(axes[3,iCur], "raw.diff.movavgT3", plotSelCols=selCols, plotLegend=True, title="%s-DiffOfCases/Day_MovAvgT3-DiffMovAvgT2Top8"%(ds.name))
-        inset = axes[3,iCur].inset_axes([0.13,0.55,0.64,0.4])
-        ap.plot(inset, "raw.diff", plotSelCols=selCols, plotLegend=None, bTranslucent=True, title="%s-DiffOfCases/Day-DiffMovAvgT2Top8"%(ds.name))
+        plot_diffdata(ds, ap, axes, 3, iCur)
+        ap.calc_rel2sum()
+        plot_diffdata(ds, ap, axes, 4, iCur, dataSel="raw.rel2sum", sBaseDataMsg="Rel2SumOfCases/Day")
         sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
     save_fig(fig, sGlobalMsg)

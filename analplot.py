@@ -102,7 +102,7 @@ class AnalPlot:
         else:
             tD = d[:,plotSelCols]
             tDCH = dCH[plotSelCols]
-        dprint("DBUG:AnalPlot:plot:hdr-type:%s" %(type(tDCH[-2])))
+        dprint("DBUG:AnalPlot:plot:\n\tdataSel:%s\n\tFields|ColHdr:%s" %(dataSel, tDCH))
         ax.plot(tD)
         if title != None:
             ax.set_title(title)
