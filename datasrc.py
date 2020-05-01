@@ -332,10 +332,10 @@ class EUWorldDataSrc(DataSrc):
 
 
     def load_data(self, fileName=None, fixMissing=None):
-        dprint("DBUG:DataSrc:EU:load_data:hdr-type:%s" %(type(self.hdr[-2])))
         if fixMissing == None:
             fixMissing = { "type": "value", "missing": numpy.NAN, "value": 0 }
         super().load_data(fileName=fileName, delimiter=",", skip_header=1, iHdrLine=0, fixMissing=fixMissing)
+        dprint("DBUG:DataSrc:EU:load_data:hdr-type:%s" %(type(self.hdr[-2])))
 
 
 

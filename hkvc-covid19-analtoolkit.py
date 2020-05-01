@@ -87,20 +87,21 @@ def load_fromargs(args):
     iArg = 1
     dsAll = []
     while iArg < len(args):
-        if args[iArg] == "--covid19in":
+        if args[iArg] == "--cov19in":
             iArg += 1
             ds = dsrc.Cov19InDataSrc()
-            ds.load(args[iArg])
+            ds.load_data(args[iArg])
             iArg += 1
             dsAll.append(ds)
         elif args[iArg] == "--euworld":
             iArg += 1
             ds = dsrc.EUWorldDataSrc()
-            ds.load(args[iArg])
+            ds.load_data(args[iArg])
             iArg += 1
             dsAll.append(ds)
         else:
             print("ERRR:Main:load_fromargs:UnknownArg:%s"%(args[iArg]))
+            iArg += 1
     return dsAll
 
 
