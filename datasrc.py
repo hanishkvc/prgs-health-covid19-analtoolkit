@@ -314,6 +314,11 @@ class EUWorldDataSrc(DataSrc):
         self.olddata = self.data
         self.hdr = [ "date", "Total2Calc" ] + self.geoIds
         self.data = data
+        sHdr = ""
+        for sCol in self.hdr:
+            sHdr += "{},".format(sCol)
+        sHdr = sHdr.rstrip(',')
+        numpy.savetxt("{}.tmp2".format(self.localFileName), self.data, delimiter=",", header=sHdr, comments="")
 
 
     def conv_date(self, sDate):
