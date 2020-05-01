@@ -63,9 +63,9 @@ def plot_sel():
         # Diff of Raw data
         ap.calc_diff()
         ap.calc_movavg(dataSel="raw.diff")
-        selCols, selPers = ap.selcols_percentiles("raw.diff.movavg", topN=5)
-        ap.plot(axes[3,iCur], "raw.diff", plotSelCols=selCols, plotLegend=True, title="%s-Cases/Day_Diff-DiffMovAvgTop5"%(ds.name))
-        ap.plot(axes[4,iCur], "raw.diff.movavg", plotSelCols=selCols, plotLegend=True, title="%s-Cases/Day_DiffMovAvg-DiffMovAvgTop5"%(ds.name))
+        selCols, selPers = ap.selcols_percentiles("raw.diff.movavg", topN=8)
+        ap.plot(axes[3,iCur], "raw.diff", plotSelCols=selCols, plotLegend=True, title="%s-Cases/Day_Diff-DiffMovAvgTop8"%(ds.name))
+        ap.plot(axes[4,iCur], "raw.diff.movavg", plotSelCols=selCols, plotLegend=True, title="%s-Cases/Day_DiffMovAvg-DiffMovAvgTop8"%(ds.name))
         sGlobalMsg += " {}:DataDate:{}-{};".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
     save_fig(fig, sGlobalMsg)
