@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Analyse Plot data sets
 # v20200430IST1743, HanishKVC
-# 
+#
 
 import numpy as np
 from helpers import *
@@ -50,6 +50,8 @@ class AnalPlot:
 
 
     def get_data(self, dataKey="raw"):
+        """ Return the specified data and its col and row headers
+            """
         sDKey, sCHKey, sRHKey = self._get_datakeys(dataKey)
         d = self.data[sDKey]
         dCH = self.data[sCHKey]
@@ -72,6 +74,9 @@ class AnalPlot:
 
 
     def calc_rel2mean(self, dataKey="raw", bHandleColsWith0=True):
+        """ Calculate the mean for each col and store val/mean
+            for each val in the respective columns.
+            """
         d, dCH, dRH = self.get_data(dataKey)
         if bHandleColsWith0:
             colsWith0 = self.get_cols_withval(dataKey, 0)
@@ -84,6 +89,9 @@ class AnalPlot:
 
 
     def calc_rel2sum(self, dataKey="raw", bHandleColsWith0=True):
+        """ Calculate the sum for each col and store value/sum
+            for each value in the respective columns.
+            """
         d, dCH, dRH = self.get_data(dataKey)
         if bHandleColsWith0:
             colsWith0 = self.get_cols_withval(dataKey, 0)
@@ -131,6 +139,26 @@ class AnalPlot:
 
 
     def selcols_percentiles(self, dataKey="raw", selRow=-1, selPers=[0,100], bSelInclusive=True, topN=None, botN=None):
+        """ Select a set of cols belonging to the specified dataKey, which are within
+            the specified percentile range wrt their values in the specified row.
+            dataKey: specifies the data set to work with
+            selRow: specifies which row in the dataset one should use to calculate
+                the percentiles, which will represent the columns.
+            selPers: the range of percentiles within which the column should fall
+                for it to be selected.
+                One could either explicitly specify this or else specify one of
+                topN or botN.
+            bSelInclusive: Specifies whether the boundry specfied by selPers is
+                included in the range of percentiles, when selecting the cols.
+            topN: If specified, this is used to decide the selPers to be used.
+                If one requires to select the top N columns in the dataset, based
+                on the percentile calculation for the given row in the dataset,
+                use this.
+            botN: If specified, this is used to decide the selPers to be used.
+                If one requires to select the bottom N columns in the dataset,
+                based on percentile calculation for given row in the dataset,
+                use this.
+            """
         d = self.data[dataKey]
         if (topN != None) and (botN != None):
             print("WARN:AnalPlot:selcols_percentile: botN takes priority if both topN & botN specified")
@@ -205,6 +233,13 @@ class AnalPlot:
 
 
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
+        """ Same as pyplot's subplots, except that this also sets the size
+            of the figure, based on how many rows and cols are there.
+            pltRows: specifies the number of rows in the figure generated
+            pltCols: specifies the number of cols in the figure generated
+            rowHeight: specifies the size to be alloted per row
+            colWidth: specifies the size to be alloted per col
+            """
         fig, axes = plt.subplots(pltRows, pltCols)
         fig.set_figwidth(pltCols*colWidth)
         fig.set_figheight(pltRows*rowHeight)
