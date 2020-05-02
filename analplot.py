@@ -229,14 +229,6 @@ class AnalPlot:
         for fname in self.dCalcFuncs:
             if sCmd.startswith(fname):
                 self.dCalcFuncs[fname](self, sBDKey)
-                """
-                # This will work
-                tFunc = self.dCalcFuncs[fname]
-                dprint("DBUG:AnalPlot:get_data:self[{}], tFunc[{}], sBDKey[{}]".format(self, tFunc, sBDKey), 0)
-                tFunc(self, sBDKey)
-                # This wont work
-                tFunc(sBDKey)
-                """
                 return self._get_data(dataKey)
         raise NotImplementedError("AnalPlot:get_data:Func[{}] not found...")
 
