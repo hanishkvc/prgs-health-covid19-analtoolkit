@@ -40,21 +40,21 @@ def plot_simple(allDS):
     save_fig(fig, sGlobalMsg)
 
 
-def plot_diffdata(ds, ap, axes, iARow, iACol, dataSel="raw", sBaseDataMsg="Cases/Day"):
-    ap.calc_diff(dataSel)
-    ap.calc_movavg_ex(dataSel="%s.diff"%(dataSel), times=2)
-    ap.calc_movavg_ex(dataSel="%s.diff"%(dataSel), times=3)
-    selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataSel), topN=8)
-    ap.plot(axes[iARow,iACol], "%s.diff.movavgT3"%(dataSel), plotSelCols=selCols, plotLegend=True,
+def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="raw", sBaseDataMsg="Cases/Day"):
+    ap.calc_diff(dataKey)
+    ap.calc_movavg_ex(dataKey="%s.diff"%(dataKey), times=2)
+    ap.calc_movavg_ex(dataKey="%s.diff"%(dataKey), times=3)
+    selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataKey), topN=8)
+    ap.plot(axes[iARow,iACol], "%s.diff.movavgT3"%(dataKey), plotSelCols=selCols, plotLegend=True,
                 title="%s-DiffOf%s_MovAvgT3-DiffMovAvgT2Top8"%(ds.name, sBaseDataMsg))
     inset = axes[iARow,iACol].inset_axes([0.13,0.55,0.64,0.4])
-    ap.plot(inset, "%s.diff"%(dataSel), plotSelCols=selCols, plotLegend=None, bTranslucent=True,
+    ap.plot(inset, "%s.diff"%(dataKey), plotSelCols=selCols, plotLegend=None, bTranslucent=True,
                 title="%s-DiffOf%s-DiffMovAvgT2Top8"%(ds.name, sBaseDataMsg))
-    ap.calc_rel2sum(dataSel)
-    ap.calc_movavg_ex(dataSel="%s.rel2sum"%(dataSel), times=2)
-    ap.plot(axes[iARow+1,iACol], "%s.rel2sum.movavgT2"%(dataSel), plotSelCols=selCols, plotLegend=True,
+    ap.calc_rel2sum(dataKey)
+    ap.calc_movavg_ex(dataKey="%s.rel2sum"%(dataKey), times=2)
+    ap.plot(axes[iARow+1,iACol], "%s.rel2sum.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
                 title="%s-MovAvgT2OfRel2SumOf%s-DiffMovAvgT2Top8"%(ds.name, sBaseDataMsg))
-    ap.plotxy(axes[iARow+2,iACol], dataSel, "%s.diff.movavgT2"%(dataSel), title="%s vs %s.diff.movavgT2"%(dataSel,dataSel))
+    ap.plotxy(axes[iARow+2,iACol], dataKey, "%s.diff.movavgT2"%(dataKey), title="%s vs %s.diff.movavgT2"%(dataKey,dataKey))
 
 
 def plot_sel(allDS):
@@ -83,7 +83,7 @@ def plot_sel(allDS):
         # Diff of Raw data
         plot_diffdata(ds, ap, axes, 3, iCur)
         #ap.calc_rel2sum()
-        #plot_diffdata(ds, ap, axes, 4, iCur, dataSel="raw.rel2sum", sBaseDataMsg="Rel2SumOfCases/Day")
+        #plot_diffdata(ds, ap, axes, 4, iCur, dataKey="raw.rel2sum", sBaseDataMsg="Rel2SumOfCases/Day")
         sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
     save_fig(fig, sGlobalMsg)

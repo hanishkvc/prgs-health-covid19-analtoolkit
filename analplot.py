@@ -24,7 +24,7 @@ class AnalPlot:
         return sDKey, sCHKey, sRHKey
 
 
-    def new_dataset():
+    def new_dataset(self):
         """ Setup the current AnalPlot instance to work with
             a new set of data. THis automatically clears any
             prev data that may be stored by this instance.
@@ -209,7 +209,7 @@ class AnalPlot:
         if (numXTicks != None):
             if plotXTickGap != None:
                 print("WARN:analplot.plot: numXTicks overrides plotXTickGap")
-            plotXTickGap = int(((d.shape[0]/numXTicks)/xtickMultOf)+1)*xtickMultOf
+            plotXTickGap = int(((tD.shape[0]/numXTicks)/xtickMultOf)+1)*xtickMultOf
         if plotXTickGap != None:
             ax.set_xticks(np.arange(0, dRH.shape[0], plotXTickGap))
             ax.set_xticklabels(dRH[0::plotXTickGap])
