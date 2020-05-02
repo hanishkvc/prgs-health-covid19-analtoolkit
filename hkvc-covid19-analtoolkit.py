@@ -49,17 +49,16 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day"):
                 title="%s-__AUTO__-DiffMovAvgT2Top8"%(ds.name))
     ap.plot(axes[iARow+1,iACol], "%s.rel2sum.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
                 title="%s-__AUTO__-DiffMovAvgT2Top8"%(ds.name))
-    ap.plotxy(axes[iARow+2,iACol], "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True)
     selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataKey), topN=25, bSelInclusive=True)
-    ap.plotxy(axes[iARow+3,iACol], "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols,
+    ap.plotxy(axes[iARow+2,iACol], "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols,
                 title="%s-__AUTO__~Top25(diff.movavgT2)"%(ds.name), xscale="log", yscale="log", plotLegend=True)
     selCols, selPers = ap.selcols_percentiles("%s.cumsum"%(dataKey), topN=25, bSelInclusive=True)
-    ap.plotxy(axes[iARow+4,iACol], "%s.cumsum"%(dataKey), "%s.movavg"%(dataKey), plotSelCols=selCols,
+    ap.plotxy(axes[iARow+3,iACol], "%s.cumsum"%(dataKey), "%s.movavg"%(dataKey), plotSelCols=selCols,
                 title="%s-__AUTO__~Top25(cumsum)"%(ds.name), xscale="log", yscale="log", plotLegend=True)
 
 
 def plot_sel(allDS):
-    fig, axes = ap.subplots(plt,8,2)
+    fig, axes = ap.subplots(plt,6,2)
     iCur = 0
     sGlobalMsg = ""
     for ds in allDS:
@@ -67,22 +66,20 @@ def plot_sel(allDS):
         dprint("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[-2])))
         # The Raw data
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
-        ap.plot(axes[0,iCur], "cases/day", numXTicks=4, xtickMultOf=7, title="%s-__AUTO__-All"%(ds.name))
+        topN=12
+        selCols, selPers = ap.selcols_percentiles("cases/day.movavg", topN=topN)
+        ap.plot(axes[0,iCur], "cases/day", plotSelCols=selCols, plotLegend=True, numXTicks=4, xtickMultOf=7, title="%s-__AUTO__-movavgTop%d"%(ds.name, topN))
         # The moving avg
-        """
-        selCols, selPers = ap.selcols_percentiles("cases/day.movavg", selPers=[0,15])
-        ap.plot(axes[1,iCur], "cases/day.movavg", plotSelCols=selCols, plotLegend=True)
-        """
-        selCols, selPers = ap.selcols_percentiles("cases/day.movavg", topN=12)
         yscale = "log"
         yscale = None
-        ap.plot(axes[1,iCur], "cases/day.movavg", plotSelCols=selCols, plotLegend=True, yscale=yscale, title="%s-__AUTO__-MovAvgTop12"%(ds.name))
+        inset = axes[0,iCur].inset_axes([0.16,0.55,0.64,0.4])
+        ap.plot(inset, "cases/day.movavg", plotSelCols=selCols, yscale=yscale, bTranslucent=True, title="%s-__AUTO__-MovAvgTop%d"%(ds.name, topN))
         # Boxplot Raw data
-        selCols, selPers = ap.selcols_percentiles("cases/day.movavg", topN=15)
-        ap.boxplot(axes[2,iCur], "cases/day", plotSelCols=selCols, bInsetBoxPlot=True, title="%s-Cases/Day-MovAvgTop15"%(ds.name))
+        topN=20
+        selCols, selPers = ap.selcols_percentiles("cases/day.movavg", topN=topN)
+        ap.boxplot(axes[1,iCur], "cases/day", plotSelCols=selCols, bInsetBoxPlot=True, title="%s-Cases/Day-MovAvgTop%d"%(ds.name, topN))
         # Diff of Raw data
-        plot_diffdata(ds, ap, axes, 3, iCur)
-        #ap.calc_rel2sum()
+        plot_diffdata(ds, ap, axes, 2, iCur)
         #plot_diffdata(ds, ap, axes, 4, iCur, dataKey="cases/day.rel2sum", sBaseDataMsg="Rel2SumOfCases/Day")
         sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
