@@ -81,8 +81,8 @@ class AnalPlot:
     def get_cols_withval(self, dataKey="raw", val = 0):
         """ Find cols which contain the given val in all its rows
             """
-        #d, dCH, dRH = self.get_data(dataKey)
-        d = self.data[dataKey]
+        d, dCH, dRH = self.get_data(dataKey)
+        #d = self.data[dataKey]
         colsWithVal = []
         for i in range(d.shape[1]):
             tMin = np.min(d[:,i])
@@ -188,7 +188,7 @@ class AnalPlot:
                 based on percentile calculation for given row in the dataset,
                 use this.
             """
-        d = self.data[dataKey]
+        d, dCH, dRH = self.get_data(dataKey)
         if (topN != None) and (botN != None):
             print("WARN:AnalPlot:selcols_percentile: botN takes priority if both topN & botN specified")
         if topN != None:
@@ -226,10 +226,17 @@ class AnalPlot:
             return self._get_data(dataKey)
         # This means data not in dict, lets see if we can create it
         [sBDKey, sCmd] = dataKey.rsplit('.',1)
-        sBDKey, sBCHKey, sBRHKey = self.get_data(sBDKey)
-        for fname in dCalcFuncs:
+        for fname in self.dCalcFuncs:
             if sCmd.startswith(fname):
-                self.dCalcFuncs[fname](sBDKey)
+                self.dCalcFuncs[fname](self, sBDKey)
+                """
+                # This will work
+                tFunc = self.dCalcFuncs[fname]
+                dprint("DBUG:AnalPlot:get_data:self[{}], tFunc[{}], sBDKey[{}]".format(self, tFunc, sBDKey), 0)
+                tFunc(self, sBDKey)
+                # This wont work
+                tFunc(sBDKey)
+                """
                 return self._get_data(dataKey)
         raise NotImplementedError("AnalPlot:get_data:Func[{}] not found...")
 

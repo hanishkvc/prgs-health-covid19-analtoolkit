@@ -41,7 +41,6 @@ def plot_simple(allDS):
 
 
 def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", sBaseDataMsg="Cases/Day"):
-    ap.calc_diff(dataKey)
     ap.calc_movavg_ex(dataKey="%s.diff"%(dataKey), times=2)
     ap.calc_movavg_ex(dataKey="%s.diff"%(dataKey), times=3)
     selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataKey), topN=8)
@@ -75,7 +74,6 @@ def plot_sel(allDS):
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
         ap.plot(axes[0,iCur], "cases/day", numXTicks=4, xtickMultOf=7, title="%s-Cases/Day-All"%(ds.name))
         # The moving avg
-        ap.calc_movavg("cases/day")
         """
         selCols, selPers = ap.selcols_percentiles("cases/day.movavg", selPers=[0,15])
         ap.plot(axes[1,iCur], "cases/day.movavg", plotSelCols=selCols, plotLegend=True)
