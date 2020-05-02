@@ -150,7 +150,7 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
-    def calc_movavg_ex(self, dataKey="raw", avgOver=7, times=2):
+    def calc_movavg_ex(self, dataKey="raw", avgOver=7, times=2, bRoundToDeci8=True):
         d, dCH, dRH = self.get_data(dataKey)
         tWeight = np.ones(avgOver)/avgOver
         dCur = d
@@ -159,8 +159,10 @@ class AnalPlot:
             for i in range(1,dCur.shape[1]):
                 dataConv[:,i] = np.convolve(dCur[:,i], tWeight, 'valid')
             dCur = dataConv
+        if bRoundToDeci8:
+            dCur = np.round(dCur, 8)
         newDKey, newCHKey, newRHKey = self._get_datakeys("%s.movavgT%d"%(dataKey,times))
-        self.data[newDKey] = dataConv
+        self.data[newDKey] = dCur
         self.data[newRHKey] = list(range(dataConv.shape[0]))
         self.data[newCHKey] = dCH
 
