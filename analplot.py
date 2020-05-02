@@ -239,7 +239,7 @@ class AnalPlot:
             inset.grid(True, axis='y')
 
 
-    def plotXY(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title=None):
+    def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title=None):
         """ Plot the specified subset of cols from two related datasets such that
             values of these cols in one of the dataset acts as the x value
             and the values of these cols in the other dataset acts as the y value
