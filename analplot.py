@@ -18,8 +18,23 @@ class AnalPlot:
         return sDKey, sCHKey, sRHKey
 
 
-    def set_raw(self, data, rowHdr=None, colHdr=None, dataKey="raw", skipRowsTop=0, skipRowsBottom=-1, skipColsLeft=0, skipColsRight=-1):
+    def new_dataset():
+        """ Setup the current AnalPlot instance to work with
+            a new set of data. THis automatically clears any
+            prev data that may be stored by this instance.
+            """
         self.data = {}
+
+
+    def set_raw(self, data, rowHdr=None, colHdr=None, dataKey="raw", skipRowsTop=0, skipRowsBottom=-1, skipColsLeft=0, skipColsRight=-1):
+        """ Store new raw data along with given row header and col header
+            data: the new raw data to store
+            colHdr: the associated column | field header
+                    i.e what each col corresponds to
+            rowHdr: the associated row header
+                    i.e what each row corresponds to
+            dataKey: the base key to use for refering to this data
+            """
         sDKey, sCHKey, sRHKey = self._get_datakeys(dataKey)
         self.data[sDKey] = data
         self.data[sRHKey] = rowHdr

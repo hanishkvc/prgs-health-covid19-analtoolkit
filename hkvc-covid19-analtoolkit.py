@@ -25,6 +25,7 @@ def plot_simple(allDS):
     iCur = 0
     sGlobalMsg = ""
     for ds in allDS:
+        ap.new_dataset()
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:])
         ap.plot(axes[0,iCur], "raw", numXTicks=4, xtickMultOf=7, title="%s-Cases/Day"%(ds.name))
         ap.calc_rel2mean()
@@ -60,6 +61,7 @@ def plot_sel(allDS):
     iCur = 0
     sGlobalMsg = ""
     for ds in allDS:
+        ap.new_dataset()
         dprint("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[-2])))
         # The Raw data
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:])
