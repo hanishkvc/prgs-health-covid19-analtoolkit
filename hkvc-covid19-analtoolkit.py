@@ -55,10 +55,13 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="raw", sBaseDataMsg="Cases
     ap.plot(axes[iARow+1,iACol], "%s.rel2sum.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
                 title="%s-MovAvgT2OfRel2SumOf%s-DiffMovAvgT2Top8"%(ds.name, sBaseDataMsg))
     ap.plotxy(axes[iARow+2,iACol], "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True)
+    selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataKey), topN=25, bSelInclusive=False)
+    ap.plotxy(axes[iARow+3,iACol], "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols,
+                xscale="log", yscale="log", plotLegend=True)
 
 
 def plot_sel(allDS):
-    fig, axes = ap.subplots(plt,6,2)
+    fig, axes = ap.subplots(plt,7,2)
     iCur = 0
     sGlobalMsg = ""
     for ds in allDS:
