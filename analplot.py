@@ -11,16 +11,16 @@ from helpers import *
 class AnalPlot:
 
 
-    def _get_datakeys(self, dataSel="raw"):
-        sDKey = dataSel
-        sCHKey = "%sColHdr"%(dataSel)
-        sRHKey = "%sRowHdr"%(dataSel)
+    def _get_datakeys(self, dataKey="raw"):
+        sDKey = dataKey
+        sCHKey = "%sColHdr"%(dataKey)
+        sRHKey = "%sRowHdr"%(dataKey)
         return sDKey, sCHKey, sRHKey
 
 
-    def set_raw(self, data, rowHdr=None, colHdr=None, dataName="raw", skipRowsTop=0, skipRowsBottom=-1, skipColsLeft=0, skipColsRight=-1):
+    def set_raw(self, data, rowHdr=None, colHdr=None, dataKey="raw", skipRowsTop=0, skipRowsBottom=-1, skipColsLeft=0, skipColsRight=-1):
         self.data = {}
-        sDKey, sCHKey, sRHKey = self._get_datakeys(dataName)
+        sDKey, sCHKey, sRHKey = self._get_datakeys(dataKey)
         self.data[sDKey] = data
         self.data[sRHKey] = rowHdr
         if type(colHdr) == type(list()):
@@ -28,18 +28,18 @@ class AnalPlot:
         self.data[sCHKey] = colHdr
 
 
-    def get_basedata(self, dataSel="raw"):
-        d = self.data[dataSel]
-        dCH = self.data["{}ColHdr".format(dataSel)]
-        dRH = self.data["{}RowHdr".format(dataSel)]
+    def get_basedata(self, dataKey="raw"):
+        d = self.data[dataKey]
+        dCH = self.data["{}ColHdr".format(dataKey)]
+        dRH = self.data["{}RowHdr".format(dataKey)]
         return d, dCH, dRH
 
 
-    def get_cols_withval(self, dataSel="raw", val = 0):
+    def get_cols_withval(self, dataKey="raw", val = 0):
         """ Find cols which contain the given val in all its rows
             """
-        #d, dCH, dRH = self.get_basedata(dataSel)
-        d = self.data[dataSel]
+        #d, dCH, dRH = self.get_basedata(dataKey)
+        d = self.data[dataKey]
         colsWithVal = []
         for i in range(d.shape[1]):
             tMin = np.min(d[:,i])
@@ -49,48 +49,48 @@ class AnalPlot:
         return colsWithVal
 
 
-    def calc_rel2mean(self, dataSel="raw", bHandleColsWith0=True):
-        d, dCH, dRH = self.get_basedata(dataSel)
+    def calc_rel2mean(self, dataKey="raw", bHandleColsWith0=True):
+        d, dCH, dRH = self.get_basedata(dataKey)
         if bHandleColsWith0:
-            colsWith0 = self.get_cols_withval(dataSel, 0)
-        self.data["{}.rel2mean".format(dataSel)] = d/np.mean(d, axis=0)
+            colsWith0 = self.get_cols_withval(dataKey, 0)
+        self.data["{}.rel2mean".format(dataKey)] = d/np.mean(d, axis=0)
         if bHandleColsWith0:
-            self.data["{}.rel2mean".format(dataSel)][:,colsWith0] = 0
-        self.data["{}.rel2meanRowHdr".format(dataSel)] = dRH
-        self.data["{}.rel2meanColHdr".format(dataSel)] = dCH
+            self.data["{}.rel2mean".format(dataKey)][:,colsWith0] = 0
+        self.data["{}.rel2meanRowHdr".format(dataKey)] = dRH
+        self.data["{}.rel2meanColHdr".format(dataKey)] = dCH
 
 
-    def calc_rel2sum(self, dataSel="raw", bHandleColsWith0=True):
-        d, dCH, dRH = self.get_basedata(dataSel)
+    def calc_rel2sum(self, dataKey="raw", bHandleColsWith0=True):
+        d, dCH, dRH = self.get_basedata(dataKey)
         if bHandleColsWith0:
-            colsWith0 = self.get_cols_withval(dataSel, 0)
-        self.data["{}.rel2sum".format(dataSel)] = d/np.sum(d, axis=0)
+            colsWith0 = self.get_cols_withval(dataKey, 0)
+        self.data["{}.rel2sum".format(dataKey)] = d/np.sum(d, axis=0)
         if bHandleColsWith0:
-            self.data["{}.rel2sum".format(dataSel)][:,colsWith0] = 0
-        self.data["{}.rel2sumRowHdr".format(dataSel)] = dRH
-        self.data["{}.rel2sumColHdr".format(dataSel)] = dCH
+            self.data["{}.rel2sum".format(dataKey)][:,colsWith0] = 0
+        self.data["{}.rel2sumRowHdr".format(dataKey)] = dRH
+        self.data["{}.rel2sumColHdr".format(dataKey)] = dCH
 
 
-    def calc_diff(self, dataSel="raw"):
-        d, dCH, dRH = self.get_basedata(dataSel)
-        self.data["{}.diff".format(dataSel)] = np.diff(d, axis=0)
-        self.data["{}.diffRowHdr".format(dataSel)] = dRH[1:]
-        self.data["{}.diffColHdr".format(dataSel)] = dCH
+    def calc_diff(self, dataKey="raw"):
+        d, dCH, dRH = self.get_basedata(dataKey)
+        self.data["{}.diff".format(dataKey)] = np.diff(d, axis=0)
+        self.data["{}.diffRowHdr".format(dataKey)] = dRH[1:]
+        self.data["{}.diffColHdr".format(dataKey)] = dCH
 
 
-    def calc_movavg(self, dataSel="raw", avgOver=7):
-        d, dCH, dRH = self.get_basedata(dataSel)
+    def calc_movavg(self, dataKey="raw", avgOver=7):
+        d, dCH, dRH = self.get_basedata(dataKey)
         tWeight = np.ones(avgOver)/avgOver
         dataConv = np.zeros((d.shape[0]-(avgOver-1),d.shape[1]))
         for i in range(1,d.shape[1]):
             dataConv[:,i] = np.convolve(d[:,i], tWeight, 'valid')
-        self.data["{}.movavg".format(dataSel)] = dataConv
-        self.data["{}.movavgRowHdr".format(dataSel)] = list(range(dataConv.shape[0]))
-        self.data["{}.movavgColHdr".format(dataSel)] = dCH
+        self.data["{}.movavg".format(dataKey)] = dataConv
+        self.data["{}.movavgRowHdr".format(dataKey)] = list(range(dataConv.shape[0]))
+        self.data["{}.movavgColHdr".format(dataKey)] = dCH
 
 
-    def calc_movavg_ex(self, dataSel="raw", avgOver=7, times=2):
-        d, dCH, dRH = self.get_basedata(dataSel)
+    def calc_movavg_ex(self, dataKey="raw", avgOver=7, times=2):
+        d, dCH, dRH = self.get_basedata(dataKey)
         tWeight = np.ones(avgOver)/avgOver
         dCur = d
         for time in range(times):
@@ -98,13 +98,13 @@ class AnalPlot:
             for i in range(1,dCur.shape[1]):
                 dataConv[:,i] = np.convolve(dCur[:,i], tWeight, 'valid')
             dCur = dataConv
-        self.data["{}.movavgT{}".format(dataSel,times)] = dataConv
-        self.data["{}.movavgT{}RowHdr".format(dataSel,times)] = list(range(dataConv.shape[0]))
-        self.data["{}.movavgT{}ColHdr".format(dataSel,times)] = dCH
+        self.data["{}.movavgT{}".format(dataKey,times)] = dataConv
+        self.data["{}.movavgT{}RowHdr".format(dataKey,times)] = list(range(dataConv.shape[0]))
+        self.data["{}.movavgT{}ColHdr".format(dataKey,times)] = dCH
 
 
-    def selcols_percentiles(self, dataSel="raw", selRow=-1, selPers=[0,100], bSelInclusive=True, topN=None, botN=None):
-        d = self.data[dataSel]
+    def selcols_percentiles(self, dataKey="raw", selRow=-1, selPers=[0,100], bSelInclusive=True, topN=None, botN=None):
+        d = self.data[dataKey]
         if (topN != None) and (botN != None):
             print("WARN:AnalPlot:selcols_percentile: botN takes priority if both topN & botN specified")
         if topN != None:
@@ -124,15 +124,15 @@ class AnalPlot:
         return selCols, selPers
 
 
-    def plot(self, ax, dataSel, plotSelCols=None, title=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None, bTranslucent=False):
-        d, dCH, dRH = self.get_basedata(dataSel)
+    def plot(self, ax, dataKey, plotSelCols=None, title=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None, bTranslucent=False):
+        d, dCH, dRH = self.get_basedata(dataKey)
         if type(plotSelCols) == type(None):
             tD = d
             tDCH = dCH
         else:
             tD = d[:,plotSelCols]
             tDCH = dCH[plotSelCols]
-        dprint("DBUG:AnalPlot:plot:\n\tdataSel:%s\n\tFields|ColHdr:%s" %(dataSel, tDCH))
+        dprint("DBUG:AnalPlot:plot:\n\tdataKey:%s\n\tFields|ColHdr:%s" %(dataKey, tDCH))
         ax.plot(tD)
         if title != None:
             ax.set_title(title)
@@ -154,8 +154,8 @@ class AnalPlot:
             ax.tick_params(color=[0,0,0,0.4], labelcolor=[0,0,0,0.4])
 
 
-    def boxplot(self, ax, dataSel, plotSelCols=None, title=None, bInsetBoxPlot=False):
-        d, dCH, dRH = self.get_basedata(dataSel)
+    def boxplot(self, ax, dataKey, plotSelCols=None, title=None, bInsetBoxPlot=False):
+        d, dCH, dRH = self.get_basedata(dataKey)
         if type(plotSelCols) == type(None):
             tD = d
             tDCH = dCH
