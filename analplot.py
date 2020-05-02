@@ -239,10 +239,20 @@ class AnalPlot:
             inset.grid(True, axis='y')
 
 
-    def plotXY(self, ax, dataKeyX, dataKeyY, plotSelCols=None, title=None):
+    def plotXY(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title=None):
+        """ Plot the specified subset of cols from two related datasets such that
+            values of these cols in one of the dataset acts as the x value
+            and the values of these cols in the other dataset acts as the y value
+            ax: the axes or inset in which to plot.
+            dataKeyX: the dataset to use for X axis related values.
+            dataKeyY: the dataset to use for Y axis related values.
+            selRow: Specifies which row in the given datasets should represent
+                the cols in the xy plot.
+            plotSelCols: list of cols which should be represented in the plot.
+            """
         dX, dCHX, dRHX = self.get_data_selective(dataKeyX, plotSelCols)
         dY, dCHY, dRHY = self.get_data_selective(dataKeyY, plotSelCols)
-        ax.plot(dX[-1,:], dY[-1,:])
+        ax.plot(dX[selRow,:], dY[selRow,:])
         if title != None:
             ax.set_title(title)
 
