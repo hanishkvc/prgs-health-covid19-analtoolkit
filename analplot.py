@@ -239,7 +239,7 @@ class AnalPlot:
             inset.grid(True, axis='y')
 
 
-    def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", plotLegend=None):
+    def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None):
         """ Plot the specified subset of cols from two related datasets such that
             values of these cols in one of the dataset acts as the x value
             and the values of these cols in the other dataset acts as the y value
@@ -262,6 +262,8 @@ class AnalPlot:
             if title == "__AUTO__":
                 title = "%s vs %s"%(dataKeyX, dataKeyY)
             ax.set_title(title)
+        ax.set_xscale(xscale)
+        ax.set_yscale(yscale)
 
 
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
