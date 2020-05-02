@@ -249,8 +249,8 @@ class AnalPlot:
             selRow: Specifies which row in the given datasets should represent
                 the cols in the xy plot.
             plotSelCols: list of cols which should be represented in the plot.
-            title: None or the title to plot or else "__AUTO__"
-                if __AUTO__, then title autocreated as dataKeyX vs dataKeyY
+            title: None or title to plot. Specified title can contain "__AUTO__"
+                __AUTO__ in title replaced by string "<dataKeyX> vs <dataKeyY>"
             """
         dX, dCHX, dRHX = self.get_data_selective(dataKeyX, plotSelCols)
         dY, dCHY, dRHY = self.get_data_selective(dataKeyY, plotSelCols)
@@ -259,8 +259,9 @@ class AnalPlot:
             for i in range(len(dCHX)):
                 ax.text(dX[selRow,i], dY[selRow,i], dCHX[i])
         if title != None:
-            if title == "__AUTO__":
-                title = "%s vs %s"%(dataKeyX, dataKeyY)
+            if title.find("__AUTO__") != -1:
+                sAuto = "%s vs %s"%(dataKeyX, dataKeyY)
+                title = title.replace("__AUTO__", sAuto)
             ax.set_title(title)
         ax.set_xscale(xscale)
         ax.set_yscale(yscale)

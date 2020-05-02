@@ -57,7 +57,7 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="raw", sBaseDataMsg="Cases
     ap.plotxy(axes[iARow+2,iACol], "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True)
     selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataKey), topN=25, bSelInclusive=False)
     ap.plotxy(axes[iARow+3,iACol], "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols,
-                xscale="log", yscale="log", plotLegend=True)
+                title="%s-__AUTO__~Top25~SkipExtreme"%(ds.name), xscale="log", yscale="log", plotLegend=True)
 
 
 def plot_sel(allDS):
