@@ -252,7 +252,7 @@ class AnalPlot:
             """
         dX, dCHX, dRHX = self.get_data_selective(dataKeyX, plotSelCols)
         dY, dCHY, dRHY = self.get_data_selective(dataKeyY, plotSelCols)
-        ax.plot(dX[selRow,:], dY[selRow,:])
+        ax.plot(dX[selRow,:], dY[selRow,:], ".")
         if title != None:
             ax.set_title(title)
 
