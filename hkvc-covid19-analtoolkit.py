@@ -28,11 +28,11 @@ def plot_simple(allDS):
         ap.new_dataset()
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
         ap.plot(axes[0,iCur], "cases/day", numXTicks=4, xtickMultOf=7, title="%s-Cases/Day"%(ds.name))
-        ap.calc_rel2mean()
+        ap.calc_rel2mean("cases/day")
         ap.plot(axes[1,iCur], "cases/day.rel2mean", title="%s-Cases/Day_Rel2Mean"%(ds.name))
-        ap.calc_rel2sum()
+        ap.calc_rel2sum("cases/day")
         ap.plot(axes[2,iCur], "cases/day.rel2sum", title="%s-Cases/Day_Rel2Sum"%(ds.name))
-        ap.calc_movavg()
+        ap.calc_movavg("cases/day")
         selCols, selPers = ap.selcols_percentiles("cases/day.movavg")
         ap.plot(axes[3,iCur], "cases/day.movavg", plotSelCols=selCols, title="%s-Cases/Day_MovAvg"%(ds.name))
         sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
@@ -71,7 +71,7 @@ def plot_sel(allDS):
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
         ap.plot(axes[0,iCur], "cases/day", numXTicks=4, xtickMultOf=7, title="%s-Cases/Day-All"%(ds.name))
         # The moving avg
-        ap.calc_movavg()
+        ap.calc_movavg("cases/day")
         """
         selCols, selPers = ap.selcols_percentiles("cases/day.movavg", selPers=[0,15])
         ap.plot(axes[1,iCur], "cases/day.movavg", plotSelCols=selCols, plotLegend=True)
