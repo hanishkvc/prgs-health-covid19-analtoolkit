@@ -276,8 +276,13 @@ class AnalPlot:
             colWidth: specifies the size to be alloted per col
             """
         fig, axes = plt.subplots(pltRows, pltCols)
-        fig.set_figwidth(pltCols*colWidth)
-        fig.set_figheight(pltRows*rowHeight)
+        figWidth = pltCols*colWidth
+        fig.set_figwidth(figWidth)
+        figHeight = pltRows*rowHeight
+        fig.set_figheight(figHeight)
+        xD = 0.8/figWidth
+        yD = 0.8/figHeight
+        fig.subplots_adjust(xD, yD, 1-xD, 1-yD, 3*xD, 6*yD)
         return fig, axes
 
 
