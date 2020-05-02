@@ -59,6 +59,25 @@ class AnalPlot:
         return d, dCH, dRH
 
 
+    def get_data_selective(self, dataKey="raw", selCols=None):
+        """ Return the specified data and its col and row headers
+            ie similar to get_data, except that the returned cols
+            correspond to (i.e limited to) specified cols only.
+            selCols: gives a list which contains True or False
+                corresponding to each col in the dataset.
+                Cols with True corresponding to their position,
+                will be selected to be returned.
+            """
+        d, dCH, dRH = self.get_data(dataKey)
+        if type(selCols) == type(None):
+            tD = d
+            tDCH = dCH
+        else:
+            tD = d[:,selCols]
+            tDCH = dCH[selCols]
+        return tD, tDCH, dRH
+
+
     def get_cols_withval(self, dataKey="raw", val = 0):
         """ Find cols which contain the given val in all its rows
             """
@@ -180,13 +199,7 @@ class AnalPlot:
 
 
     def plot(self, ax, dataKey, plotSelCols=None, title=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None, bTranslucent=False):
-        d, dCH, dRH = self.get_data(dataKey)
-        if type(plotSelCols) == type(None):
-            tD = d
-            tDCH = dCH
-        else:
-            tD = d[:,plotSelCols]
-            tDCH = dCH[plotSelCols]
+        tD, tDCH, dRH = self.get_data_selective(dataKey, plotSelCols)
         dprint("DBUG:AnalPlot:plot:\n\tdataKey:%s\n\tFields|ColHdr:%s" %(dataKey, tDCH))
         ax.plot(tD)
         if title != None:
@@ -210,13 +223,7 @@ class AnalPlot:
 
 
     def boxplot(self, ax, dataKey, plotSelCols=None, title=None, bInsetBoxPlot=False):
-        d, dCH, dRH = self.get_data(dataKey)
-        if type(plotSelCols) == type(None):
-            tD = d
-            tDCH = dCH
-        else:
-            tD = d[:,plotSelCols]
-            tDCH = dCH[plotSelCols]
+        tD, tDCH, dRH = self.get_data_selective(dataKey, plotSelCols)
         ax.boxplot(tD,labels=tDCH)
         if title != None:
             ax.set_title(title)
@@ -230,6 +237,14 @@ class AnalPlot:
             inset.set_facecolor([1,1,1,0.1])
             inset.tick_params(color=[1,0,0,0.4], labelcolor=[1,0,0,0.4])
             inset.grid(True, axis='y')
+
+
+    def plotXY(self, ax, dataKeyX, dataKeyY, plotSelCols=None, title=None):
+        dX, dCHX, dRHX = self.get_data_selective(dataKeyX, plotSelCols)
+        dY, dCHY, dRHY = self.get_data_selective(dataKeyY, plotSelCols)
+        ax.plot(dX[-1,:], dY[-1,:])
+        if title != None:
+            ax.set_title(title)
 
 
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
