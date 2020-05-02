@@ -29,9 +29,10 @@ class AnalPlot:
 
 
     def get_basedata(self, dataKey="raw"):
-        d = self.data[dataKey]
-        dCH = self.data["{}ColHdr".format(dataKey)]
-        dRH = self.data["{}RowHdr".format(dataKey)]
+        sDKey, sCHKey, sRHKey = self._get_datakeys(dataKey)
+        d = self.data[sDKey]
+        dCH = self.data[sCHKey]
+        dRH = self.data[sRHKey]
         return d, dCH, dRH
 
 
@@ -53,29 +54,32 @@ class AnalPlot:
         d, dCH, dRH = self.get_basedata(dataKey)
         if bHandleColsWith0:
             colsWith0 = self.get_cols_withval(dataKey, 0)
-        self.data["{}.rel2mean".format(dataKey)] = d/np.mean(d, axis=0)
+        newDKey, newCHKey, newRHKey = self._get_datakeys("%s.rel2mean"%(dataKey))
+        self.data[newDKey] = d/np.mean(d, axis=0)
         if bHandleColsWith0:
-            self.data["{}.rel2mean".format(dataKey)][:,colsWith0] = 0
-        self.data["{}.rel2meanRowHdr".format(dataKey)] = dRH
-        self.data["{}.rel2meanColHdr".format(dataKey)] = dCH
+            self.data[newDKey][:,colsWith0] = 0
+        self.data[newRHKey] = dRH
+        self.data[newCHKey] = dCH
 
 
     def calc_rel2sum(self, dataKey="raw", bHandleColsWith0=True):
         d, dCH, dRH = self.get_basedata(dataKey)
         if bHandleColsWith0:
             colsWith0 = self.get_cols_withval(dataKey, 0)
-        self.data["{}.rel2sum".format(dataKey)] = d/np.sum(d, axis=0)
+        newDKey, newCHKey, newRHKey = self._get_datakeys("%s.rel2sum"%(dataKey))
+        self.data[newDKey] = d/np.sum(d, axis=0)
         if bHandleColsWith0:
-            self.data["{}.rel2sum".format(dataKey)][:,colsWith0] = 0
-        self.data["{}.rel2sumRowHdr".format(dataKey)] = dRH
-        self.data["{}.rel2sumColHdr".format(dataKey)] = dCH
+            self.data[newDKey][:,colsWith0] = 0
+        self.data[newRHKey] = dRH
+        self.data[newCHKey] = dCH
 
 
     def calc_diff(self, dataKey="raw"):
         d, dCH, dRH = self.get_basedata(dataKey)
-        self.data["{}.diff".format(dataKey)] = np.diff(d, axis=0)
-        self.data["{}.diffRowHdr".format(dataKey)] = dRH[1:]
-        self.data["{}.diffColHdr".format(dataKey)] = dCH
+        newDKey, newCHKey, newRHKey = self._get_datakeys("%s.diff"%(dataKey))
+        self.data[newDKey] = np.diff(d, axis=0)
+        self.data[newRHKey] = dRH[1:]
+        self.data[newCHKey] = dCH
 
 
     def calc_movavg(self, dataKey="raw", avgOver=7):
@@ -84,9 +88,10 @@ class AnalPlot:
         dataConv = np.zeros((d.shape[0]-(avgOver-1),d.shape[1]))
         for i in range(1,d.shape[1]):
             dataConv[:,i] = np.convolve(d[:,i], tWeight, 'valid')
-        self.data["{}.movavg".format(dataKey)] = dataConv
-        self.data["{}.movavgRowHdr".format(dataKey)] = list(range(dataConv.shape[0]))
-        self.data["{}.movavgColHdr".format(dataKey)] = dCH
+        newDKey, newCHKey, newRHKey = self._get_datakeys("%s.movavg"%(dataKey))
+        self.data[newDKey] = dataConv
+        self.data[newRHKey] = list(range(dataConv.shape[0]))
+        self.data[newCHKey] = dCH
 
 
     def calc_movavg_ex(self, dataKey="raw", avgOver=7, times=2):
@@ -98,9 +103,10 @@ class AnalPlot:
             for i in range(1,dCur.shape[1]):
                 dataConv[:,i] = np.convolve(dCur[:,i], tWeight, 'valid')
             dCur = dataConv
-        self.data["{}.movavgT{}".format(dataKey,times)] = dataConv
-        self.data["{}.movavgT{}RowHdr".format(dataKey,times)] = list(range(dataConv.shape[0]))
-        self.data["{}.movavgT{}ColHdr".format(dataKey,times)] = dCH
+        newDKey, newCHKey, newRHKey = self._get_datakeys("%s.movavgT%d"%(dataKey,times))
+        self.data[newDKey] = dataConv
+        self.data[newRHKey] = list(range(dataConv.shape[0]))
+        self.data[newCHKey] = dCH
 
 
     def selcols_percentiles(self, dataKey="raw", selRow=-1, selPers=[0,100], bSelInclusive=True, topN=None, botN=None):
