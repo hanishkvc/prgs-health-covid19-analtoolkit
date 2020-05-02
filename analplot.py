@@ -130,6 +130,14 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
+    def calc_cumsum(self, dataKey="raw"):
+        d, dCH, dRH = self.get_data(dataKey)
+        newDKey, newCHKey, newRHKey = self._get_datakeys("%s.cumsum"%(dataKey))
+        self.data[newDKey] = np.cumsum(d, axis=0)
+        self.data[newRHKey] = dRH
+        self.data[newCHKey] = dCH
+
+
     def calc_movavg(self, dataKey="raw", avgOver=7):
         d, dCH, dRH = self.get_data(dataKey)
         tWeight = np.ones(avgOver)/avgOver

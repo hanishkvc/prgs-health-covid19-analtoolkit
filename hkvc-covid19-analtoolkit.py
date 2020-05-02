@@ -58,10 +58,14 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", sBaseDataMsg=
     selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataKey), topN=25, bSelInclusive=True)
     ap.plotxy(axes[iARow+3,iACol], "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols,
                 title="%s-__AUTO__~Top25(diff.movavgT2)"%(ds.name), xscale="log", yscale="log", plotLegend=True)
+    ap.calc_cumsum(dataKey)
+    selCols, selPers = ap.selcols_percentiles("%s.cumsum"%(dataKey), topN=25, bSelInclusive=True)
+    ap.plotxy(axes[iARow+4,iACol], "%s.cumsum"%(dataKey), "%s.movavg"%(dataKey), plotSelCols=selCols,
+                title="%s-__AUTO__~Top25(cumsum)"%(ds.name), xscale="log", yscale="log", plotLegend=True)
 
 
 def plot_sel(allDS):
-    fig, axes = ap.subplots(plt,7,2)
+    fig, axes = ap.subplots(plt,8,2)
     iCur = 0
     sGlobalMsg = ""
     for ds in allDS:
