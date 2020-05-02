@@ -239,7 +239,7 @@ class AnalPlot:
             inset.grid(True, axis='y')
 
 
-    def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title=None):
+    def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title=None, plotLegend=None):
         """ Plot the specified subset of cols from two related datasets such that
             values of these cols in one of the dataset acts as the x value
             and the values of these cols in the other dataset acts as the y value
@@ -253,6 +253,8 @@ class AnalPlot:
         dX, dCHX, dRHX = self.get_data_selective(dataKeyX, plotSelCols)
         dY, dCHY, dRHY = self.get_data_selective(dataKeyY, plotSelCols)
         ax.plot(dX[selRow,:], dY[selRow,:], ".")
+        if plotLegend != None:
+            ax.legend(dCHY)
         if title != None:
             ax.set_title(title)
 
