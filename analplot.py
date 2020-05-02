@@ -12,6 +12,12 @@ class AnalPlot:
 
 
     def _get_datakeys(self, dataKey="raw"):
+        """ get the datakeys required to access a given data
+            and its associated column and row headers
+            dataKey: the base name used to access/refer to the
+                     data and its col header and row header
+                     in AnalPlot instance's data dictionary.
+            """
         sDKey = dataKey
         sCHKey = "%sColHdr"%(dataKey)
         sRHKey = "%sRowHdr"%(dataKey)
@@ -43,7 +49,7 @@ class AnalPlot:
         self.data[sCHKey] = colHdr
 
 
-    def get_basedata(self, dataKey="raw"):
+    def get_data(self, dataKey="raw"):
         sDKey, sCHKey, sRHKey = self._get_datakeys(dataKey)
         d = self.data[sDKey]
         dCH = self.data[sCHKey]
@@ -54,7 +60,7 @@ class AnalPlot:
     def get_cols_withval(self, dataKey="raw", val = 0):
         """ Find cols which contain the given val in all its rows
             """
-        #d, dCH, dRH = self.get_basedata(dataKey)
+        #d, dCH, dRH = self.get_data(dataKey)
         d = self.data[dataKey]
         colsWithVal = []
         for i in range(d.shape[1]):
@@ -66,7 +72,7 @@ class AnalPlot:
 
 
     def calc_rel2mean(self, dataKey="raw", bHandleColsWith0=True):
-        d, dCH, dRH = self.get_basedata(dataKey)
+        d, dCH, dRH = self.get_data(dataKey)
         if bHandleColsWith0:
             colsWith0 = self.get_cols_withval(dataKey, 0)
         newDKey, newCHKey, newRHKey = self._get_datakeys("%s.rel2mean"%(dataKey))
@@ -78,7 +84,7 @@ class AnalPlot:
 
 
     def calc_rel2sum(self, dataKey="raw", bHandleColsWith0=True):
-        d, dCH, dRH = self.get_basedata(dataKey)
+        d, dCH, dRH = self.get_data(dataKey)
         if bHandleColsWith0:
             colsWith0 = self.get_cols_withval(dataKey, 0)
         newDKey, newCHKey, newRHKey = self._get_datakeys("%s.rel2sum"%(dataKey))
@@ -90,7 +96,7 @@ class AnalPlot:
 
 
     def calc_diff(self, dataKey="raw"):
-        d, dCH, dRH = self.get_basedata(dataKey)
+        d, dCH, dRH = self.get_data(dataKey)
         newDKey, newCHKey, newRHKey = self._get_datakeys("%s.diff"%(dataKey))
         self.data[newDKey] = np.diff(d, axis=0)
         self.data[newRHKey] = dRH[1:]
@@ -98,7 +104,7 @@ class AnalPlot:
 
 
     def calc_movavg(self, dataKey="raw", avgOver=7):
-        d, dCH, dRH = self.get_basedata(dataKey)
+        d, dCH, dRH = self.get_data(dataKey)
         tWeight = np.ones(avgOver)/avgOver
         dataConv = np.zeros((d.shape[0]-(avgOver-1),d.shape[1]))
         for i in range(1,d.shape[1]):
@@ -110,7 +116,7 @@ class AnalPlot:
 
 
     def calc_movavg_ex(self, dataKey="raw", avgOver=7, times=2):
-        d, dCH, dRH = self.get_basedata(dataKey)
+        d, dCH, dRH = self.get_data(dataKey)
         tWeight = np.ones(avgOver)/avgOver
         dCur = d
         for time in range(times):
@@ -146,7 +152,7 @@ class AnalPlot:
 
 
     def plot(self, ax, dataKey, plotSelCols=None, title=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None, bTranslucent=False):
-        d, dCH, dRH = self.get_basedata(dataKey)
+        d, dCH, dRH = self.get_data(dataKey)
         if type(plotSelCols) == type(None):
             tD = d
             tDCH = dCH
@@ -176,7 +182,7 @@ class AnalPlot:
 
 
     def boxplot(self, ax, dataKey, plotSelCols=None, title=None, bInsetBoxPlot=False):
-        d, dCH, dRH = self.get_basedata(dataKey)
+        d, dCH, dRH = self.get_data(dataKey)
         if type(plotSelCols) == type(None):
             tD = d
             tDCH = dCH
