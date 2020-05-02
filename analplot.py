@@ -254,7 +254,8 @@ class AnalPlot:
         dY, dCHY, dRHY = self.get_data_selective(dataKeyY, plotSelCols)
         ax.plot(dX[selRow,:], dY[selRow,:], ".")
         if plotLegend != None:
-            ax.legend(dCHY)
+            for i in range(len(dCHX)):
+                ax.text(dX[selRow,i], dY[selRow,i], dCHX[i])
         if title != None:
             ax.set_title(title)
 
