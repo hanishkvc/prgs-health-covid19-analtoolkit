@@ -246,6 +246,8 @@ class AnalPlot:
         dprint("DBUG:AnalPlot:plot:\n\tdataKey:%s\n\tFields|ColHdr:%s" %(dataKey, tDCH))
         ax.plot(tD)
         if title != None:
+            if title.find("__AUTO__") != -1:
+                title = title.replace("__AUTO__", dataKey)
             ax.set_title(title)
         if plotLegend != None:
             ax.legend(tDCH)
