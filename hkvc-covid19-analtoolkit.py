@@ -92,6 +92,7 @@ def save_fig(fig, sMsg):
     fig.set_tight_layout(True)
     tFName = sMsg.replace(";","_N_").replace(" ","_")
     fig.savefig("/tmp/{}.svg".format(tFName))
+    fig.savefig("/tmp/{}.png".format(tFName))
     plt.show()
 
 
