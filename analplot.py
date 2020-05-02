@@ -208,13 +208,15 @@ class AnalPlot:
         return selCols, selPers
 
 
-    dCalcFuncs = {
+    dCalcSimpleFuncs = {
         "diff": calc_diff,
         "cumsum": calc_cumsum,
         "rel2mean": calc_rel2mean,
         "rel2sum": calc_rel2sum,
-        "movavgT": calc_movavg_ex,
         "movavg": calc_movavg
+    }
+    dCalcFuncsWithArg = {
+        "movavgT": calc_movavg_ex,
     }
     def get_data(self, dataKey="raw"):
         """ Return the specified data and its col and row headers
@@ -226,10 +228,16 @@ class AnalPlot:
             return self._get_data(dataKey)
         # This means data not in dict, lets see if we can create it
         [sBDKey, sCmd] = dataKey.rsplit('.',1)
-        for fname in self.dCalcFuncs:
+        # Create using a simple calc func
+        if sCmd in self.dCalcSimpleFuncs:
+            self.dCalcSimpleFuncs[sCmd](self, sBDKey)
+            return self._get_data(dataKey)
+        for fname in self.dCalcFuncsWithArg:
             if sCmd.startswith(fname):
-                self.dCalcFuncs[fname](self, sBDKey)
-                return self._get_data(dataKey)
+                if fname == "movavgT":
+                    argTimes = int(sCmd.replace("movavgT",""))
+                    self.dCalcFuncsWithArg[fname](self, sBDKey, times=argTimes)
+                    return self._get_data(dataKey)
         raise NotImplementedError("AnalPlot:get_data:Func[{}] not found...")
 
 
