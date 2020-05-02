@@ -54,7 +54,7 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="raw", sBaseDataMsg="Cases
     ap.calc_movavg_ex(dataKey="%s.rel2sum"%(dataKey), times=2)
     ap.plot(axes[iARow+1,iACol], "%s.rel2sum.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
                 title="%s-MovAvgT2OfRel2SumOf%s-DiffMovAvgT2Top8"%(ds.name, sBaseDataMsg))
-    ap.plotxy(axes[iARow+2,iACol], dataKey, "%s.diff.movavgT2"%(dataKey), title="%s vs %s.diff.movavgT2"%(dataKey,dataKey))
+    ap.plotxy(axes[iARow+2,iACol], dataKey, "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols, title="%s vs %s.diff.movavgT2"%(dataKey,dataKey), plotLegend=True)
 
 
 def plot_sel(allDS):
