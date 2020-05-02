@@ -49,7 +49,7 @@ class AnalPlot:
         self.data[sCHKey] = colHdr
 
 
-    def get_data(self, dataKey="raw"):
+    def _get_data(self, dataKey="raw"):
         """ Return the specified data and its col and row headers
             """
         sDKey, sCHKey, sRHKey = self._get_datakeys(dataKey)
@@ -206,6 +206,32 @@ class AnalPlot:
         else:
             selCols = (d[selRow,:] > thePercentiles[0]) & (d[selRow,:] < thePercentiles[1])
         return selCols, selPers
+
+
+    dCalcFuncs = {
+        "diff": calc_diff,
+        "cumsum": calc_cumsum,
+        "rel2mean": calc_rel2mean,
+        "rel2sum": calc_rel2sum,
+        "movavgT": calc_movavg_ex,
+        "movavg": calc_movavg
+    }
+    def get_data(self, dataKey="raw"):
+        """ Return the specified data and its col and row headers
+            Create them by calling required calc functions, if possible.
+
+            TODO: Need to handle movavgT so as to extract times from name
+            """
+        if dataKey in self.data:
+            return self._get_data(dataKey)
+        # This means data not in dict, lets see if we can create it
+        [sBDKey, sCmd] = dataKey.rsplit('.',1)
+        sBDKey, sBCHKey, sBRHKey = self.get_data(sBDKey)
+        for fname in dCalcFuncs:
+            if sCmd.startswith(fname):
+                self.dCalcFuncs[fname](sBDKey)
+                return self._get_data(dataKey)
+        raise NotImplementedError("AnalPlot:get_data:Func[{}] not found...")
 
 
     def plot(self, ax, dataKey, plotSelCols=None, title=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None, bTranslucent=False):
