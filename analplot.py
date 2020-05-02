@@ -11,13 +11,21 @@ from helpers import *
 class AnalPlot:
 
 
-    def set_raw(self, data, rowHdr=None, colHdr=None, skipRowsTop=0, skipRowsBottom=-1, skipColsLeft=0, skipColsRight=-1):
+    def _get_datakeys(self, dataSel="raw"):
+        sDKey = dataSel
+        sCHKey = "%sColHdr"%(dataSel)
+        sRHKey = "%sRowHdr"%(dataSel)
+        return sDKey, sCHKey, sRHKey
+
+
+    def set_raw(self, data, rowHdr=None, colHdr=None, dataName="raw", skipRowsTop=0, skipRowsBottom=-1, skipColsLeft=0, skipColsRight=-1):
         self.data = {}
-        self.data["raw"] = data
-        self.data["rawRowHdr"] = rowHdr
+        sDKey, sCHKey, sRHKey = self._get_datakeys(dataName)
+        self.data[sDKey] = data
+        self.data[sRHKey] = rowHdr
         if type(colHdr) == type(list()):
             colHdr = np.array(colHdr)
-        self.data["rawColHdr"] = colHdr
+        self.data[sCHKey] = colHdr
 
 
     def get_basedata(self, dataSel="raw"):
