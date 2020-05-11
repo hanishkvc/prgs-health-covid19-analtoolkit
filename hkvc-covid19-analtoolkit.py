@@ -88,7 +88,8 @@ def plot_sel(allDS):
 
 def save_fig(fig, sMsg):
     sMsg += "-hkvc"
-    fig.text(0.01, 0.002, sMsg)
+    textMsg = sMsg + "; github.com/hanishkvc/prgs-health-covid19-analtoolkit.git"
+    fig.text(0.01, 0.002, textMsg)
     fig.set_tight_layout(True)
     tFName = sMsg.replace(";","_N_").replace(" ","_")
     fig.savefig("/tmp/{}.svg".format(tFName))
