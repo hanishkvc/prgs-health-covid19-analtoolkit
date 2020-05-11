@@ -431,11 +431,15 @@ class AnalPlot:
         dY, dCHY, dRHY = self.get_data_selective(dataKeyY, plotSelCols)
         ax.plot(dX[selRow,:], dY[selRow,:], ".")
         if plotLegend != None:
+            textDX = dX[selRow,:]
+            textDY = dY[selRow,:]
             for i in range(len(dCHX)):
                 tX = dX[selRow,i]
                 tY = dY[selRow,i]
                 tTxt = dCHX[i]
-                tNX, tNY = self._textxy(ax, i, tX, tY, tTxt, dX[selRow,:], dY[selRow,:], xscale, yscale)
+                tNX, tNY = self._textxy(ax, i, tX, tY, tTxt, textDX, textDY, xscale, yscale)
+                textDX[i] = tNX
+                textDY[i] = tNY
                 ax.arrow(tX,tY, (tNX-tX), (tNY-tY))
                 ax.text(tNX, tNY, tTxt)
         if title != None:
