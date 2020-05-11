@@ -342,12 +342,9 @@ class AnalPlot:
             except AttributeError:
                 self.newxyRot = 3
             r = self.newxyRot % 8
-        xMin, xMax, yMin, yMax = ax.axis()
-        xRange = xMax-xMin
-        yRange = yMax-yMin
         ratioX = 0.01
-        ratioY = ((yRange/xRange)*ratioX)
-        print("xRange:%f, yRange:%f; ratioX: %f, ratioY: %f"%(xRange, yRange, ratioX, ratioY))
+        ratioY = ((self.textxyYRange/self.textxyXRange)*ratioX)
+        print("xRange:%f, yRange:%f; ratioX: %f, ratioY: %f"%(self.textxyXRange, self.textxyYRange, ratioX, ratioY))
         if r == 0:
             tX += tX*ratioX
         elif r == 1:
@@ -368,8 +365,7 @@ class AnalPlot:
         elif r == 7:
             tX -= tX*ratioX
             tY -= tY*ratioY
-        # TODO: make it work for linear and log and not just log
-        tY += 0.05*np.log10(yRange)
+        tY += 0.05*self.textxyYRange
         return tX, tY
 
 
@@ -391,6 +387,8 @@ class AnalPlot:
         else:
             theY = dY
             tY = curY
+        self.textxyXRange = xRange
+        self.textxyYRange = yRange
         xDiff = theX-tX
         yDiff = theY-tY
         ratioX = 0.02
