@@ -351,8 +351,8 @@ class AnalPlot:
         if (len(tList) > 0):
             dprint("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
             print(curTxt, tX, tY, tList, end="")
-            tX += np.random.uniform(-0.01*tX, 0.01*tX)
-            tY += np.random.uniform(-0.01*tY, 0.01*tY)
+            tX += np.random.uniform(-tX, tX)*0.01
+            tY += np.random.uniform(-tY, tY)*0.01
             print("\tNew: ", tX, tY)
         if xscale == "log":
             curX = 10**tX
