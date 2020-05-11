@@ -387,8 +387,13 @@ class AnalPlot:
             tY = curY
         xDiff = theX-tX
         yDiff = theY-tY
-        xConflict = np.argwhere( (xDiff > -0.02*theX) & (xDiff < 0.02*theX) )
-        yConflict = np.argwhere( (yDiff > -0.02*theY) & (yDiff < 0.02*theY) )
+        xMin, xMax, yMin, yMax = ax.axis()
+        xRange = xMax-xMin
+        yRange = yMax-yMin
+        ratioX = 0.15
+        ratioY = ((yRange/xRange)*ratioX)
+        xConflict = np.argwhere( (xDiff > -ratioX*tX) & (xDiff < ratioX*tX) )
+        yConflict = np.argwhere( (yDiff > -ratioY*tY) & (yDiff < ratioY*tY) )
         dprint("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
         tList = []
         for xC in xConflict:
@@ -415,7 +420,16 @@ class AnalPlot:
 
 
     def _textxy_super(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale):
-        pass
+        lastX = curX
+        lastY = curY
+        self.newxyRot = 1
+        while True:
+            nX, nY = self._textxy(ax, curLoc, lastX, lastY, curTxt, dX, dY, xscale, yscale)
+            if (nX == lastX) and (nY == lastY):
+                break
+            lastX = nX
+            lastY = nY
+        return nX, nY
 
 
     def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None, bTranslucent=False):
@@ -441,7 +455,7 @@ class AnalPlot:
                 tX = dX[selRow,i]
                 tY = dY[selRow,i]
                 tTxt = dCHX[i]
-                tNX, tNY = self._textxy(ax, i, tX, tY, tTxt, textDX, textDY, xscale, yscale)
+                tNX, tNY = self._textxy_super(ax, i, tX, tY, tTxt, textDX, textDY, xscale, yscale)
                 textDX[i] = tNX
                 textDY[i] = tNY
                 ax.arrow(tX,tY, (tNX-tX), (tNY-tY))
