@@ -365,7 +365,7 @@ class AnalPlot:
         return curX, curY
 
 
-    def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None):
+    def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None, bTranslucent=False):
         """ Plot the specified subset of cols from two related datasets such that
             values of these cols in one of the dataset acts as the x value
             and the values of these cols in the other dataset acts as the y value
@@ -395,6 +395,11 @@ class AnalPlot:
             ax.set_title(title)
         ax.set_xscale(xscale)
         ax.set_yscale(yscale)
+        if bTranslucent:
+            ax.set_facecolor([1,1,1,0.1])
+            for l in ax.lines:
+                l.set_alpha(0.4)
+            ax.tick_params(color=[0,0,0,0.4], labelcolor=[0,0,0,0.4])
 
 
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):

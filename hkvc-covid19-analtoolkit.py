@@ -54,7 +54,7 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day"):
                 title="%s-__AUTO__~Top25(cumsum)"%(ds.name), xscale="log", yscale="log", plotLegend=True)
     inset = axes[iARow+2,iACol].inset_axes([0.6,0.10,0.4,0.4])
     selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataKey), topN=8, bSelInclusive=True)
-    ap.plotxy(inset, "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols,
+    ap.plotxy(inset, "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols, bTranslucent=True,
                 title="movavgVSdiff(diff.maT8)", xscale="log", yscale="log", plotLegend=True)
 
 
