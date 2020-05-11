@@ -49,17 +49,17 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day"):
                 title="%s-__AUTO__-DiffMovAvgT2Top8"%(ds.name))
     ap.plot(axes[iARow+1,iACol], "%s.rel2sum.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
                 title="%s-__AUTO__-DiffMovAvgT2Top8"%(ds.name))
-    selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataKey), topN=25, bSelInclusive=True)
-    ap.plotxy(axes[iARow+2,iACol], "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols,
-                title="%s-__AUTO__~Top25(diff.movavgT2)"%(ds.name), xscale="log", yscale="log", plotLegend=True)
     selCols, selPers = ap.selcols_percentiles("%s.cumsum"%(dataKey), topN=25, bSelInclusive=True)
-    ap.plotxy(axes[iARow+3,iACol], "%s.cumsum"%(dataKey), "%s.movavg"%(dataKey), plotSelCols=selCols,
-                #title="%s-__AUTO__~Top25(cumsum)"%(ds.name), plotLegend=True)
+    ap.plotxy(axes[iARow+2,iACol], "%s.cumsum"%(dataKey), "%s.movavg"%(dataKey), plotSelCols=selCols,
                 title="%s-__AUTO__~Top25(cumsum)"%(ds.name), xscale="log", yscale="log", plotLegend=True)
+    inset = axes[iARow+2,iACol].inset_axes([0.6,0.10,0.4,0.4])
+    selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataKey), topN=8, bSelInclusive=True)
+    ap.plotxy(inset, "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols,
+                title="movavgVSdiff(diff.maT8)", xscale="log", yscale="log", plotLegend=True)
 
 
 def plot_sel(allDS):
-    fig, axes = ap.subplots(plt,6,2)
+    fig, axes = ap.subplots(plt,5,2)
     iCur = 0
     sGlobalMsg = ""
     for ds in allDS:
