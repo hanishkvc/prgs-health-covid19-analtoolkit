@@ -335,8 +335,8 @@ class AnalPlot:
         else:
             theY = dY
             tY = curY
-        xDiff = theX[selRow,:]-tX
-        yDiff = theY[selRow,:]-tY
+        xDiff = theX-tX
+        yDiff = theY-tY
         xConflict = np.argwhere( (xDiff > -5) & (xDiff < 5) )
         yConflict = np.argwhere( (yDiff > -5) & (yDiff < 5) )
         for xC in xConflict:
@@ -376,7 +376,7 @@ class AnalPlot:
                 tX = dX[selRow,i]
                 tY = dY[selRow,i]
                 tTxt = dCHX[i]
-                tX, tY = self._textxy(tX, tY, tTxt, dX, dY, xscale, yscale)
+                tX, tY = self._textxy(tX, tY, tTxt, dX[selRow,:], dY[selRow,:], xscale, yscale)
                 ax.text(tX, tY, tTxt)
         if title != None:
             if title.find("__AUTO__") != -1:
