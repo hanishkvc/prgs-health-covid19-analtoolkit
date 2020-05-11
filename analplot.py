@@ -322,6 +322,39 @@ class AnalPlot:
             inset.grid(True, axis='y')
 
 
+    def _textxy(self, curX, curY, curTxt, dX, dY, xscale, yscale):
+        if xscale == "log":
+            theX = np.log10(dX)
+            tX = np.log10(curX)
+        else:
+            theX = dX
+            tX = curX
+        if yscale == "log":
+            theY = np.log10(dY)
+            tY = np.log10(curY)
+        else:
+            theY = dY
+            tY = curY
+        xDiff = theX[selRow,:]-tX
+        yDiff = theY[selRow,:]-tY
+        xConflict = np.argwhere( (xDiff > -5) & (xDiff < 5) )
+        yConflict = np.argwhere( (yDiff > -5) & (yDiff < 5) )
+        for xC in xConflict:
+            tC = np.argwhere(yConflict == xC)
+            if (len(tC) > 1):
+                print(tTxt,tX,tY, tC)
+                tX += np.random.uniform(10)
+        if xscale == "log":
+            curX = 10**tX
+        else:
+            curX = tX
+        if yscale == "log":
+            curY = 10**tY
+        else:
+            curY = tY
+        return curX, curY
+
+
     def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None):
         """ Plot the specified subset of cols from two related datasets such that
             values of these cols in one of the dataset acts as the x value
@@ -343,19 +376,8 @@ class AnalPlot:
                 tX = dX[selRow,i]
                 tY = dY[selRow,i]
                 tTxt = dCHX[i]
-                xDiff = dX[selRow,:]-tX
-                yDiff = dY[selRow,:]-tY
-                #xConflict = xDiff[ (xDiff > -5) & (xDiff < 5) ]
-                xConflict = np.argwhere( (xDiff > -5) & (xDiff < 5) )
-                yConflict = np.argwhere( (yDiff > -5) & (yDiff < 5) )
-                for xC in xConflict:
-                    tC = np.argwhere(yConflict == xC)
-                    print(tX,tY, tC)
-                    #print("DBUG:AnalPlot:ploxXY:[{},{}] conflicts with {},{}".format(tX,tY,xDiff[xConflict],yDiff[yConflict]))
-                    if (len(tC) > 1):
-                        #print("DBUG:AnalPlot:ploxXY:[{},{}] conflicts with {},{}".format(tX,tY,xDiff[tC],yDiff[tC]))
-                        tX += np.random.uniform(10)
-                ax.text(tX, tY, dCHX[i])
+                tX, tY = self._textxy(tX, tY, tTxt, dX, dY, xscale, yscale)
+                ax.text(tX, tY, tTxt)
         if title != None:
             if title.find("__AUTO__") != -1:
                 sAuto = "%s vs %s"%(dataKeyX, dataKeyY)
