@@ -5,7 +5,6 @@
 
 import numpy as np
 from helpers import *
-import matplotlib.patches
 
 
 
@@ -396,8 +395,6 @@ class AnalPlot:
         yDiff = theY-tY
         ratioX = 0.02
         ratioY = 0.015
-        #ax.add_patch(matplotlib.patches.Rectangle((curX, curY), 4*xRange, 0.1*yRange))
-        #ax.axhspan(curY, curY+ratioY*yRange, curX, curX+ratioX*xRange)
         print("DBUG:AnalPlot:textxy:tX={}, tY={}, rect={}x{}".format(tX,tY,ratioX*xRange,ratioY*yRange))
         xConflict = np.argwhere( (xDiff > -ratioX*xRange) & (xDiff < ratioX*xRange) )
         yConflict = np.argwhere( (yDiff > -ratioY*yRange) & (yDiff < ratioY*yRange) )
