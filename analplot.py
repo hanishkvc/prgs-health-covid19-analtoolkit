@@ -331,7 +331,7 @@ class AnalPlot:
         return tX, tY
 
 
-    def __newxy_rotate(self, tX, tY, mode=None):
+    def __newxy_rotate(self, ax, tX, tY, mode=None):
         if mode == None:
             mode = "rand"
         if mode == "rand":
@@ -342,8 +342,12 @@ class AnalPlot:
             except AttributeError:
                 self.newxyRot = 3
             r = self.newxyRot % 8
+        xMin, xMax, yMin, yMax = ax.axis()
+        xRange = xMax-xMin
+        yRange = yMax-yMin
         ratioX = 0.01
-        ratioY = 0.01
+        ratioY = (yRange/xRange)*ratioX
+        print("xRange:%f, yRange:%f; ratioX: %f, ratioY: %f"%(xRange, yRange, ratioX, ratioY))
         if r == 0:
             tX += tX*ratioX
         elif r == 1:
@@ -367,7 +371,7 @@ class AnalPlot:
         return tX, tY
 
 
-    def _textxy(self, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale):
+    def _textxy(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale):
         if xscale == "log":
             theX = np.log10(dX)
             tX = np.log10(curX)
@@ -396,7 +400,7 @@ class AnalPlot:
         if (len(tList) > 0):
             dprint("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
             print(curTxt, tX, tY, tList, end="")
-            tX, tY = self.__newxy_rotate(tX, tY, "seq")
+            tX, tY = self.__newxy_rotate(ax, tX, tY, "seq")
             print("\tNew: ", tX, tY)
         if xscale == "log":
             curX = 10**tX
@@ -430,7 +434,7 @@ class AnalPlot:
                 tX = dX[selRow,i]
                 tY = dY[selRow,i]
                 tTxt = dCHX[i]
-                tNX, tNY = self._textxy(i, tX, tY, tTxt, dX[selRow,:], dY[selRow,:], xscale, yscale)
+                tNX, tNY = self._textxy(ax, i, tX, tY, tTxt, dX[selRow,:], dY[selRow,:], xscale, yscale)
                 ax.arrow(tX,tY, (tNX-tX), (tNY-tY))
                 ax.text(tNX, tNY, tTxt)
         if title != None:
