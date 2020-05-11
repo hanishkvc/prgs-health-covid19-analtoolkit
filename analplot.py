@@ -340,7 +340,22 @@ class AnalPlot:
         ax.plot(dX[selRow,:], dY[selRow,:], ".")
         if plotLegend != None:
             for i in range(len(dCHX)):
-                ax.text(dX[selRow,i], dY[selRow,i], dCHX[i])
+                tX = dX[selRow,i]
+                tY = dY[selRow,i]
+                tTxt = dCHX[i]
+                xDiff = dX[selRow,:]-tX
+                yDiff = dY[selRow,:]-tY
+                #xConflict = xDiff[ (xDiff > -5) & (xDiff < 5) ]
+                xConflict = np.argwhere( (xDiff > -5) & (xDiff < 5) )
+                yConflict = np.argwhere( (yDiff > -5) & (yDiff < 5) )
+                for xC in xConflict:
+                    tC = np.argwhere(yConflict == xC)
+                    print(tX,tY, tC)
+                    #print("DBUG:AnalPlot:ploxXY:[{},{}] conflicts with {},{}".format(tX,tY,xDiff[xConflict],yDiff[yConflict]))
+                    if (len(tC) > 1):
+                        #print("DBUG:AnalPlot:ploxXY:[{},{}] conflicts with {},{}".format(tX,tY,xDiff[tC],yDiff[tC]))
+                        tX += np.random.uniform(10)
+                ax.text(tX, tY, dCHX[i])
         if title != None:
             if title.find("__AUTO__") != -1:
                 sAuto = "%s vs %s"%(dataKeyX, dataKeyY)
