@@ -5,6 +5,7 @@
 
 import numpy as np
 from helpers import *
+import matplotlib.patches
 
 
 
@@ -368,6 +369,7 @@ class AnalPlot:
         elif r == 7:
             tX -= tX*ratioX
             tY -= tY*ratioY
+        # TODO: make it work for linear and log and not just log
         tY += 0.05*np.log10(yRange)
         return tX, tY
 
@@ -394,6 +396,9 @@ class AnalPlot:
         yDiff = theY-tY
         ratioX = 0.02
         ratioY = 0.015
+        #ax.add_patch(matplotlib.patches.Rectangle((curX, curY), 4*xRange, 0.1*yRange))
+        #ax.axhspan(curY, curY+ratioY*yRange, curX, curX+ratioX*xRange)
+        print("DBUG:AnalPlot:textxy:tX={}, tY={}, rect={}x{}".format(tX,tY,ratioX*xRange,ratioY*yRange))
         xConflict = np.argwhere( (xDiff > -ratioX*xRange) & (xDiff < ratioX*xRange) )
         yConflict = np.argwhere( (yDiff > -ratioY*yRange) & (yDiff < ratioY*yRange) )
         dprint("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
@@ -424,6 +429,7 @@ class AnalPlot:
     def _textxy_super(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale):
         lastX = curX
         lastY = curY
+        self.newxyRot = 0
         while True:
             nX, nY = self._textxy(ax, curLoc, lastX, lastY, curTxt, dX, dY, xscale, yscale)
             if (nX == lastX) and (nY == lastY):
