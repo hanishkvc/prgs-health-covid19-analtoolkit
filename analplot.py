@@ -138,8 +138,12 @@ class AnalPlot:
         d, dCH, dRH = self.get_data(inDataKey)
         if inMin == None:
             inMin = np.min(d, axis=0)
+        elif type(inMin) == type(int()):
+            inMin = np.ones(d.shape[1])*inMin
         if inMax == None:
             inMax = np.max(d, axis=0)
+        elif type(inMax) == type(int()):
+            inMax = np.ones(d.shape[1])*inMax
         inRange=inMax-inMin
         newDKey, newCHKey, newRHKey = self._get_datakeys("%s.%s"%(inDataKey, outDataKey))
         self.data[newDKey] = (d-inMin)/inRange
