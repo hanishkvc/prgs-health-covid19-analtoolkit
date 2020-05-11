@@ -331,8 +331,17 @@ class AnalPlot:
         return tX, tY
 
 
-    def __newxy_randrot(self, tX, tY):
-        r = np.random.randint(8)
+    def __newxy_rotate(self, tX, tY, mode=None):
+        if mode == None:
+            mode = "rand"
+        if mode == "rand":
+            r = np.random.randint(8)
+        elif mode == "seq":
+            try:
+                self.newxyRot += 1
+            except AttributeError:
+                self.newxyRot = 3
+            r = self.newxyRot % 8
         if r == 0:
             tX += tX*0.005
         elif r == 1:
@@ -385,7 +394,7 @@ class AnalPlot:
         if (len(tList) > 0):
             dprint("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
             print(curTxt, tX, tY, tList, end="")
-            tX, tY = self.__newxy_randrot(tX, tY)
+            tX, tY = self.__newxy_rotate(tX, tY, "seq")
             print("\tNew: ", tX, tY)
         if xscale == "log":
             curX = 10**tX
