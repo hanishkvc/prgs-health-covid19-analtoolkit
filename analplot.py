@@ -324,21 +324,21 @@ class AnalPlot:
 
     def _textxy(self, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale):
         if xscale == "log":
-            theX = np.log(dX)
-            tX = np.log(curX)
+            theX = np.log10(dX)
+            tX = np.log10(curX)
         else:
             theX = dX
             tX = curX
         if yscale == "log":
-            theY = np.log(dY)
-            tY = np.log(curY)
+            theY = np.log10(dY)
+            tY = np.log10(curY)
         else:
             theY = dY
             tY = curY
         xDiff = theX-tX
         yDiff = theY-tY
-        xConflict = np.argwhere( (xDiff > -5) & (xDiff < 5) )
-        yConflict = np.argwhere( (yDiff > -5) & (yDiff < 5) )
+        xConflict = np.argwhere( (xDiff > -0.05*theX) & (xDiff < 0.05*theX) )
+        yConflict = np.argwhere( (yDiff > -0.05*theY) & (yDiff < 0.05*theY) )
         dprint("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
         tList = []
         for xC in xConflict:
@@ -351,14 +351,14 @@ class AnalPlot:
         if (len(tList) > 0):
             dprint("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
             print(curTxt, tX, tY, tList)
-            tX += np.random.uniform(0.05*tX)
-            tY += np.random.uniform(0.05*tY)
+            tX += np.random.uniform(0, 0.05*tX)
+            tY += np.random.uniform(0, 0.05*tY)
         if xscale == "log":
-            curX = np.e**tX
+            curX = 10**tX
         else:
             curX = tX
         if yscale == "log":
-            curY = np.e**tY
+            curY = 10**tY
         else:
             curY = tY
         return curX, curY
