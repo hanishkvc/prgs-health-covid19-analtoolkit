@@ -342,26 +342,28 @@ class AnalPlot:
             except AttributeError:
                 self.newxyRot = 3
             r = self.newxyRot % 8
+        ratioX = 0.01
+        ratioY = 0.01
         if r == 0:
-            tX += tX*0.005
+            tX += tX*ratioX
         elif r == 1:
-            tY += tY*0.005
+            tY += tY*ratioY
         elif r == 2:
-            tX -= tX*0.005
+            tX -= tX*ratioX
         elif r == 3:
-            tY -= tY*0.005
+            tY -= tY*ratioY
         elif r == 4:
-            tX += tX*0.005
-            tY += tY*0.005
+            tX += tX*ratioX
+            tY += tY*ratioY
         elif r == 5:
-            tX += tX*0.005
-            tY -= tY*0.005
+            tX += tX*ratioX
+            tY -= tY*ratioY
         elif r == 6:
-            tX -= tX*0.005
-            tY += tY*0.005
+            tX -= tX*ratioX
+            tY += tY*ratioY
         elif r == 7:
-            tX -= tX*0.005
-            tY -= tY*0.005
+            tX -= tX*ratioX
+            tY -= tY*ratioY
         return tX, tY
 
 
