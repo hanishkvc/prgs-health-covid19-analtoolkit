@@ -430,8 +430,9 @@ class AnalPlot:
                 tX = dX[selRow,i]
                 tY = dY[selRow,i]
                 tTxt = dCHX[i]
-                tX, tY = self._textxy(i, tX, tY, tTxt, dX[selRow,:], dY[selRow,:], xscale, yscale)
-                ax.text(tX, tY, tTxt)
+                tNX, tNY = self._textxy(i, tX, tY, tTxt, dX[selRow,:], dY[selRow,:], xscale, yscale)
+                ax.arrow(tX,tY, (tNX-tX), (tNY-tY))
+                ax.text(tNX, tNY, tTxt)
         if title != None:
             if title.find("__AUTO__") != -1:
                 sAuto = "%s vs %s"%(dataKeyX, dataKeyY)
