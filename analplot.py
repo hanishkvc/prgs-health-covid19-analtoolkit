@@ -346,25 +346,25 @@ class AnalPlot:
         ratioY = ((self.textxyYRange/self.textxyXRange)*ratioX)
         print("xRange:%f, yRange:%f; ratioX: %f, ratioY: %f"%(self.textxyXRange, self.textxyYRange, ratioX, ratioY))
         if r == 0:
-            tX += tX*ratioX
+            tX += self.textxyXRange*ratioX
         elif r == 1:
-            tY += tY*ratioY
+            tY += self.textxyYRange*ratioY
         elif r == 2:
-            tX -= tX*ratioX
+            tX -= self.textxyXRange*ratioX
         elif r == 3:
-            tY -= tY*ratioY
+            tY -= self.textxyYRange*ratioY
         elif r == 4:
-            tX += tX*ratioX
-            tY += tY*ratioY
+            tX += self.textxyXRange*ratioX
+            tY += self.textxyYRange*ratioY
         elif r == 5:
-            tX += tX*ratioX
-            tY -= tY*ratioY
+            tX += self.textxyXRange*ratioX
+            tY -= self.textxyYRange*ratioY
         elif r == 6:
-            tX -= tX*ratioX
-            tY += tY*ratioY
+            tX -= self.textxyXRange*ratioX
+            tY += self.textxyYRange*ratioY
         elif r == 7:
-            tX -= tX*ratioX
-            tY -= tY*ratioY
+            tX -= self.textxyXRange*ratioX
+            tY -= self.textxyYRange*ratioY
         tY += 0.05*self.textxyYRange
         return tX, tY
 
@@ -393,10 +393,10 @@ class AnalPlot:
         yDiff = theY-tY
         ratioX = 0.02
         ratioY = 0.015
-        print("DBUG:AnalPlot:textxy:tX={}, tY={}, rect={}x{}".format(tX,tY,ratioX*xRange,ratioY*yRange))
+        dprint("DBUG:AnalPlot:textxy:tX={}, tY={}, rect={}x{}".format(tX,tY,ratioX*xRange,ratioY*yRange))
         xConflict = np.argwhere( (xDiff > -ratioX*xRange) & (xDiff < ratioX*xRange) )
         yConflict = np.argwhere( (yDiff > -ratioY*yRange) & (yDiff < ratioY*yRange) )
-        dprint("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
+        dprint("DBUG:AnalPlot:textxy:dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
         tList = []
         for xC in xConflict:
             tC = np.argwhere(yConflict == xC)
