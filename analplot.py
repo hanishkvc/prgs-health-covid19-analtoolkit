@@ -403,15 +403,19 @@ class AnalPlot:
             print(curTxt, tX, tY, tList, end="")
             tX, tY = self.__newxy_rotate(ax, tX, tY, "seq")
             print("\tNew: ", tX, tY)
-        if xscale == "log":
-            curX = 10**tX
-        else:
-            curX = tX
-        if yscale == "log":
-            curY = 10**tY
-        else:
-            curY = tY
+            if xscale == "log":
+                curX = 10**tX
+            else:
+                curX = tX
+            if yscale == "log":
+                curY = 10**tY
+            else:
+                curY = tY
         return curX, curY
+
+
+    def _textxy_super(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale):
+        pass
 
 
     def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None, bTranslucent=False):
