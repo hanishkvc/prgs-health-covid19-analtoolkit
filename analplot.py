@@ -339,8 +339,10 @@ class AnalPlot:
         yDiff = theY-tY
         xConflict = np.argwhere( (xDiff > -5) & (xDiff < 5) )
         yConflict = np.argwhere( (yDiff > -5) & (yDiff < 5) )
+        print("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflic:{}\nyConflick:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
         for xC in xConflict:
             tC = np.argwhere(yConflict == xC)
+            print("xC:{}, tC:{}".format(xC, tC))
             if (len(tC) > 1):
                 print(tTxt,tX,tY, tC)
                 tX += np.random.uniform(10)
@@ -404,6 +406,15 @@ class AnalPlot:
         yD = 0.8/figHeight
         fig.subplots_adjust(xD, yD, 1-xD, 1-yD, 3*xD, 6*yD)
         return fig, axes
+
+
+
+def test_textxy():
+    d=np.array([[1,10, 200], [40,41,42], [50,51,52],[60,61,62],[40,41,42]])
+    ap=AnalPlot()
+    ap._textxy(41, 42, "test", d[:,1], d[:,2], "lin", "lin")
+    return d
+
 
 
 # vim: set softtabstop=4 shiftwidth=4 expandtab: #
