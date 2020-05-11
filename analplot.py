@@ -339,13 +339,16 @@ class AnalPlot:
         yDiff = theY-tY
         xConflict = np.argwhere( (xDiff > -5) & (xDiff < 5) )
         yConflict = np.argwhere( (yDiff > -5) & (yDiff < 5) )
-        print("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflic:{}\nyConflick:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
+        print("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
+        tList = []
         for xC in xConflict:
             tC = np.argwhere(yConflict == xC)
             print("xC:{}, tC:{}".format(xC, tC))
-            if (len(tC) > 1):
-                print(tTxt,tX,tY, tC)
-                tX += np.random.uniform(10)
+            if (len(tC) > 0):
+                tList.append(xC[0])
+        if (len(tList) > 1):
+            print(curTxt, tX, tY, tList)
+            tX += np.random.uniform(10)
         if xscale == "log":
             curX = 10**tX
         else:
@@ -410,7 +413,7 @@ class AnalPlot:
 
 
 def test_textxy():
-    d=np.array([[1,10, 200], [40,41,42], [50,51,52],[60,61,62],[40,41,42]])
+    d=np.array([[1,10, 200], [40,41,42], [50,41,52],[60,61,62],[40,41,42]])
     ap=AnalPlot()
     ap._textxy(41, 42, "test", d[:,1], d[:,2], "lin", "lin")
     return d
