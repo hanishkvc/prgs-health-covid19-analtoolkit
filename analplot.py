@@ -303,6 +303,9 @@ class AnalPlot:
             for l in ax.lines:
                 l.set_alpha(0.4)
             ax.tick_params(color=[0,0,0,0.4], labelcolor=[0,0,0,0.4])
+            ax.title.set_alpha(0.4)
+            for t in ax.texts:
+                t.set_alpha(0.4)
 
 
     def boxplot(self, ax, dataKey, plotSelCols=None, title=None, bInsetBoxPlot=False):
