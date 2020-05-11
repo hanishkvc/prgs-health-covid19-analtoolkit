@@ -325,6 +325,37 @@ class AnalPlot:
             inset.grid(True, axis='y')
 
 
+    def __newxy_randxy(self, tX, tY):
+        tX += np.random.uniform(-tX, tX)*0.01
+        tY += np.random.uniform(-tY, tY)*0.01
+        return tX, tY
+
+
+    def __newxy_randrot(self, tX, tY):
+        r = np.random.randint(8)
+        if r == 0:
+            tX += tX*0.005
+        elif r == 1:
+            tY += tY*0.005
+        elif r == 2:
+            tX -= tX*0.005
+        elif r == 3:
+            tY -= tY*0.005
+        elif r == 4:
+            tX += tX*0.005
+            tY += tY*0.005
+        elif r == 5:
+            tX += tX*0.005
+            tY -= tY*0.005
+        elif r == 6:
+            tX -= tX*0.005
+            tY += tY*0.005
+        elif r == 7:
+            tX -= tX*0.005
+            tY -= tY*0.005
+        return tX, tY
+
+
     def _textxy(self, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale):
         if xscale == "log":
             theX = np.log10(dX)
@@ -354,8 +385,7 @@ class AnalPlot:
         if (len(tList) > 0):
             dprint("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
             print(curTxt, tX, tY, tList, end="")
-            tX += np.random.uniform(-tX, tX)*0.01
-            tY += np.random.uniform(-tY, tY)*0.01
+            tX, tY = self.__newxy_randrot(tX, tY)
             print("\tNew: ", tX, tY)
         if xscale == "log":
             curX = 10**tX
