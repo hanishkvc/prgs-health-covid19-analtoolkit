@@ -322,7 +322,7 @@ class AnalPlot:
             inset.grid(True, axis='y')
 
 
-    def _textxy(self, curX, curY, curTxt, dX, dY, xscale, yscale):
+    def _textxy(self, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale):
         if xscale == "log":
             theX = np.log10(dX)
             tX = np.log10(curX)
@@ -346,7 +346,9 @@ class AnalPlot:
             print("xC:{}, tC:{}".format(xC, tC))
             if (len(tC) > 0):
                 tList.append(xC[0])
-        if (len(tList) > 1):
+        tList = np.array(tList)
+        tList = tList[(tList != curLoc)]
+        if (len(tList) > 0):
             print(curTxt, tX, tY, tList)
             tX += np.random.uniform(10)
         if xscale == "log":
@@ -381,7 +383,7 @@ class AnalPlot:
                 tX = dX[selRow,i]
                 tY = dY[selRow,i]
                 tTxt = dCHX[i]
-                tX, tY = self._textxy(tX, tY, tTxt, dX[selRow,:], dY[selRow,:], xscale, yscale)
+                tX, tY = self._textxy(i, tX, tY, tTxt, dX[selRow,:], dY[selRow,:], xscale, yscale)
                 ax.text(tX, tY, tTxt)
         if title != None:
             if title.find("__AUTO__") != -1:
@@ -415,7 +417,7 @@ class AnalPlot:
 def test_textxy():
     d=np.array([[1,10, 200], [40,41,42], [50,41,52],[60,61,62],[40,41,42]])
     ap=AnalPlot()
-    ap._textxy(41, 42, "test", d[:,1], d[:,2], "lin", "lin")
+    ap._textxy(1, 41, 42, "test", d[:,1], d[:,2], "lin", "lin")
     return d
 
 
