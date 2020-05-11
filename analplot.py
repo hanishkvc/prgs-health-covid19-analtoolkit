@@ -122,6 +122,31 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
+    def calc_scale(self, inDataKey="raw", outDataKey="scale", inMin=None, inMax=None, outMin=0, outMax=1):
+        """ Scale the data from inMin-inMax to outMin-outMax
+            for each column in the specified input data
+            inDataKey: use data saved in this key
+            outDataKey: saved result in/using this key
+            inMin: Use this as the min value for respective input data cols
+                None: Get min from the data cols itself
+                a int value: Use this as the min for each data col
+                a 1d-array: Use this as the min for each data col
+            inMax: Use this as the max value for respective input data cols
+            outMin: Use this as the min value for respective output data cols
+            outMax: Use this as the max value for respective output data cols
+            """
+        d, dCH, dRH = self.get_data(inDataKey)
+        if inMin == None:
+            inMin = np.min(d, axis=0)
+        if inMax == None:
+            inMax = np.max(d, axis=0)
+        inRange=inMax-inMin
+        newDKey, newCHKey, newRHKey = self._get_datakeys("%s.%s"%(inDataKey, outDataKey))
+        self.data[newDKey] = (d-inMin)/inRange
+        self.data[newRHKey] = dRH
+        self.data[newCHKey] = dCH
+
+
     def calc_diff(self, dataKey="raw"):
         d, dCH, dRH = self.get_data(dataKey)
         newDKey, newCHKey, newRHKey = self._get_datakeys("%s.diff"%(dataKey))
