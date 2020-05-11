@@ -337,8 +337,8 @@ class AnalPlot:
             tY = curY
         xDiff = theX-tX
         yDiff = theY-tY
-        xConflict = np.argwhere( (xDiff > -0.05*theX) & (xDiff < 0.05*theX) )
-        yConflict = np.argwhere( (yDiff > -0.05*theY) & (yDiff < 0.05*theY) )
+        xConflict = np.argwhere( (xDiff > -0.02*theX) & (xDiff < 0.02*theX) )
+        yConflict = np.argwhere( (yDiff > -0.02*theY) & (yDiff < 0.02*theY) )
         dprint("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
         tList = []
         for xC in xConflict:
@@ -350,9 +350,10 @@ class AnalPlot:
         tList = tList[(tList != curLoc)]
         if (len(tList) > 0):
             dprint("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
-            print(curTxt, tX, tY, tList)
-            tX += np.random.uniform(0, 0.05*tX)
-            tY += np.random.uniform(0, 0.05*tY)
+            print(curTxt, tX, tY, tList, end="")
+            tX += np.random.uniform(-0.01*tX, 0.01*tX)
+            tY += np.random.uniform(-0.01*tY, 0.01*tY)
+            print("\tNew: ", tX, tY)
         if xscale == "log":
             curX = 10**tX
         else:
