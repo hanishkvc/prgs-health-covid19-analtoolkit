@@ -346,7 +346,7 @@ class AnalPlot:
         xRange = xMax-xMin
         yRange = yMax-yMin
         ratioX = 0.01
-        ratioY = (yRange/xRange)*ratioX
+        ratioY = ((yRange/xRange)*ratioX)
         print("xRange:%f, yRange:%f; ratioX: %f, ratioY: %f"%(xRange, yRange, ratioX, ratioY))
         if r == 0:
             tX += tX*ratioX
@@ -368,6 +368,7 @@ class AnalPlot:
         elif r == 7:
             tX -= tX*ratioX
             tY -= tY*ratioY
+        tY += 0.05*np.log10(yRange)
         return tX, tY
 
 
