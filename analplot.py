@@ -324,14 +324,14 @@ class AnalPlot:
 
     def _textxy(self, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale):
         if xscale == "log":
-            theX = np.log10(dX)
-            tX = np.log10(curX)
+            theX = np.log(dX)
+            tX = np.log(curX)
         else:
             theX = dX
             tX = curX
         if yscale == "log":
-            theY = np.log10(dY)
-            tY = np.log10(curY)
+            theY = np.log(dY)
+            tY = np.log(curY)
         else:
             theY = dY
             tY = curY
@@ -351,14 +351,14 @@ class AnalPlot:
         if (len(tList) > 0):
             dprint("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
             print(curTxt, tX, tY, tList)
-            tX += np.random.uniform(0.0001)
-            tY += np.random.uniform(0.0001)
+            tX += np.random.uniform(0.05*tX)
+            tY += np.random.uniform(0.05*tY)
         if xscale == "log":
-            curX = 10**tX
+            curX = np.e**tX
         else:
             curX = tX
         if yscale == "log":
-            curY = 10**tY
+            curY = np.e**tY
         else:
             curY = tY
         return curX, curY
