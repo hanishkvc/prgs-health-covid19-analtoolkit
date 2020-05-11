@@ -373,27 +373,29 @@ class AnalPlot:
 
 
     def _textxy(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale):
+        xMin, xMax, yMin, yMax = ax.axis()
+        xRange = xMax-xMin
+        yRange = yMax-yMin
         if xscale == "log":
             theX = np.log10(dX)
             tX = np.log10(curX)
+            xRange = np.log10(xRange)
         else:
             theX = dX
             tX = curX
         if yscale == "log":
             theY = np.log10(dY)
             tY = np.log10(curY)
+            yRange = np.log10(yRange)
         else:
             theY = dY
             tY = curY
         xDiff = theX-tX
         yDiff = theY-tY
-        xMin, xMax, yMin, yMax = ax.axis()
-        xRange = xMax-xMin
-        yRange = yMax-yMin
-        ratioX = 0.15
-        ratioY = ((yRange/xRange)*ratioX)
-        xConflict = np.argwhere( (xDiff > -ratioX*tX) & (xDiff < ratioX*tX) )
-        yConflict = np.argwhere( (yDiff > -ratioY*tY) & (yDiff < ratioY*tY) )
+        ratioX = 0.02
+        ratioY = 0.015
+        xConflict = np.argwhere( (xDiff > -ratioX*xRange) & (xDiff < ratioX*xRange) )
+        yConflict = np.argwhere( (yDiff > -ratioY*yRange) & (yDiff < ratioY*yRange) )
         dprint("dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
         tList = []
         for xC in xConflict:
@@ -422,7 +424,6 @@ class AnalPlot:
     def _textxy_super(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale):
         lastX = curX
         lastY = curY
-        self.newxyRot = 1
         while True:
             nX, nY = self._textxy(ax, curLoc, lastX, lastY, curTxt, dX, dY, xscale, yscale)
             if (nX == lastX) and (nY == lastY):
