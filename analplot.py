@@ -402,7 +402,7 @@ class AnalPlot:
         return tX, tY
 
 
-    def _textxy(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation="horizontal"):
+    def _textxy_checkoverlap(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation="horizontal"):
         """ Check if the given location (curX,curY) for the given curTxt is ok
             or if it overlaps with any other text, whose x and y locations are
             passed using dX and dY arrays.
@@ -474,6 +474,13 @@ class AnalPlot:
         if (len(tList) > 0):
             dprint("DBUG:AnalPlot:textxy:{}:\ndX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}\nratioX{},ratioY{},xRange{},yRange{}"
                 .format(curTxt,theX,theY,xDiff,yDiff,xConflict,yConflict,ratioX,ratioY,xRange,yRange))
+            return True, tX, tY, tList
+        return False, tX, tY, tList
+
+
+    def _textxy(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation="horizontal"):
+        overlap,tX,tY,tList = self._textxy_checkoverlap(ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation)
+        if overlap:
             dprint("DBUG:AnalPlot:textxy:{}: tx {}, ty {}: tList {}".format(curTxt, tX, tY, tList))
             tX, tY = self.__newxy_rotate(ax, tX, tY, "seq")
             dprint("\tNew: {}, {}".format(tX, tY))
@@ -513,7 +520,8 @@ class AnalPlot:
         bRetainSame = True
         for i in range(1024):
             nX, nY = self._textxy(ax, curLoc, lastX, lastY, curTxt, dX, dY, xscale, yscale)
-            if (nX == lastX) and (nY == lastY):
+            overlap, tX, tY, tList = self._textxy_checkoverlap(ax, curLoc, nX, nY, curTxt, dX, dY, xscale, yscale)
+            if not overlap:
                 return nX, nY
             if bRetainSame:
                 lastX = curX
