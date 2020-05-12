@@ -368,6 +368,8 @@ class AnalPlot:
             r = self.newxyRot % 8
         ratioX = 0.01
         ratioY = ((self.textxyYRange/self.textxyXRange)*ratioX)
+        ratioX = self.textxyCharPixRatioX
+        ratioY = self.textxyCharPixRatioY
         print("DBUG:AnalPlot:newxy:xRange:%f, yRange:%f; ratioX: %f, ratioY: %f"%(self.textxyXRange, self.textxyYRange, ratioX, ratioY))
         if r == 0:
             tX += self.textxyXRange*ratioX
@@ -389,7 +391,7 @@ class AnalPlot:
         elif r == 7:
             tX -= self.textxyXRange*ratioX
             tY -= self.textxyYRange*ratioY
-        tY += 0.05*self.textxyYRange
+        tY += ratioY*self.textxyYRange
         return tX, tY
 
 
@@ -431,16 +433,16 @@ class AnalPlot:
         xDiff = theX-tX
         yDiff = theY-tY
         bbox = ax.get_window_extent()
-        pixelRatioX = 4/bbox.width
-        pixelRatioY = 6/bbox.height
+        self.textxyCharPixRatioX = 4/bbox.width
+        self.textxyCharPixRatioY = 6/bbox.height
         if textOrientation == "horizontal":
-            ratioX = pixelRatioX * len(curTxt)
+            ratioX = self.textxyCharPixRatioX * len(curTxt)
         else:
-            ratioX = pixelRatioX*1.5
+            ratioX = self.textxyCharPixRatioX*1.5
         if textOrientation == "vertical":
-            ratioY = pixelRatioY * len(curTxt)
+            ratioY = self.textxyCharPixRatioY * len(curTxt)
         else:
-            ratioY = pixelRatioY*1.5
+            ratioY = self.textxyCharPixRatioY*1.5
         dprint("DBUG:AnalPlot:textxy:tX={}, tY={}, rect={}x{}".format(tX,tY,ratioX*xRange,ratioY*yRange))
         # Need to find the physical dimension of the current axes in which one is plotting.
         # Even thou I try to control the area checked using the current x and y range, still
