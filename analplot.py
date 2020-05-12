@@ -357,6 +357,8 @@ class AnalPlot:
 
 
     def __newxy_rotate(self, ax, tX, tY, mode=None):
+        iX = tX
+        iY = tY
         if mode == None:
             mode = "rand"
         if mode == "rand":
@@ -374,7 +376,6 @@ class AnalPlot:
         ratioY = self.textxyCharPixRatioY
         deltaX = ratioX*self.textxyXRange*mult
         deltaY = ratioY*self.textxyYRange*mult
-        print("DBUG:AnalPlot:newxy:xRange:%f, yRange:%f; ratioX: %f, ratioY: %f; deltaX: %f, deltaY: %f"%(self.textxyXRange, self.textxyYRange, ratioX, ratioY, deltaX, deltaY))
         if r == 0:
             tX += deltaX
         elif r == 1:
@@ -396,6 +397,8 @@ class AnalPlot:
             tX -= deltaX
             tY -= deltaY
         #tY += deltaY*2
+        print("DBUG:AnalPlot:newxy:xRange:%f, yRange:%f; ratioX: %f, ratioY: %f; deltaX: %f, deltaY: %f; %f,%f=>%f,%f"
+                %(self.textxyXRange, self.textxyYRange, ratioX, ratioY, deltaX, deltaY, iX,iY, tX,tY))
         return tX, tY
 
 
