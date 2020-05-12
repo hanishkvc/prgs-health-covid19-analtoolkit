@@ -13,11 +13,12 @@ import sys
 CHAR_XPIXELS=6
 CHAR_YPIXELS=9
 CHAR_NONORIENTATION_MULT=1.2
-def textxy_spread(mode="default"):
+def textxy_spread(mode="default", mult=1):
     """ Use this to make the textxy overlap avoidance be either
         "far": more spread out
         "near": more near to one another
         "default": to set the levers back to default value
+        "custom": you specify the multiplier to apply to the levers
         """
     global CHAR_XPIXELS, CHAR_YPIXELS, CHAR_NONORIENTATION_MULT
     if mode == "default":
@@ -32,6 +33,12 @@ def textxy_spread(mode="default"):
         CHAR_XPIXELS *= 0.8
         CHAR_YPIXELS *= 0.8
         CHAR_NONORIENTATION_MULT *= 0.8
+    elif mode == "custom":
+        CHAR_XPIXELS *= mult
+        CHAR_YPIXELS *= mult
+        CHAR_NONORIENTATION_MULT *= mult
+    else:
+        raise NotImplementedError
 
 
 
