@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # Covid19 Data extractor from mygov.in html page
 # v20200415IST1850, HanishKVC
+# GPL
 #
 
 import sys

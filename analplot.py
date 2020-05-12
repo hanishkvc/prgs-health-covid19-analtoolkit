@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # Analyse Plot data sets
-# v20200430IST1743, HanishKVC
+# v20200512IST1126, HanishKVC
+# LGPL
 #
 
 import numpy as np

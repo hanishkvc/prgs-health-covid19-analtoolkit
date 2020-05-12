@@ -1,6 +1,7 @@
 #
 # DataSrc Base Class plus additional Classes
 # v20200430IST1742, HanishKVC
+# LGPL
 #
 
 import os
