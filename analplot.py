@@ -367,12 +367,13 @@ class AnalPlot:
             except AttributeError:
                 self.newxyRot = 3
             r = self.newxyRot % 8
+            mult = int(self.newxyRot/32)+1
         ratioX = 0.01
         ratioY = ((self.textxyYRange/self.textxyXRange)*ratioX)
         ratioX = self.textxyCharPixRatioX
         ratioY = self.textxyCharPixRatioY
-        deltaX = ratioX*self.textxyXRange
-        deltaY = ratioY*self.textxyYRange
+        deltaX = ratioX*self.textxyXRange*(mult*0.1)
+        deltaY = ratioY*self.textxyYRange*(mult*0.1)
         print("DBUG:AnalPlot:newxy:xRange:%f, yRange:%f; ratioX: %f, ratioY: %f; deltaX: %f, deltaY: %f"%(self.textxyXRange, self.textxyYRange, ratioX, ratioY, deltaX, deltaY))
         if r == 0:
             tX += deltaX
@@ -506,7 +507,7 @@ class AnalPlot:
         lastX = curX
         lastY = curY
         self.newxyRot = 0
-        for i in range(16):
+        for i in range(1024):
             nX, nY = self._textxy(ax, curLoc, lastX, lastY, curTxt, dX, dY, xscale, yscale)
             if (nX == lastX) and (nY == lastY):
                 return nX, nY
