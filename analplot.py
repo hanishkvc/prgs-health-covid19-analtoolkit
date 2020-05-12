@@ -370,28 +370,30 @@ class AnalPlot:
         ratioY = ((self.textxyYRange/self.textxyXRange)*ratioX)
         ratioX = self.textxyCharPixRatioX
         ratioY = self.textxyCharPixRatioY
-        print("DBUG:AnalPlot:newxy:xRange:%f, yRange:%f; ratioX: %f, ratioY: %f"%(self.textxyXRange, self.textxyYRange, ratioX, ratioY))
+        deltaX = ratioX*self.textxyXRange
+        deltaY = ratioY*self.textxyYRange
+        print("DBUG:AnalPlot:newxy:xRange:%f, yRange:%f; ratioX: %f, ratioY: %f; deltaX: %f, deltaY: %f"%(self.textxyXRange, self.textxyYRange, ratioX, ratioY, deltaX, deltaY))
         if r == 0:
-            tX += self.textxyXRange*ratioX
+            tX += deltaX
         elif r == 1:
-            tY += self.textxyYRange*ratioY
+            tY += deltaY
         elif r == 2:
-            tX -= self.textxyXRange*ratioX
+            tX -= deltaX
         elif r == 3:
-            tY -= self.textxyYRange*ratioY
+            tY -= deltaY
         elif r == 4:
-            tX += self.textxyXRange*ratioX
-            tY += self.textxyYRange*ratioY
+            tX += deltaX
+            tY += deltaY
         elif r == 5:
-            tX += self.textxyXRange*ratioX
-            tY -= self.textxyYRange*ratioY
+            tX += deltaX
+            tY -= deltaY
         elif r == 6:
-            tX -= self.textxyXRange*ratioX
-            tY += self.textxyYRange*ratioY
+            tX -= deltaX
+            tY += deltaY
         elif r == 7:
-            tX -= self.textxyXRange*ratioX
-            tY -= self.textxyYRange*ratioY
-        tY += ratioY*self.textxyYRange
+            tX -= deltaX
+            tY -= deltaY
+        #tY += deltaY*2
         return tX, tY
 
 
