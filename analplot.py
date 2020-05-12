@@ -13,6 +13,28 @@ import sys
 CHAR_XPIXELS=6
 CHAR_YPIXELS=9
 CHAR_NONORIENTATION_MULT=1.2
+def textxy_spread(mode="default"):
+    """ Use this to make the textxy overlap avoidance be either
+        "far": more spread out
+        "near": more near to one another
+        "default": to set the levers back to default value
+        """
+    global CHAR_XPIXELS, CHAR_YPIXELS, CHAR_NONORIENTATION_MULT
+    if mode == "default":
+        CHAR_XPIXELS=6
+        CHAR_YPIXELS=9
+        CHAR_NONORIENTATION_MULT=1.2
+    elif mode == "far":
+        CHAR_XPIXELS *= 1.2
+        CHAR_YPIXELS *= 1.2
+        CHAR_NONORIENTATION_MULT *= 1.2
+    elif mode == "near":
+        CHAR_XPIXELS *= 0.8
+        CHAR_YPIXELS *= 0.8
+        CHAR_NONORIENTATION_MULT *= 0.8
+
+
+
 class AnalPlot:
 
 
@@ -409,16 +431,12 @@ class AnalPlot:
         """ Check if the given location (curX,curY) for the given curTxt is ok
             or if it overlaps with any other text, whose x and y locations are
             passed using dX and dY arrays.
-            If it appears to overlap, then find a new location for curTxt.
 
             xscale and yscale tell if the x or y axis is using linear or log
                 based scale and inturn based on it, it adjusts calculations.
 
-            NOTE: This doesnt check if the new x and y position identified is ok
-                or if it will overlap any existing text. This check is done by
-                the following _textxy_super function below.
-            TODO: Have to look at the mapping btw the xRange and yRange of data
-                being plotted and the screen space it occupies and based on that
+            TODO: Have to look at the current mapping/calc btw the xRange and yRange of
+                data being plotted and the screen space it occupies and based on that
                 adjust the area checked, Need to check if finetuning required for
                 this logic like get char pixel size from default font or aspect
                 ratio or ...
@@ -474,6 +492,18 @@ class AnalPlot:
 
 
     def _textxy(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation="horizontal"):
+        """ Check if the given location (curX,curY) for the given curTxt is ok
+            or if it overlaps with any other text, whose x and y locations are
+            passed using dX and dY arrays.
+            If it appears to overlap, then find a new location for curTxt.
+
+            xscale and yscale tell if the x or y axis is using linear or log
+                based scale and inturn based on it, it adjusts calculations.
+
+            NOTE: This doesnt check if the new x and y position identified is ok
+                or if it will overlap any existing text. This check is done by
+                the following _textxy_super function below.
+            """
         overlap,tX,tY,tList = self._textxy_checkoverlap(ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation)
         if overlap:
             print("DBUG:AnalPlot:textxy:{}: tx {}, ty {}: tList {}".format(curTxt, tX, tY, tList))
@@ -555,7 +585,7 @@ class AnalPlot:
                 tNX, tNY = self._textxy_super(ax, i, tX, tY, tTxt, textDX, textDY, xscale, yscale)
                 textDX[i] = tNX
                 textDY[i] = tNY
-                ax.arrow(tX,tY, (tNX-tX), (tNY-tY)).set_alpha(0.3)
+                ax.arrow(tX,tY, (tNX-tX), (tNY-tY), color=(1,0,0)).set_alpha(0.3)
                 ax.text(tNX, tNY, tTxt)
         if title != None:
             if title.find("__AUTO__") != -1:
