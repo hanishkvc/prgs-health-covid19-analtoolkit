@@ -280,6 +280,29 @@ class AnalPlot:
 
 
     def plot(self, ax, dataKey, plotSelCols=None, title=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None, bTranslucent=False):
+        """ Plot the specified dataset's data columns or a subset of its columns on the given
+                axes (ax).
+
+            dataKey: decides which set of data inside the current analplot instance is used.
+            plotSelCols: decides if only a subset of the cols need to be plotted.
+            title: None or title to plot. Specified title can contain "__AUTO__"
+                __AUTO__ in title replaced by string "<dataKey>"
+            plotXTickGap: Specifies what should be the gap between x-axis ticks.
+                This is specified interms of how many data points along x-axis to skip
+                from tick marking on the plot, which in this case is rows of data.
+                The number of ticks will depend on amount of data available along x-axis.
+            numXTicks: Or else One can specify the number of ticks required along x-axis
+                and let the logic to decide the plotXTickGap required based on the total
+                data points available along x-axis, automatically.
+                One can even control the plotXTickGap to be a multiple of some number
+                in this case by specifying xtickMultOf argument. For example when plotting
+                data where x-axis corresponds to days, one can ask the ticks to relate to
+                roughly weeks or months or so, by setting xtickMultOf arg to 7 or 30 ...
+            bTranslucent: Will make the ticks, labels, title, lines to be translucent.
+                This is useful, if this is a inset being plotted on top of another plot.
+            plotLegend: list of legends corresponding to each column of data being plotted.
+            yscale: If specified y-axis can use log scale instead of the default linear.
+            """
         tD, tDCH, dRH = self.get_data_selective(dataKey, plotSelCols)
         dprint("DBUG:AnalPlot:plot:\n\tdataKey:%s\n\tFields|ColHdr:%s" %(dataKey, tDCH))
         ax.plot(tD)
@@ -392,8 +415,15 @@ class AnalPlot:
         xDiff = theX-tX
         yDiff = theY-tY
         ratioX = 0.02
-        ratioY = 0.015
+        ratioY = 0.02
         dprint("DBUG:AnalPlot:textxy:tX={}, tY={}, rect={}x{}".format(tX,tY,ratioX*xRange,ratioY*yRange))
+        # Need to find the physical dimension of the current axes in which one is plotting.
+        # Even thou I try to control the area checked using the current x and y range, still
+        # as how much area is used by font/text is dependent on the physical / screen space
+        # used by the current axes, getting this info is critical for more accurate overlapping
+        # area cross check.
+        # Currently bcas of this it may move or not move certain things wrongly.
+        #print(ax.get_geometry(), ax.get_xbound(), ax.get_ybound(), ax.get_xlim())
         xConflict = np.argwhere( (xDiff > -ratioX*xRange) & (xDiff < ratioX*xRange) )
         yConflict = np.argwhere( (yDiff > -ratioY*yRange) & (yDiff < ratioY*yRange) )
         dprint("DBUG:AnalPlot:textxy:dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
