@@ -392,7 +392,7 @@ class AnalPlot:
         return tX, tY
 
 
-    def _textxy(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale):
+    def _textxy(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation="horizontal"):
         """ Check if the given location (curX,curY) for the given curTxt is ok
             or if it overlaps with any other text, whose x and y locations are
             passed using dX and dY arrays.
@@ -404,10 +404,9 @@ class AnalPlot:
             NOTE: This doesnt check if the new x and y position identified is ok
                 or if it will overlap any existing text. This check is done by
                 the following _textxy_super function below.
-            TODO: Have to look at the length of curTxt to decide on the x-axis
-                area to check for overlap. Also have to look at the mapping btw
-                the xRange and yRange of data being plotted and the screen space
-                it occupies and based on that adjust the area checked.
+            TODO: Have to look at the mapping btw the xRange and yRange of data
+                being plotted and the screen space it occupies and based on that
+                adjust the area checked.
             """
         xMin, xMax, yMin, yMax = ax.axis()
         xRange = xMax-xMin
@@ -430,8 +429,14 @@ class AnalPlot:
         self.textxyYRange = yRange
         xDiff = theX-tX
         yDiff = theY-tY
-        ratioX = 0.02
-        ratioY = 0.02
+        if textOrientation == "horizontal":
+            ratioX = 0.01 * len(curTxt)
+        else:
+            ratioX = 0.02
+        if textOrientation == "vertical":
+            ratioY = 0.01 * len(curTxt)
+        else:
+            ratioY = 0.02
         dprint("DBUG:AnalPlot:textxy:tX={}, tY={}, rect={}x{}".format(tX,tY,ratioX*xRange,ratioY*yRange))
         # Need to find the physical dimension of the current axes in which one is plotting.
         # Even thou I try to control the area checked using the current x and y range, still
