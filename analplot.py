@@ -530,7 +530,7 @@ class AnalPlot:
                 tNX, tNY = self._textxy_super(ax, i, tX, tY, tTxt, textDX, textDY, xscale, yscale)
                 textDX[i] = tNX
                 textDY[i] = tNY
-                ax.arrow(tX,tY, (tNX-tX), (tNY-tY))
+                ax.arrow(tX,tY, (tNX-tX), (tNY-tY)).set_alpha(0.3)
                 ax.text(tNX, tNY, tTxt)
         if title != None:
             if title.find("__AUTO__") != -1:
