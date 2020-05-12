@@ -439,8 +439,8 @@ class AnalPlot:
         xDiff = theX-tX
         yDiff = theY-tY
         bbox = ax.get_window_extent()
-        self.textxyCharPixRatioX = 10/bbox.width
-        self.textxyCharPixRatioY = 15/bbox.height
+        self.textxyCharPixRatioX = 8/bbox.width
+        self.textxyCharPixRatioY = 12/bbox.height
         if textOrientation == "horizontal":
             ratioX = self.textxyCharPixRatioX * len(curTxt)
         else:
