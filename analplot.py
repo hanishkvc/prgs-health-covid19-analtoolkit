@@ -367,13 +367,13 @@ class AnalPlot:
             except AttributeError:
                 self.newxyRot = 3
             r = self.newxyRot % 8
-            mult = int(self.newxyRot/32)+1
+            mult = self.newxyRot/16+1
         ratioX = 0.01
         ratioY = ((self.textxyYRange/self.textxyXRange)*ratioX)
         ratioX = self.textxyCharPixRatioX
         ratioY = self.textxyCharPixRatioY
-        deltaX = ratioX*self.textxyXRange*(mult*0.1)
-        deltaY = ratioY*self.textxyYRange*(mult*0.1)
+        deltaX = ratioX*self.textxyXRange*mult
+        deltaY = ratioY*self.textxyYRange*mult
         print("DBUG:AnalPlot:newxy:xRange:%f, yRange:%f; ratioX: %f, ratioY: %f; deltaX: %f, deltaY: %f"%(self.textxyXRange, self.textxyYRange, ratioX, ratioY, deltaX, deltaY))
         if r == 0:
             tX += deltaX
@@ -469,11 +469,11 @@ class AnalPlot:
         tList = np.array(tList)
         tList = tList[(tList != curLoc)]
         if (len(tList) > 0):
-            print("DBUG:AnalPlot:textxy:{}:\ndX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}\nratioX{},ratioY{},xRange{},yRange{}"
+            dprint("DBUG:AnalPlot:textxy:{}:\ndX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}\nratioX{},ratioY{},xRange{},yRange{}"
                 .format(curTxt,theX,theY,xDiff,yDiff,xConflict,yConflict,ratioX,ratioY,xRange,yRange))
-            print("DBUG:AnalPlot:textxy:{}: tx {}, ty {}: tList {}".format(curTxt, tX, tY, tList))
+            dprint("DBUG:AnalPlot:textxy:{}: tx {}, ty {}: tList {}".format(curTxt, tX, tY, tList))
             tX, tY = self.__newxy_rotate(ax, tX, tY, "seq")
-            print("\tNew: ", tX, tY)
+            dprint("\tNew: {}, {}".format(tX, tY))
             if xscale == "log":
                 curX = 10**tX
             else:
@@ -507,12 +507,17 @@ class AnalPlot:
         lastX = curX
         lastY = curY
         self.newxyRot = 0
+        bRetainSame = True
         for i in range(1024):
             nX, nY = self._textxy(ax, curLoc, lastX, lastY, curTxt, dX, dY, xscale, yscale)
             if (nX == lastX) and (nY == lastY):
                 return nX, nY
-            lastX = nX
-            lastY = nY
+            if bRetainSame:
+                lastX = curX
+                lastY = curY
+            else:
+                lastX = nX
+                lastY = nY
         print("DBUG:AnalPlot:textxy_super:%s: Failed finding suitable new xy"%(curTxt), file=sys.stderr)
         return curX, curY
 
