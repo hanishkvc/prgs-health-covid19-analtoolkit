@@ -10,6 +10,9 @@ import sys
 
 
 
+CHAR_XPIXELS=6
+CHAR_YPIXELS=9
+CHAR_NONORIENTATION_MULT=1.2
 class AnalPlot:
 
 
@@ -367,7 +370,7 @@ class AnalPlot:
             try:
                 self.newxyRot += 1
             except AttributeError:
-                self.newxyRot = 3
+                self.newxyRot = 0
             r = self.newxyRot % 8
             mult = self.newxyRot/16+1
         ratioX = 0.01
@@ -442,16 +445,16 @@ class AnalPlot:
         xDiff = theX-tX
         yDiff = theY-tY
         bbox = ax.get_window_extent()
-        self.textxyCharPixRatioX = 8/bbox.width
-        self.textxyCharPixRatioY = 12/bbox.height
+        self.textxyCharPixRatioX = CHAR_XPIXELS/bbox.width
+        self.textxyCharPixRatioY = CHAR_YPIXELS/bbox.height
         if textOrientation == "horizontal":
             ratioX = self.textxyCharPixRatioX * len(curTxt)
         else:
-            ratioX = self.textxyCharPixRatioX*1.4
+            ratioX = self.textxyCharPixRatioX*CHAR_NONORIENTATION_MULT
         if textOrientation == "vertical":
             ratioY = self.textxyCharPixRatioY * len(curTxt)
         else:
-            ratioY = self.textxyCharPixRatioY*1.4
+            ratioY = self.textxyCharPixRatioY*CHAR_NONORIENTATION_MULT
         dprint("DBUG:AnalPlot:textxy:tX={}, tY={}, rect={}x{}".format(tX,tY,ratioX*xRange,ratioY*yRange))
         # Need to find the physical dimension of the current axes in which one is plotting.
         # Even thou I try to control the area checked using the current x and y range, still
