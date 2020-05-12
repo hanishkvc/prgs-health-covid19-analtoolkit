@@ -22,6 +22,11 @@ def fetch():
 
 
 def plot_simple(allDS):
+    """ Plot few simple plots
+        This uses the old call calc logics explicitly mechanism,
+        which is no longer required, as AnalPlot handles calc
+        automatically as required.
+        """
     fig, axes = ap.subplots(plt,4,2)
     iCur = 0
     sGlobalMsg = ""
@@ -60,6 +65,9 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day"):
 
 
 def plot_sel(allDS):
+    """ Plot a set of interesting/informative/... plots
+        Uses the new auto calc as required functionality of AnalPlot
+        """
     fig, axes = ap.subplots(plt,5,2)
     iCur = 0
     sGlobalMsg = ""
@@ -68,10 +76,10 @@ def plot_sel(allDS):
         dprint("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[-2])))
         # The Raw data
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
+        # Plot moving avg and raw data (inset)
         topN=8
         selCols, selPers = ap.selcols_percentiles("cases/day.movavg", topN=topN)
         ap.plot(axes[0,iCur], "cases/day.movavg", plotSelCols=selCols, plotLegend=True, title="%s-__AUTO__-movavgTop%d"%(ds.name, topN), yscale="log")
-        # The moving avg
         yscale = "log"
         yscale = None
         inset = axes[0,iCur].inset_axes([0.36,0.05,0.64,0.4])
@@ -80,7 +88,7 @@ def plot_sel(allDS):
         topN=20
         selCols, selPers = ap.selcols_percentiles("cases/day.movavg", topN=topN)
         ap.boxplot(axes[1,iCur], "cases/day", plotSelCols=selCols, bInsetBoxPlot=True, title="%s-Cases/Day-MovAvgTop%d"%(ds.name, topN))
-        # Diff of Raw data
+        # Diff of Raw data and more
         plot_diffdata(ds, ap, axes, 2, iCur)
         sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCur += 1
