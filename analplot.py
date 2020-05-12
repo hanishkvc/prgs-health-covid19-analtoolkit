@@ -393,6 +393,22 @@ class AnalPlot:
 
 
     def _textxy(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale):
+        """ Check if the given location (curX,curY) for the given curTxt is ok
+            or if it overlaps with any other text, whose x and y locations are
+            passed using dX and dY arrays.
+            If it appears to overlap, then find a new location for curTxt.
+
+            xscale and yscale tell if the x or y axis is using linear or log
+                based scale and inturn based on it, it adjusts calculations.
+
+            NOTE: This doesnt check if the new x and y position identified is ok
+                or if it will overlap any existing text. This check is done by
+                the following _textxy_super function below.
+            TODO: Have to look at the length of curTxt to decide on the x-axis
+                area to check for overlap. Also have to look at the mapping btw
+                the xRange and yRange of data being plotted and the screen space
+                it occupies and based on that adjust the area checked.
+            """
         xMin, xMax, yMin, yMax = ax.axis()
         xRange = xMax-xMin
         yRange = yMax-yMin
@@ -455,6 +471,12 @@ class AnalPlot:
 
 
     def _textxy_super(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale):
+        """ Helps check if the new value calculated by _textxy overlaps any other existing text
+            or not. If it overlaps, then tries to identify a new location by calling _textxy
+            again.
+            TODO: Have to make the number of attempts finite rather than the current infinite
+                looping.
+            """
         lastX = curX
         lastY = curY
         self.newxyRot = 0
