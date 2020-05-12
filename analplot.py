@@ -430,14 +430,17 @@ class AnalPlot:
         self.textxyYRange = yRange
         xDiff = theX-tX
         yDiff = theY-tY
+        bbox = ax.get_window_extent()
+        pixelRatioX = 4/bbox.width
+        pixelRatioY = 6/bbox.height
         if textOrientation == "horizontal":
-            ratioX = 0.01 * len(curTxt)
+            ratioX = pixelRatioX * len(curTxt)
         else:
-            ratioX = 0.02
+            ratioX = pixelRatioX*1.5
         if textOrientation == "vertical":
-            ratioY = 0.01 * len(curTxt)
+            ratioY = pixelRatioY * len(curTxt)
         else:
-            ratioY = 0.02
+            ratioY = pixelRatioY*1.5
         dprint("DBUG:AnalPlot:textxy:tX={}, tY={}, rect={}x{}".format(tX,tY,ratioX*xRange,ratioY*yRange))
         # Need to find the physical dimension of the current axes in which one is plotting.
         # Even thou I try to control the area checked using the current x and y range, still
@@ -521,6 +524,7 @@ class AnalPlot:
         dX, dCHX, dRHX = self.get_data_selective(dataKeyX, plotSelCols)
         dY, dCHY, dRHY = self.get_data_selective(dataKeyY, plotSelCols)
         ax.plot(dX[selRow,:], dY[selRow,:], ".")
+        print("DBUG:AnalPlot:plotxy:Cols %s"%(dCHX))
         if plotLegend != None:
             textDX = dX[selRow,:]
             textDY = dY[selRow,:]
