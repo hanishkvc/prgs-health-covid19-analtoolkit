@@ -465,7 +465,6 @@ class AnalPlot:
         #print(ax.get_geometry(), ax.get_xbound(), ax.get_ybound(), ax.get_xlim())
         xConflict = np.argwhere( (xDiff > -ratioX*xRange) & (xDiff < ratioX*xRange) )
         yConflict = np.argwhere( (yDiff > -ratioY*yRange) & (yDiff < ratioY*yRange) )
-        dprint("DBUG:AnalPlot:textxy:dX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}".format(theX,theY,xDiff,yDiff,xConflict,yConflict))
         tList = []
         for xC in xConflict:
             tC = np.argwhere(yConflict == xC)
@@ -475,7 +474,7 @@ class AnalPlot:
         tList = np.array(tList)
         tList = tList[(tList != curLoc)]
         if (len(tList) > 0):
-            dprint("DBUG:AnalPlot:textxy:{}:\ndX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}\nratioX{},ratioY{},xRange{},yRange{}"
+            print("DBUG:AnalPlot:textxy:{}:\ndX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}\nratioX{},ratioY{},xRange{},yRange{}"
                 .format(curTxt,theX,theY,xDiff,yDiff,xConflict,yConflict,ratioX,ratioY,xRange,yRange))
             return True, tX, tY, tList
         return False, tX, tY, tList
@@ -484,7 +483,7 @@ class AnalPlot:
     def _textxy(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation="horizontal"):
         overlap,tX,tY,tList = self._textxy_checkoverlap(ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation)
         if overlap:
-            dprint("DBUG:AnalPlot:textxy:{}: tx {}, ty {}: tList {}".format(curTxt, tX, tY, tList))
+            print("DBUG:AnalPlot:textxy:{}: tx {}, ty {}: tList {}".format(curTxt, tX, tY, tList))
             tX, tY = self.__newxy_rotate(ax, tX, tY, "seq")
             dprint("\tNew: {}, {}".format(tX, tY))
             if xscale == "log":
