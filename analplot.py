@@ -6,6 +6,7 @@
 
 import numpy as np
 from helpers import *
+import sys
 
 
 
@@ -411,7 +412,9 @@ class AnalPlot:
                 the following _textxy_super function below.
             TODO: Have to look at the mapping btw the xRange and yRange of data
                 being plotted and the screen space it occupies and based on that
-                adjust the area checked.
+                adjust the area checked, Need to check if finetuning required for
+                this logic like get char pixel size from default font or aspect
+                ratio or ...
             """
         xMin, xMax, yMin, yMax = ax.axis()
         xRange = xMax-xMin
@@ -491,14 +494,14 @@ class AnalPlot:
             NOTE: The logic attempts to find a new location only for a finite amount of time,
                 if a suitable new location is not found, then it returns the original x and y
                 position itself back.
-                If the overlapping text has still not been plotted, then there is still a
-                small possibility that it may be moved for it overlapping with some text
-                and this overlap also gets avoided due to that reason. Do note that the
-                logic checks only to see if the current text overlaps the start location
-                of any other texts and not the full extent of those other texts, so this
-                is not perfect. Also as already mentioned, if the overlapping text had
-                already been plotted, then this small possibility of avoiding overlapping
-                eitherway is not going to occur.
+                If the other overlapping text has still not been plotted, then there is still a
+                small possibility that it may be moved for it overlapping with some text and this
+                overlap also gets avoided due to that reason.
+                Do note that the logic checks only to see if the current text overlaps the start
+                location of any other texts and a rough area around it and not the full extent of
+                those other texts, so this is not perfect. Also as already mentioned, if the
+                overlapping text had already been plotted, then this small possibility of avoiding
+                overlapping eitherway is not going to occur.
             """
         lastX = curX
         lastY = curY
@@ -509,6 +512,7 @@ class AnalPlot:
                 return nX, nY
             lastX = nX
             lastY = nY
+        print("DBUG:AnalPlot:textxy_super:%s: Failed finding suitable new xy"%(curTxt), file=sys.stderr)
         return curX, curY
 
 
