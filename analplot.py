@@ -372,7 +372,7 @@ class AnalPlot:
             except AttributeError:
                 self.newxyRot = 0
             r = self.newxyRot % 8
-            mult = self.newxyRot/16+1
+            mult = (int(self.newxyRot/16)/16)+1
         ratioX = 0.01
         ratioY = ((self.textxyYRange/self.textxyXRange)*ratioX)
         ratioX = self.textxyCharPixRatioX
@@ -513,7 +513,7 @@ class AnalPlot:
         lastY = curY
         self.newxyRot = 0
         bRetainSame = True
-        for i in range(1024):
+        for i in range(4096):
             nX, nY = self._textxy(ax, curLoc, lastX, lastY, curTxt, dX, dY, xscale, yscale)
             overlap, tX, tY, tList = self._textxy_checkoverlap(ax, curLoc, nX, nY, curTxt, dX, dY, xscale, yscale)
             if not overlap:
