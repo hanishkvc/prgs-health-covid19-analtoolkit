@@ -456,13 +456,6 @@ class AnalPlot:
         else:
             ratioY = self.textxyCharPixRatioY*CHAR_NONORIENTATION_MULT
         dprint("DBUG:AnalPlot:textxy:tX={}, tY={}, rect={}x{}".format(tX,tY,ratioX*xRange,ratioY*yRange))
-        # Need to find the physical dimension of the current axes in which one is plotting.
-        # Even thou I try to control the area checked using the current x and y range, still
-        # as how much area is used by font/text is dependent on the physical / screen space
-        # used by the current axes, getting this info is critical for more accurate overlapping
-        # area cross check.
-        # Currently bcas of this it may move or not move certain things wrongly.
-        #print(ax.get_geometry(), ax.get_xbound(), ax.get_ybound(), ax.get_xlim())
         xConflict = np.argwhere( (xDiff > -ratioX*xRange) & (xDiff < ratioX*xRange) )
         yConflict = np.argwhere( (yDiff > -ratioY*yRange) & (yDiff < ratioY*yRange) )
         tList = []
@@ -474,8 +467,8 @@ class AnalPlot:
         tList = np.array(tList)
         tList = tList[(tList != curLoc)]
         if (len(tList) > 0):
-            print("DBUG:AnalPlot:textxy:{}:\ndX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}\nratioX{},ratioY{},xRange{},yRange{}"
-                .format(curTxt,theX,theY,xDiff,yDiff,xConflict,yConflict,ratioX,ratioY,xRange,yRange))
+            print("DBUG:AnalPlot:textxy:{}:\ndX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}\nratioX{},ratioY{}; xRange{},yRange{}; bboxWidth{},bboxHeight{}"
+                .format(curTxt,theX,theY,xDiff,yDiff,xConflict,yConflict,ratioX,ratioY,xRange,yRange,bbox.width,bbox.height))
             return True, tX, tY, tList
         return False, tX, tY, tList
 
