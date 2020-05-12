@@ -479,19 +479,29 @@ class AnalPlot:
         """ Helps check if the new value calculated by _textxy overlaps any other existing text
             or not. If it overlaps, then tries to identify a new location by calling _textxy
             again.
-            TODO: Have to make the number of attempts finite rather than the current infinite
-                looping.
+
+            NOTE: The logic attempts to find a new location only for a finite amount of time,
+                if a suitable new location is not found, then it returns the original x and y
+                position itself back.
+                If the overlapping text has still not been plotted, then there is still a
+                small possibility that it may be moved for it overlapping with some text
+                and this overlap also gets avoided due to that reason. Do note that the
+                logic checks only to see if the current text overlaps the start location
+                of any other texts and not the full extent of those other texts, so this
+                is not perfect. Also as already mentioned, if the overlapping text had
+                already been plotted, then this small possibility of avoiding overlapping
+                eitherway is not going to occur.
             """
         lastX = curX
         lastY = curY
         self.newxyRot = 0
-        while True:
+        for i in range(16):
             nX, nY = self._textxy(ax, curLoc, lastX, lastY, curTxt, dX, dY, xscale, yscale)
             if (nX == lastX) and (nY == lastY):
-                break
+                return nX, nY
             lastX = nX
             lastY = nY
-        return nX, nY
+        return curX, curY
 
 
     def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None, bTranslucent=False):
