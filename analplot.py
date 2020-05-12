@@ -433,16 +433,16 @@ class AnalPlot:
         xDiff = theX-tX
         yDiff = theY-tY
         bbox = ax.get_window_extent()
-        self.textxyCharPixRatioX = 4/bbox.width
-        self.textxyCharPixRatioY = 6/bbox.height
+        self.textxyCharPixRatioX = 10/bbox.width
+        self.textxyCharPixRatioY = 15/bbox.height
         if textOrientation == "horizontal":
             ratioX = self.textxyCharPixRatioX * len(curTxt)
         else:
-            ratioX = self.textxyCharPixRatioX*1.5
+            ratioX = self.textxyCharPixRatioX*1.4
         if textOrientation == "vertical":
             ratioY = self.textxyCharPixRatioY * len(curTxt)
         else:
-            ratioY = self.textxyCharPixRatioY*1.5
+            ratioY = self.textxyCharPixRatioY*1.4
         dprint("DBUG:AnalPlot:textxy:tX={}, tY={}, rect={}x{}".format(tX,tY,ratioX*xRange,ratioY*yRange))
         # Need to find the physical dimension of the current axes in which one is plotting.
         # Even thou I try to control the area checked using the current x and y range, still
