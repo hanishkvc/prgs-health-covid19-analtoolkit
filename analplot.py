@@ -436,7 +436,19 @@ class AnalPlot:
         return tX, tY
 
 
-    def test_plotxy_rect(self, ax, x1, y1, x2, y2, xscale="linear", yscale="linear", sMsgT=None, sMsgB=None):
+    def _test_plotxy_rect(self, ax, x1, y1, x2, y2, xscale="linear", yscale="linear", sMsgT=None, sMsgB=None):
+        """ Plot the 4 edge vertices of the rectangle specified.
+            It assumes that the x and y info passed to it, is in the
+            same scale as specified by xscale and yscale. So it takes
+            care of converting them into normal value before calling
+            the plot logic, bcas the plot logic takes normal values,
+            what ever they may be, and then plots them and scales them
+            as required/specified by the xscale and yscale passed to it.
+
+            It also allows one to plot 2 messages next to the rectangle,
+            one next to the top right edge and one next to the bottom
+            right edge of the rectangle.
+            """
         lX = [ x1,x1,x2,x2]
         lY = [ y1,y2,y1,y2]
         lX = np.array(lX)
@@ -455,12 +467,37 @@ class AnalPlot:
             lYO = lY
             Y2 = y2
             Y1 = y1
-        print("DBUG:AnalPlot:TestPlotXYRect: lX {}, lY {}, lXO {}, lYO {}; sMsgT {}".format(lX, lY, lXO, lYO, sMsgT))
+        print("DBUG:AnalPlot:_TestPlotXYRect: lX {}, lY {}, lXO {}, lYO {}; sMsgT {}, sMsgB {}".format(lX, lY, lXO, lYO, sMsgT, sMsgB))
         ax.plot(lXO,lYO,"xg")
         if sMsgT != None:
             ax.text(X2,Y2, sMsgT)
         if sMsgB != None:
             ax.text(X2,Y1, sMsgB)
+
+
+    def test_plotxy_rect(self, ax, idCheck, x1, y1, x2, y2, xscale="linear", yscale="linear", sMsgT=None, sMsgB=None):
+        """ Plot the rectangle specified provided it meets the criteria set by
+            info in the given dTestPlotXYRect instance variable.
+
+            idCheck is the id to associate with the current rect plot request.
+
+            dTextPltXYRect dictionary contains the ids which should be plotted
+            as well as how many sets of rectangles related to that id to plot.
+
+            the logic stores the current use counter related to the id within the
+            list associated with that given id in this dictionary.
+
+            With this one can limit the rectangles to be plotted to a subset
+            and inturn how many rectangles related to it to plot.
+
+            NOTE: with help from plotxy and textxy this is used to plot selective
+            columns' data points' text legend/label's overlap check area.
+            """
+        if idCheck in self.dTestPlotXYRect:
+            if self.dTestPlotXYRect[idCheck][0] < self.dTestPlotXYRect[idCheck][1]:
+                print("DBUG:AnalPlot:TestPlotXYRect:{}:{}:{}".format(idCheck,sMsgT,sMsgB))
+                self._test_plotxy_rect(ax, x1, y1, x2, y2, xscale, yscale, sMsgT, sMsgB)
+                self.dTestPlotXYRect[idCheck][0] += 1
 
 
     def _textxy_checkoverlap(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation="horizontal"):
@@ -510,7 +547,7 @@ class AnalPlot:
         else:
             ratioY = self.textxyCharPixRatioY*CHAR_NONORIENTATION_MULT
         dprint("DBUG:AnalPlot:textxy:tX={}, tY={}, rect={}x{}".format(tX,tY,ratioX*xRange,ratioY*yRange))
-        self.test_plotxy_rect(ax, tX-ratioX*xRange, tY-ratioY*yRange, tX+ratioX*xRange, tY+ratioY*yRange, xscale, yscale)
+        self.test_plotxy_rect(ax, curTxt, tX-ratioX*xRange, tY-ratioY*yRange, tX+ratioX*xRange, tY+ratioY*yRange, xscale, yscale)
         xConflict = np.argwhere( (xDiff > -ratioX*xRange) & (xDiff < ratioX*xRange) )
         yConflict = np.argwhere( (yDiff > -ratioY*yRange) & (yDiff < ratioY*yRange) )
         tList = []
@@ -608,6 +645,7 @@ class AnalPlot:
             title: None or title to plot. Specified title can contain "__AUTO__"
                 __AUTO__ in title replaced by string "<dataKeyX> vs <dataKeyY>"
             """
+        self.dTestPlotXYRect = { 'FR': [0, 1], 'MP': [0, 1] }
         dX, dCHX, dRHX = self.get_data_selective(dataKeyX, plotSelCols)
         dY, dCHY, dRHY = self.get_data_selective(dataKeyY, plotSelCols)
         ax.plot(dX[selRow,:], dY[selRow,:], ".")
