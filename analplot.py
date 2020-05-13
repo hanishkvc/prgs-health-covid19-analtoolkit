@@ -10,8 +10,10 @@ import sys
 
 
 
-CHAR_XPIXELS=6
-CHAR_YPIXELS=9
+DEF_CHARXPIXELS=3
+DEF_CHARYPIXELS=3
+CHAR_XPIXELS=DEF_CHARXPIXELS
+CHAR_YPIXELS=DEF_CHARYPIXELS
 CHAR_NONORIENTATION_MULT=1.2
 def textxy_spread(mode="default", mult=1):
     """ Use this to make the textxy overlap avoidance be either
@@ -22,8 +24,8 @@ def textxy_spread(mode="default", mult=1):
         """
     global CHAR_XPIXELS, CHAR_YPIXELS, CHAR_NONORIENTATION_MULT
     if mode == "default":
-        CHAR_XPIXELS=6
-        CHAR_YPIXELS=9
+        CHAR_XPIXELS=DEF_CHARXPIXELS
+        CHAR_YPIXELS=DEF_CHARYPIXELS
         CHAR_NONORIENTATION_MULT=1.2
     elif mode == "far":
         CHAR_XPIXELS *= 1.2
