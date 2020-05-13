@@ -10,8 +10,8 @@ import sys
 
 
 
-DEF_CHARXPIXELS=3
-DEF_CHARYPIXELS=3
+DEF_CHARXPIXELS=6
+DEF_CHARYPIXELS=9
 CHAR_XPIXELS=DEF_CHARXPIXELS
 CHAR_YPIXELS=DEF_CHARYPIXELS
 CHAR_NONORIENTATION_MULT=1.2
@@ -436,6 +436,33 @@ class AnalPlot:
         return tX, tY
 
 
+    def test_plotxy_rect(self, ax, x1, y1, x2, y2, xscale="linear", yscale="linear", sMsgT=None, sMsgB=None):
+        lX = [ x1,x1,x2,x2]
+        lY = [ y1,y2,y1,y2]
+        lX = np.array(lX)
+        if xscale == "log":
+            lXO = 10**lX
+            X2 = 10**x2
+        else:
+            lXO = lX
+            X2 = x2
+        lY = np.array(lY)
+        if yscale == "log":
+            lYO = 10**lY
+            Y2 = 10**y2
+            Y1 = 10**y1
+        else:
+            lYO = lY
+            Y2 = y2
+            Y1 = y1
+        print("DBUG:AnalPlot:TestPlotXYRect: lX {}, lY {}, lXO {}, lYO {}; sMsgT {}".format(lX, lY, lXO, lYO, sMsgT))
+        ax.plot(lXO,lYO,"xg")
+        if sMsgT != None:
+            ax.text(X2,Y2, sMsgT)
+        if sMsgB != None:
+            ax.text(X2,Y1, sMsgB)
+
+
     def _textxy_checkoverlap(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation="horizontal"):
         """ Check if the given location (curX,curY) for the given curTxt is ok
             or if it overlaps with any other text, whose x and y locations are
@@ -483,6 +510,7 @@ class AnalPlot:
         else:
             ratioY = self.textxyCharPixRatioY*CHAR_NONORIENTATION_MULT
         dprint("DBUG:AnalPlot:textxy:tX={}, tY={}, rect={}x{}".format(tX,tY,ratioX*xRange,ratioY*yRange))
+        self.test_plotxy_rect(ax, tX-ratioX*xRange, tY-ratioY*yRange, tX+ratioX*xRange, tY+ratioY*yRange, xscale, yscale)
         xConflict = np.argwhere( (xDiff > -ratioX*xRange) & (xDiff < ratioX*xRange) )
         yConflict = np.argwhere( (yDiff > -ratioY*yRange) & (yDiff < ratioY*yRange) )
         tList = []
