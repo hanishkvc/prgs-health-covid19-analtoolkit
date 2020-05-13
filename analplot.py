@@ -538,18 +538,24 @@ class AnalPlot:
         bbox = ax.get_window_extent()
         self.textxyCharPixRatioX = CHAR_XPIXELS/bbox.width
         self.textxyCharPixRatioY = CHAR_YPIXELS/bbox.height
+
+        charPlotDataWidth = (xRange/bbox.width)*CHAR_XPIXELS
+        charPlotDataHeight = (yRange/bbox.height)*CHAR_YPIXELS
         if textOrientation == "horizontal":
-            ratioX = self.textxyCharPixRatioX * len(curTxt)
+            deltaX = charPlotDataWidth * len(curTxt)
         else:
-            ratioX = self.textxyCharPixRatioX*CHAR_NONORIENTATION_MULT
+            deltaX = charPlotDataWidth * CHAR_NONORIENTATION_MULT
         if textOrientation == "vertical":
-            ratioY = self.textxyCharPixRatioY * len(curTxt)
+            deltaY = charPlotDataHeight * len(curTxt)
         else:
-            ratioY = self.textxyCharPixRatioY*CHAR_NONORIENTATION_MULT
-        dprint("DBUG:AnalPlot:textxy:tX={}, tY={}, rect={}x{}".format(tX,tY,ratioX*xRange,ratioY*yRange))
-        self.test_plotxy_rect(ax, curTxt, tX-ratioX*xRange, tY-ratioY*yRange, tX+ratioX*xRange, tY+ratioY*yRange, xscale, yscale)
-        xConflict = np.argwhere( (xDiff > -ratioX*xRange) & (xDiff < ratioX*xRange) )
-        yConflict = np.argwhere( (yDiff > -ratioY*yRange) & (yDiff < ratioY*yRange) )
+            deltaY = charPlotDataHeight * CHAR_NONORIENTATION_MULT
+        dprint("DBUG:AnalPlot:textxy:tX={},tY={}, delta=x{}y{}".format(tX,tY,deltaX,deltaY))
+        sMsgT = "xD={},xR={},xW={}".format(np.round(deltaX,4), np.round(xRange,4), np.round(bbox.width))
+        sMsgB = "yD={},yR={},yW={}".format(np.round(deltaY,4), np.round(yRange,4), np.round(bbox.height))
+        self.test_plotxy_rect(ax, curTxt, tX-deltaX, tY-deltaY, tX+deltaX, tY+deltaY, xscale, yscale, sMsgT, sMsgB)
+        xConflict = np.argwhere( (xDiff > -deltaX) & (xDiff < deltaX) )
+        yConflict = np.argwhere( (yDiff > -deltaY) & (yDiff < deltaY) )
+
         tList = []
         for xC in xConflict:
             tC = np.argwhere(yConflict == xC)
@@ -559,8 +565,8 @@ class AnalPlot:
         tList = np.array(tList)
         tList = tList[(tList != curLoc)]
         if (len(tList) > 0):
-            print("DBUG:AnalPlot:textxy:{}:\ndX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}\nratioX{},ratioY{}; xRange{},yRange{}; bboxWidth{},bboxHeight{}"
-                .format(curTxt,theX,theY,xDiff,yDiff,xConflict,yConflict,ratioX,ratioY,xRange,yRange,bbox.width,bbox.height))
+            print("DBUG:AnalPlot:textxy:{}:\ndX:{}\ndY:{}\nxDiff:{}\nyDiff:{}\nxConflict:{}\nyConflict:{}\ndeltaX{},deltaY{}; xRange{},yRange{}; bboxWidth{},bboxHeight{}"
+                .format(curTxt,theX,theY,xDiff,yDiff,xConflict,yConflict,deltaX,deltaY,xRange,yRange,bbox.width,bbox.height))
             return True, tX, tY, tList
         return False, tX, tY, tList
 
