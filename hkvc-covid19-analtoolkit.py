@@ -61,6 +61,7 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day"):
     inset = axes[iARow+2,iACol].inset_axes([0.6,0.10,0.4,0.4])
     selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataKey), topN=8, bSelInclusive=True)
     analplot.textxy_spread("custom", 0.55)
+    analplot.textxy_spread("default")
     ap.plotxy(inset, "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols, bTranslucent=True,
                 title="Cases/Day mavgVSdiff(diffTop8)", xscale="log", yscale="log", plotLegend=True)
     analplot.textxy_spread("default")
