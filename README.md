@@ -1,6 +1,8 @@
 # COVID19 Data Analysis
+Author: HanishKVC
+Version: v20200520IST0241
 
-## Updating logic to be more generic; Branch:master WIP
+## Basic working version of generic logic; Branch:master WIP
 
 This contains a set of simple python scripts to process and plot
 covid19 data about India and World.
