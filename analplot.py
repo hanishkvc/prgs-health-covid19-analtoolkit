@@ -11,7 +11,7 @@ import sys
 
 
 DBG_PLOTXYRECT_MSG=False
-DBG_TEXTXY=False
+DBG_TEXTXY=True
 
 DEF_CHARXPIXELS=9
 DEF_CHARYPIXELS=9
@@ -532,8 +532,12 @@ class AnalPlot:
         tYRange = tYMax - tYMin
         if xscale == "log":
             tXMin -= self._mindelta_selfORextent(tXMin, tXRange, tRatio)
+            if tXMin == 0:
+                tXMin = np.min(dX[dX>0])
             tXMax += self._mindelta_selfORextent(tXMax, tXRange, tRatio)
             tYMin -= self._mindelta_selfORextent(tYMin, tYRange, tRatio)
+            if tYMin == 0:
+                tYMin = np.min(dY[dY>0])
             tYMax += self._mindelta_selfORextent(tYMax, tYRange, tRatio)
         else:
             tXMin -= tRatio*tXRange
