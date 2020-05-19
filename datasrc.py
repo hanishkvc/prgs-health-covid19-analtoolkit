@@ -326,7 +326,7 @@ class EUWorldDataSrc(DataSrc):
 
 
     def conv_date(self, sDate):
-        iDate = self.conv_date_str2int(sDate, delimiter="/", iY=2, iD=0, mType="int", bYear2Digit=False)
+        iDate = self.conv_date_str2int(sDate, delimiter="/", iY=2, iD=1, iM=0, mType="int", bYear2Digit=False)
         fDate = float(iDate)
         #print(sDate, fDate)
         return iDate
