@@ -13,6 +13,8 @@ import sys
 DBG_PLOTXYRECT_MSG=False
 DBG_TEXTXY=True
 
+bAUTO_AXISADJUST=True
+
 DEF_CHARXPIXELS=9
 DEF_CHARYPIXELS=9
 CHAR_XPIXELS=DEF_CHARXPIXELS
@@ -565,7 +567,8 @@ class AnalPlot:
                 this logic like get char pixel size from default font or aspect
                 ratio or ...
             """
-        self.axis_adjust(ax, dX, dY, xscale, yscale)
+        if bAUTO_AXISADJUST:
+            self.axis_adjust(ax, dX, dY, xscale, yscale)
         xMin, xMax, yMin, yMax = ax.axis()
         if xscale == "log":
             theX = np.log10(dX)
