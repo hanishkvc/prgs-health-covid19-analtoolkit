@@ -509,26 +509,18 @@ class AnalPlot:
         tXMax = np.max(dX)
         tYMax = np.max(dY)
         print("DBUG:AnalPlot:_textxy:axis:2:{} {} {} {}".format(tXMin, tXMax, tYMin, tYMax))
-        tXRange = tXMax - tXMin
-        tYRange = tYMax - tYMin
-        tXMin -= 0.04*tXRange
-        tXMax += 0.04*tXRange
-        tYMin -= 0.04*tYRange
-        tYMax += 0.04*tYRange
         if xscale == "log":
-            if tXMin < 0:
-                theXMin = np.min(dX)
-                if theXMin < 0: # Ideally shouldnt be, but if, then let it be
-                    tXMin = theXMin
-                else:
-                    tXMin = theXMin*0.9
-        if yscale == "log":
-            if tYMin < 0:
-                theYMin = np.min(dY)
-                if theYMin < 0:
-                    tYMin = theYMin
-                else:
-                    tYMin = theYMin*0.9
+            tXMin -= np.abs(tXMin)*0.04
+            tXMax += np.abs(tXMax)*0.04
+            tYMin -= np.abs(tYMin)*0.04
+            tYMax += np.abs(tYMax)*0.04
+        else:
+            tXRange = tXMax - tXMin
+            tYRange = tYMax - tYMin
+            tXMin -= 0.04*tXRange
+            tXMax += 0.04*tXRange
+            tYMin -= 0.04*tYRange
+            tYMax += 0.04*tYRange
         ax.set_xlim(tXMin, tXMax)
         ax.set_ylim(tYMin, tYMax)
         print("DBUG:AnalPlot:_textxy:axis:3:{}".format(ax.axis()))
