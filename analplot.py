@@ -502,6 +502,24 @@ class AnalPlot:
                 self.dTestPlotXYRect[idCheck][0] += 1
 
 
+    def axis_adjust(self, ax, dX, dY):
+        print("DBUG:AnalPlot:_textxy:axis:1:{}".format(ax.axis()))
+        tXMin = np.min(dX)
+        tYMin = np.min(dY)
+        tXMax = np.max(dX)
+        tYMax = np.max(dY)
+        print("DBUG:AnalPlot:_textxy:axis:2:{} {} {} {}".format(tXMin, tXMax, tYMin, tYMax))
+        tXRange = tXMax - tXMin
+        tYRange = tYMax - tYMin
+        tXMin -= 0.04*tXRange
+        tXMax += 0.04*tXRange
+        tYMin -= 0.04*tYRange
+        tYMax += 0.04*tYRange
+        ax.set_xlim(tXMin, tXMax)
+        ax.set_ylim(tYMin, tYMax)
+        print("DBUG:AnalPlot:_textxy:axis:3:{}".format(ax.axis()))
+
+
     def _textxy_checkoverlap(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation="horizontal"):
         """ Check if the given location (curX,curY) for the given curTxt is ok
             or if it overlaps with any other text, whose x and y locations are
@@ -516,6 +534,7 @@ class AnalPlot:
                 this logic like get char pixel size from default font or aspect
                 ratio or ...
             """
+        self.axis_adjust(ax, dX, dY)
         xMin, xMax, yMin, yMax = ax.axis()
         xRange = xMax-xMin
         yRange = yMax-yMin
