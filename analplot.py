@@ -62,12 +62,17 @@ class AnalPlot:
         return sDKey, sCHKey, sRHKey
 
 
+    def _initdbg_axisadjust(self):
+        self.dbgAxisAdjustCntr = 1
+
+
     def new_dataset(self):
         """ Setup the current AnalPlot instance to work with
             a new set of data. THis automatically clears any
             prev data that may be stored by this instance.
             """
         self.data = {}
+        self._initdbg_axisadjust()
 
 
     def set_raw(self, data, rowHdr=None, colHdr=None, dataKey="raw", skipRowsTop=0, skipRowsBottom=-1, skipColsLeft=0, skipColsRight=-1):
@@ -510,12 +515,14 @@ class AnalPlot:
 
 
     def axis_adjust(self, ax, dX, dY, xscale, yscale):
-        print("DBUG:AnalPlot:_textxy:axis:1:{}".format(ax.axis()))
+        if self.dbgAxisAdjustCntr > 0:
+            print("DBUG:AnalPlot:_textxy:axis:1:{}".format(ax.axis()))
         tXMin = np.min(dX)
         tYMin = np.min(dY)
         tXMax = np.max(dX)
         tYMax = np.max(dY)
-        print("DBUG:AnalPlot:_textxy:axis:2:{} {} {} {}".format(tXMin, tXMax, tYMin, tYMax))
+        if self.dbgAxisAdjustCntr > 0:
+            print("DBUG:AnalPlot:_textxy:axis:2:{} {} {} {}".format(tXMin, tXMax, tYMin, tYMax))
         tRatio = 0.1
         tXRange = tXMax - tXMin
         tYRange = tYMax - tYMin
@@ -531,7 +538,9 @@ class AnalPlot:
             tYMax += tRatio*tYRange
         ax.set_xlim(tXMin, tXMax)
         ax.set_ylim(tYMin, tYMax)
-        print("DBUG:AnalPlot:_textxy:axis:3:{}".format(ax.axis()))
+        if self.dbgAxisAdjustCntr > 0:
+            print("DBUG:AnalPlot:_textxy:axis:3:{}".format(ax.axis()))
+        self.dbgAxisAdjustCntr -= 1
 
 
     def _textxy_checkoverlap(self, ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation="horizontal"):
@@ -571,6 +580,8 @@ class AnalPlot:
         xDiff = theX-tX
         yDiff = theY-tY
         bbox = ax.get_window_extent()
+        if self.dbgAxisAdjustCntr == 0:
+            print("DBUG:AnalPlot:textxy:bbox",bbox)
         self.textxyCharPixRatioX = CHAR_XPIXELS/bbox.width
         self.textxyCharPixRatioY = CHAR_YPIXELS/bbox.height
 
@@ -621,7 +632,7 @@ class AnalPlot:
             """
         overlap,tX,tY,tList = self._textxy_checkoverlap(ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation)
         if overlap:
-            print("DBUG:AnalPlot:textxy:{}: tx {}, ty {}: tList {}".format(curTxt, tX, tY, tList))
+            dprint("DBUG:AnalPlot:textxy:{}: tx {}, ty {}: tList {}".format(curTxt, tX, tY, tList))
             tX, tY = self.__newxy_rotate(ax, tX, tY, "seq")
             dprint("\tNew: {}, {}".format(tX, tY))
             if xscale == "log":
@@ -633,7 +644,7 @@ class AnalPlot:
             else:
                 curY = tY
         else:
-            print("DBUG:AnalPlot:textxy:{}: tx {}, ty {}: tList {}".format(curTxt, tX, tY, tList))
+            dprint("DBUG:AnalPlot:textxy:{}: tx {}, ty {}: tList {}".format(curTxt, tX, tY, tList))
         return curX, curY
 
 
