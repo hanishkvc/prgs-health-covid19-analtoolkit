@@ -502,6 +502,13 @@ class AnalPlot:
                 self.dTestPlotXYRect[idCheck][0] += 1
 
 
+    def _mindelta_selfORextent(self, val, extent, ratio):
+        delta = np.abs(val)*ratio
+        if delta > extent*ratio:
+            delta = extent*ratio
+        return delta
+
+
     def axis_adjust(self, ax, dX, dY, xscale, yscale):
         print("DBUG:AnalPlot:_textxy:axis:1:{}".format(ax.axis()))
         tXMin = np.min(dX)
@@ -509,18 +516,19 @@ class AnalPlot:
         tXMax = np.max(dX)
         tYMax = np.max(dY)
         print("DBUG:AnalPlot:_textxy:axis:2:{} {} {} {}".format(tXMin, tXMax, tYMin, tYMax))
+        tRatio = 0.1
+        tXRange = tXMax - tXMin
+        tYRange = tYMax - tYMin
         if xscale == "log":
-            tXMin -= np.abs(tXMin)*0.04
-            tXMax += np.abs(tXMax)*0.04
-            tYMin -= np.abs(tYMin)*0.04
-            tYMax += np.abs(tYMax)*0.04
+            tXMin -= self._mindelta_selfORextent(tXMin, tXRange, tRatio)
+            tXMax += self._mindelta_selfORextent(tXMax, tXRange, tRatio)
+            tYMin -= self._mindelta_selfORextent(tYMin, tYRange, tRatio)
+            tYMax += self._mindelta_selfORextent(tYMax, tYRange, tRatio)
         else:
-            tXRange = tXMax - tXMin
-            tYRange = tYMax - tYMin
-            tXMin -= 0.04*tXRange
-            tXMax += 0.04*tXRange
-            tYMin -= 0.04*tYRange
-            tYMax += 0.04*tYRange
+            tXMin -= tRatio*tXRange
+            tXMax += tRatio*tXRange
+            tYMin -= tRatio*tYRange
+            tYMax += tRatio*tYRange
         ax.set_xlim(tXMin, tXMax)
         ax.set_ylim(tYMin, tYMax)
         print("DBUG:AnalPlot:_textxy:axis:3:{}".format(ax.axis()))
