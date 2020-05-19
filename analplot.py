@@ -518,17 +518,17 @@ class AnalPlot:
         if xscale == "log":
             if tXMin < 0:
                 theXMin = np.min(dX)
-                if theXMin > 1:
-                    tXMin = 1
+                if theXMin < 0: # Ideally shouldnt be, but if, then let it be
+                    tXMin = theXMin
                 else:
-                    tXMin = theXMin/2
+                    tXMin = theXMin*0.9
         if yscale == "log":
             if tYMin < 0:
                 theYMin = np.min(dY)
-                if theYMin > 1:
-                    tYMin = 1
+                if theYMin < 0:
+                    tYMin = theYMin
                 else:
-                    tYMin = theYMin/2
+                    tYMin = theYMin*0.9
         ax.set_xlim(tXMin, tXMax)
         ax.set_ylim(tYMin, tYMax)
         print("DBUG:AnalPlot:_textxy:axis:3:{}".format(ax.axis()))
