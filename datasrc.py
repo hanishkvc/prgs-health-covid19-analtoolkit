@@ -15,10 +15,21 @@ from helpers import *
 
 
 class DataSrc:
+    """ The base class for downloading data and inturn loading the downloaded data
+        into memory. User can use fetch_data and load_data for this.
+
+        TO help with same child classes can implement
+        _fix_url_filenames:
+        _fetchconv_postproc:
+        """
 
     bTestForceMissing = False
 
     def fix_missing_value(self, missing=numpy.NAN, value=0):
+        """ Fix missing value(s) using the specified value
+            missing: the value to be treated as missing value
+            value: the value to use in place of missing value
+            """
         if numpy.isnan(missing):
             lMissing = numpy.argwhere(numpy.isnan(self.data))
             self.data[numpy.isnan(self.data)] = value
@@ -31,7 +42,15 @@ class DataSrc:
 
     def fix_missing_localmean(self, missing=numpy.NAN, axis=0, iNear=3):
         """ Fix missing value(s) using local mean among adjacent neighbours
-            Supports 2D array
+            Supports 2D array.
+            missing: the value to be treated as missing value
+            axis: specify which axis one should consider for neighbours.
+                0: values across rows i.e in a given column
+                1: values across cols i.e in a given row
+            iNear: How many neighbours to use on either side of missing value,
+                when calculating the local mean to use in place of missing value.
+            NOTE: if there are (adjacent or otherwise) missing values, then 0
+                will be used in their place, when calculating mean.
             """
         if self.bTestForceMissing:
             self.data[5,0] = missing
@@ -75,6 +94,13 @@ class DataSrc:
 
 
     def download(self, theUrl = None, localFileName = None):
+        """ Download the specified url into specified local file. wget is used for download.
+
+            theUrl: The url to use, if not given same is picked from url instance variable
+                in the class instance.
+            localFileName: The local file name to store into, if not given same is picked
+                from localFileName instance variable in the class instance.
+            """
         if theUrl == None:
             theUrl = self.url
         if localFileName == None:
@@ -87,10 +113,22 @@ class DataSrc:
 
 
     def _fix_url_filenames(self):
+        """ The child class needs to implement this function, to setup
+            the url to use and the local file name to use, as required
+            by it. i.e self.url and self.localFileName.
+
+            One should also specify self.localFileType, which will be used by
+            conv_data to decide if any additional processing is required
+            after the data is fetched/downloaded.
+            """
         raise NotImplementedError("DataSrc: Download data from net...")
 
 
     def _set_fetch_date(self, day, month, year):
+        """ set the fetch date related instance variables in the current
+            class instance (i.e self).
+            If date info is not specified, then set it from current time.
+            """
         curTime = time.gmtime()
         if day == None:
             self.fd_day = curTime.tm_mday
@@ -107,6 +145,10 @@ class DataSrc:
 
 
     def _fetch_data(self, day=None, month=None, year=None):
+        """ fetch/download data if not already downloaded/available.
+            It calls helper functions to setup the fetch date, as well as
+            the url, local file name and file type of fetched data.
+            """
         self._set_fetch_date(day, month, year)
         self._fix_url_filenames()
         if os.path.exists(self.localFileName) and (os.path.getsize(self.localFileName)>128):
@@ -123,10 +165,22 @@ class DataSrc:
 
 
     def _fetchconv_postproc(self):
+        """ Child class can add additional logic to help process fetched data by implementing
+            this function.
+            This is automatically called if xls to csv conversion of datasrc base class is used,
+            which occurs after a download, if localFileType is set to "xls".
+            Similarly if localFileType is set to "proc", then also this will be called.
+            """
         raise NotImplementedError("DataSrc:_fetchconv_postproc: of data fetched and or converted to csv...")
 
 
     def conv_data(self):
+        """ Automatically called by fetch_data, after data has been fetched.
+            It uses the self.localFileType instance variable to decide what to do.
+                if "xls", then fetched xls file is converted to csv format.
+                    This also triggers the "proc" logic mentioned below.
+                if "proc", then _fetchconv_postproc helper is called.
+            """
         if self.localFileType == "xls":
             xlsFN = self.localFileName
             (tBase, tExt) = os.path.splitext(xlsFN)
@@ -140,6 +194,8 @@ class DataSrc:
 
 
     def _prev_day(self, day, month, year):
+        """ Return the previous calender date, for a given date.
+            """
         for i in range(4):
             day = day - 1
             if (day == 0):
@@ -156,6 +212,13 @@ class DataSrc:
 
 
     def fetch_data(self, day=None, month=None, year=None):
+        """ Called by user to fetch data, ideally belonging to the given date.
+            If there is no data available for a given date, then it automatically
+            tries to fetch data for the previous date (upto 4 prev dates are tried).
+
+            After the data is fetched, it automatically calls conv_data. Which inturn
+            may call child class's _fetchconv_postproc, if required.
+            """
         for i in range(4):
             try:
                 self._fetch_data(day, month, year)
@@ -167,6 +230,15 @@ class DataSrc:
 
 
     def conv_date_str2int(self, sDate, delimiter="-", iY = 0, iM=1, iD=2, mType="int", bYear2Digit=False):
+        """ Helper to convert date in string format to numeric YYYYMMDD
+            sDate: the date in string format
+            delimiter: the delimiter used to differentiate between date, month and year in string.
+            iY, iM, iD: specify the location of year, month and date in the string.
+            mType: Check if month is specified as a abbrevation or number in the string.
+                "int": 01 - January, ..., 04 April, ..., 12 - December
+                anything else: jan - january, apr - april, dec - december.
+            bYear2Digit: If true, then year will be in YY format, else YYYY format.
+            """
         sDate = sDate.decode('utf-8')
         sDate = sDate.split(delimiter)
         iDate = int(sDate[iY])*10000
@@ -181,6 +253,9 @@ class DataSrc:
 
 
     def _load_hdr(self, fileName, delimiter, iHdrLine):
+        """ A helper function used to extract the header in the specified data file.
+            It uses the delimiter and header line info specified to extract the same.
+            """
         f = open(fileName)
         i = 0
         for l in f:
@@ -237,6 +312,7 @@ class Cov19InDataSrc(DataSrc):
         if fixMissing == None:
             fixMissing = { "type": "value", "missing": numpy.NAN, "value": 0 }
         super().load_data(fileName=fileName, delimiter=",", skip_header=1, converters=converters, iHdrLine=0, fixMissing=fixMissing)
+        # Remove the empty last column
         self.hdr = self.hdr[:-1]
         self.data = self.data[:,:-1]
 
