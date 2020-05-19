@@ -559,22 +559,22 @@ class AnalPlot:
             """
         self.axis_adjust(ax, dX, dY, xscale, yscale)
         xMin, xMax, yMin, yMax = ax.axis()
-        xRange = xMax-xMin
-        yRange = yMax-yMin
         if xscale == "log":
             theX = np.log10(dX)
             tX = np.log10(curX)
-            xRange = np.log10(xRange)
+            xRange = np.log10(xMax) - np.log10(xMin)
         else:
             theX = dX
             tX = curX
+            xRange = xMax-xMin
         if yscale == "log":
             theY = np.log10(dY)
             tY = np.log10(curY)
-            yRange = np.log10(yRange)
+            yRange = np.log10(yMax) - np.log10(yMin)
         else:
             theY = dY
             tY = curY
+            yRange = yMax-yMin
         self.textxyXRange = xRange
         self.textxyYRange = yRange
         xDiff = theX-tX
@@ -702,7 +702,7 @@ class AnalPlot:
             title: None or title to plot. Specified title can contain "__AUTO__"
                 __AUTO__ in title replaced by string "<dataKeyX> vs <dataKeyY>"
             """
-        self.dTestPlotXYRect = { 'FR': [0, 1], 'MP': [0, 1] }
+        self.dTestPlotXYRect = { 'FR': [0, 1], 'BR': [0, 1] }
         dX, dCHX, dRHX = self.get_data_selective(dataKeyX, plotSelCols)
         dY, dCHY, dRHY = self.get_data_selective(dataKeyY, plotSelCols)
         ax.plot(dX[selRow,:], dY[selRow,:], ".")
