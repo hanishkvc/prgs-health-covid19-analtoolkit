@@ -10,6 +10,8 @@ import sys
 
 
 
+DBG_PLOTXYRECT_MSG=False
+
 DEF_CHARXPIXELS=6
 DEF_CHARYPIXELS=9
 CHAR_XPIXELS=DEF_CHARXPIXELS
@@ -431,7 +433,7 @@ class AnalPlot:
             tX -= deltaX
             tY -= deltaY
         #tY += deltaY*2
-        print("DBUG:AnalPlot:newxy:xRange:%f, yRange:%f; ratioX: %f, ratioY: %f; deltaX: %f, deltaY: %f; %f,%f=>%f,%f"
+        dprint("DBUG:AnalPlot:newxy:xRange:%f, yRange:%f; ratioX: %f, ratioY: %f; deltaX: %f, deltaY: %f; %f,%f=>%f,%f"
                 %(self.textxyXRange, self.textxyYRange, ratioX, ratioY, deltaX, deltaY, iX,iY, tX,tY))
         return tX, tY
 
@@ -469,9 +471,9 @@ class AnalPlot:
             Y1 = y1
         print("DBUG:AnalPlot:_TestPlotXYRect: lX {}, lY {}, lXO {}, lYO {}; sMsgT {}, sMsgB {}".format(lX, lY, lXO, lYO, sMsgT, sMsgB))
         ax.plot(lXO,lYO,"xg")
-        if sMsgT != None:
+        if (sMsgT != None) and DBG_PLOTXYRECT_MSG:
             ax.text(X2,Y2, sMsgT)
-        if sMsgB != None:
+        if (sMsgB != None) and DBG_PLOTXYRECT_MSG:
             ax.text(X2,Y1, sMsgB)
 
 
