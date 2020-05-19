@@ -502,7 +502,7 @@ class AnalPlot:
                 self.dTestPlotXYRect[idCheck][0] += 1
 
 
-    def axis_adjust(self, ax, dX, dY):
+    def axis_adjust(self, ax, dX, dY, xscale, yscale):
         print("DBUG:AnalPlot:_textxy:axis:1:{}".format(ax.axis()))
         tXMin = np.min(dX)
         tYMin = np.min(dY)
@@ -515,6 +515,12 @@ class AnalPlot:
         tXMax += 0.04*tXRange
         tYMin -= 0.04*tYRange
         tYMax += 0.04*tYRange
+        if xscale == "log":
+            if tXMin < 0:
+                tXMin = 0
+        if yscale == "log":
+            if tYMin < 0:
+                tYMin = 0
         ax.set_xlim(tXMin, tXMax)
         ax.set_ylim(tYMin, tYMax)
         print("DBUG:AnalPlot:_textxy:axis:3:{}".format(ax.axis()))
@@ -534,7 +540,7 @@ class AnalPlot:
                 this logic like get char pixel size from default font or aspect
                 ratio or ...
             """
-        self.axis_adjust(ax, dX, dY)
+        self.axis_adjust(ax, dX, dY, xscale, yscale)
         xMin, xMax, yMin, yMax = ax.axis()
         xRange = xMax-xMin
         yRange = yMax-yMin
