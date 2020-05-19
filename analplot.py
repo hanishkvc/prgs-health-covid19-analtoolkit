@@ -11,6 +11,7 @@ import sys
 
 
 DBG_PLOTXYRECT_MSG=False
+DBG_TEXTXY=False
 
 DEF_CHARXPIXELS=9
 DEF_CHARYPIXELS=9
@@ -63,7 +64,10 @@ class AnalPlot:
 
 
     def _initdbg_axisadjust(self):
-        self.dbgAxisAdjustCntr = 1
+        if DBG_TEXTXY:
+            self.dbgAxisAdjustCntr = 1
+        else:
+            self.dbgAxisAdjustCntr = 0
 
 
     def new_dataset(self):
@@ -488,7 +492,7 @@ class AnalPlot:
 
             idCheck is the id to associate with the current rect plot request.
 
-            dTextPltXYRect dictionary contains the ids which should be plotted
+            dTestPlotXYRect dictionary contains the ids which should be plotted
             as well as how many sets of rectangles related to that id to plot.
 
             the logic stores the current use counter related to the id within the
@@ -702,7 +706,10 @@ class AnalPlot:
             title: None or title to plot. Specified title can contain "__AUTO__"
                 __AUTO__ in title replaced by string "<dataKeyX> vs <dataKeyY>"
             """
-        self.dTestPlotXYRect = { 'FR': [0, 1], 'BR': [0, 1] }
+        if DBG_TEXTXY:
+            self.dTestPlotXYRect = { 'FR': [0, 1], 'BR': [0, 1] }
+        else:
+            self.dTestPlotXYRect = {}
         dX, dCHX, dRHX = self.get_data_selective(dataKeyX, plotSelCols)
         dY, dCHY, dRHY = self.get_data_selective(dataKeyY, plotSelCols)
         ax.plot(dX[selRow,:], dY[selRow,:], ".")
