@@ -125,11 +125,19 @@ def plot_sel(allDS, allSel):
     save_fig(fig, sGlobalMsg)
 
 
+def _plot_movavgs(ap, axes, iRow, iCol, dataKey, selCols, theTitle):
+    ap.plot(axes[iRow+0,iCol], "%s.movavg"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
+    ap.plot(axes[iRow+1,iCol], "%s.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
+    ap.plot(axes[iRow+2,iCol], "%s.movavgT3"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
+    ap.plot(axes[iRow+3,iCol], "%s.movavgT4"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
+    return iRow+4
+
+
 def plot_movavgs(allDS, allSel):
     """ Plot a set of interesting/informative/... plots
         Uses the new auto calc as required functionality of AnalPlot
         """
-    fig, axes = ap.subplots(plt,5,len(allDS))
+    fig, axes = ap.subplots(plt,9,len(allDS))
     iCurDS = 0
     sGlobalMsg = ""
     for ds in allDS:
@@ -146,10 +154,8 @@ def plot_movavgs(allDS, allSel):
         theTitle = "%s-__AUTO__"%(ds.name)
         selCols, theTitle = sel_cols("cases/day.movavg", topN, theSelIds, theTitle, "movavg")
         ap.plot(axes[0,iCurDS], "cases/day", plotSelCols=selCols, plotLegend=True, title=theTitle)
-        ap.plot(axes[1,iCurDS], "cases/day.movavg", plotSelCols=selCols, plotLegend=True, title=theTitle)
-        ap.plot(axes[2,iCurDS], "cases/day.movavgT2", plotSelCols=selCols, plotLegend=True, title=theTitle)
-        ap.plot(axes[3,iCurDS], "cases/day.movavgT3", plotSelCols=selCols, plotLegend=True, title=theTitle)
-        ap.plot(axes[4,iCurDS], "cases/day.movavgT4", plotSelCols=selCols, plotLegend=True, title=theTitle)
+        iRow = _plot_movavgs(ap, axes, 1, iCurDS, "cases/day", selCols, theTitle)
+        iRow = _plot_movavgs(ap, axes, iRow, iCurDS, "cases/day.diff", selCols, theTitle)
         sGlobalMsg += "MA-{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCurDS += 1
     save_fig(fig, sGlobalMsg)
