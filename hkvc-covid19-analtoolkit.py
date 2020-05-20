@@ -109,9 +109,27 @@ def save_fig(fig, sMsg):
     plt.show()
 
 
+def processargs_sel(args, iArg):
+    """ Extract the selector set consisting of the dataset name
+        and associated geoIds.
+        --sel <dataset_name> <geoId1> <geoId2> ...
+        """
+    numArgs = len(args)
+    key = args[iArg]
+    iArg += 1
+    ids = []
+    while iArg < numArgs:
+        if args[iArg].startswith("--"):
+            break
+        ids.append(args[iArg])
+        iArg += 1
+    return iArg, key, ids
+
+
 def processargs_and_load(args):
     iArg = 1
     dsAll = []
+    selAll = {}
     while iArg < len(args):
         if args[iArg] == "--cov19in":
             iArg += 1
@@ -125,17 +143,22 @@ def processargs_and_load(args):
             ds.load_data(args[iArg])
             iArg += 1
             dsAll.append(ds)
+        elif args[iArg] == "--sel":
+            iArg += 1
+            iArg, key, ids = processargs_sel(args, iArg)
+            selAll[key] = ids
         else:
             print("ERRR:Main:load_fromargs:UnknownArg:%s"%(args[iArg]))
             iArg += 1
-    return dsAll
+    return dsAll, selAll
 
 
 
 if len(sys.argv) <= 1:
     allDS = fetch()
+    allSel = {}
 else:
-    allDS = processargs_and_load(sys.argv)
+    allDS, allSel = processargs_and_load(sys.argv)
 
 ap = analplot.AnalPlot()
 #plot_simple(allDS)
