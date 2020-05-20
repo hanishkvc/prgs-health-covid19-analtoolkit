@@ -171,6 +171,9 @@ def processargs_and_load(args):
         elif args[iArg] == "--no_scalediff":
             bMODE_SCALEDIFF = False
             iArg += 1
+        elif args[iArg] == "--scalediff":
+            bMODE_SCALEDIFF = True
+            iArg += 1
         else:
             print("ERRR:Main:load_fromargs:UnknownArg:%s"%(args[iArg]))
             iArg += 1
