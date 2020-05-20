@@ -127,6 +127,12 @@ class AnalPlot:
         return tD, tDCH, dRH
 
 
+    def print_data_selective(self, dataKey="raw", selCols=None):
+        tD, tDCH, dRH = self.get_data_selective(dataKey, selCols)
+        print(tDCH)
+        print(tD)
+
+
     def get_cols_withval(self, dataKey="raw", val = 0):
         """ Find cols which contain the given val in all its rows
             """
