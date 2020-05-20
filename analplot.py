@@ -175,7 +175,8 @@ class AnalPlot:
         """ Scale the data from inMin-inMax to outMin-outMax
             for each column in the specified input data
             inDataKey: use data saved in this key
-            outDataKey: saved result in/using this key
+            outDataKey: save result in/using this key
+                The actual outDataKey is inDataKey.outDataKey
             inMin: Use this as the min value for respective input data cols
                 None: Get min from the data cols itself
                 a int value: Use this as the min for each data col
@@ -343,7 +344,7 @@ class AnalPlot:
                     argTimes = int(sCmd.replace("movavgT",""))
                     self.dCalcFuncsWithArg[fname](self, sBDKey, times=argTimes)
                     return self._get_data(dataKey)
-        raise NotImplementedError("AnalPlot:get_data:Func[{}] not found...")
+        raise NotImplementedError("AnalPlot:get_data:{}:Func[{}] not found...\n\tAvailable DataSets:{}".format(dataKey, sCmd, self.data.keys()))
 
 
     def plot(self, ax, dataKey, plotSelCols=None, title=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None, bTranslucent=False):

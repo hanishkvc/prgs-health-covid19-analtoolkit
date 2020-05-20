@@ -70,7 +70,8 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None
                 title=theTitle, xscale="log", yscale="log", plotLegend=True)
     inset = axes[iARow+2,iACol].inset_axes([0.6,0.10,0.4,0.4])
     selCols, theTitle = sel_cols("%s.diff.movavgT2"%(dataKey), 8, inSelIds, "%s-Cases/Day MAvgVsDiff"%(ds.name),"DiffMAvgT2", bSelInclusive=True)
-    ap.plotxy(inset, "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols, bTranslucent=True,
+    ap.calc_scale("%s.diff.movavgT2"%(dataKey), "%s.diff.movavgT2.scale"%(dataKey))
+    ap.plotxy(inset, "%s.movavg"%(dataKey), "%s.diff.movavgT2.scale"%(dataKey), plotSelCols=selCols, bTranslucent=True,
                 title=theTitle, xscale="log", yscale="log", plotLegend=True)
     analplot.textxy_spread("default")
 
