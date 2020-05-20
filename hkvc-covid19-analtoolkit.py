@@ -76,21 +76,37 @@ def plot_sel(allDS, allSel):
     sGlobalMsg = ""
     for ds in allDS:
         ap.new_dataset()
+        if ds.name in allSel:
+            theSelIds = allSel[ds.name]
+        else:
+            theSelIds = None
         dprint("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[-2])))
         # The Raw data
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
         # Plot moving avg and raw data (inset)
         topN=8
-        selCols, selPers = ap.selcols_percentiles("cases/day.movavg", topN=topN)
-        ap.plot(axes[0,iCurDS], "cases/day.movavg", plotSelCols=selCols, plotLegend=True, title="%s-__AUTO__-movavgTop%d"%(ds.name, topN), yscale="log")
+        theTitle = "%s-__AUTO__".format(ds.name)
+        if theSelIds == None:
+            selCols, selPers = ap.selcols_percentiles("cases/day.movavg", topN=topN)
+            theTitle = "%s-movavgTop%d"%(theTitle, topN)
+        else:
+            selCols = ap.selcols_colhdr(theSelIds)
+            theTitle += "-user"
+        ap.plot(axes[0,iCurDS], "cases/day.movavg", plotSelCols=selCols, plotLegend=True, title=theTitle, yscale="log")
         yscale = "log"
         yscale = None
         inset = axes[0,iCurDS].inset_axes([0.36,0.05,0.64,0.4])
-        ap.plot(inset, "cases/day", plotSelCols=selCols, yscale=yscale, bTranslucent=True, numXTicks=4, xtickMultOf=7, title="%s-__AUTO__-MovAvgTop%d"%(ds.name, topN))
+        ap.plot(inset, "cases/day", plotSelCols=selCols, yscale=yscale, bTranslucent=True, numXTicks=4, xtickMultOf=7, title=theTitle)
         # Boxplot Raw data
         topN=20
-        selCols, selPers = ap.selcols_percentiles("cases/day.movavg", topN=topN)
-        ap.boxplot(axes[1,iCurDS], "cases/day", plotSelCols=selCols, bInsetBoxPlot=True, title="%s-Cases/Day-MovAvgTop%d"%(ds.name, topN))
+        theTitle = "%s-__AUTO__".format(ds.name)
+        if theSelIds == None:
+            selCols, selPers = ap.selcols_percentiles("cases/day.movavg", topN=topN)
+            theTitle = "%s-movavgTop%d"%(theTitle, topN)
+        else:
+            selCols = ap.selcols_colhdr(theSelIds)
+            theTitle += "-user"
+        ap.boxplot(axes[1,iCurDS], "cases/day", plotSelCols=selCols, bInsetBoxPlot=True, title=theTitle)
         # Diff of Raw data and more
         plot_diffdata(ds, ap, axes, 2, iCurDS)
         sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
