@@ -67,12 +67,12 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day"):
     analplot.textxy_spread("default")
 
 
-def plot_sel(allDS):
+def plot_sel(allDS, allSel):
     """ Plot a set of interesting/informative/... plots
         Uses the new auto calc as required functionality of AnalPlot
         """
-    fig, axes = ap.subplots(plt,5,2)
-    iCur = 0
+    fig, axes = ap.subplots(plt,5,len(allDS))
+    iCurDS = 0
     sGlobalMsg = ""
     for ds in allDS:
         ap.new_dataset()
@@ -82,19 +82,19 @@ def plot_sel(allDS):
         # Plot moving avg and raw data (inset)
         topN=8
         selCols, selPers = ap.selcols_percentiles("cases/day.movavg", topN=topN)
-        ap.plot(axes[0,iCur], "cases/day.movavg", plotSelCols=selCols, plotLegend=True, title="%s-__AUTO__-movavgTop%d"%(ds.name, topN), yscale="log")
+        ap.plot(axes[0,iCurDS], "cases/day.movavg", plotSelCols=selCols, plotLegend=True, title="%s-__AUTO__-movavgTop%d"%(ds.name, topN), yscale="log")
         yscale = "log"
         yscale = None
-        inset = axes[0,iCur].inset_axes([0.36,0.05,0.64,0.4])
+        inset = axes[0,iCurDS].inset_axes([0.36,0.05,0.64,0.4])
         ap.plot(inset, "cases/day", plotSelCols=selCols, yscale=yscale, bTranslucent=True, numXTicks=4, xtickMultOf=7, title="%s-__AUTO__-MovAvgTop%d"%(ds.name, topN))
         # Boxplot Raw data
         topN=20
         selCols, selPers = ap.selcols_percentiles("cases/day.movavg", topN=topN)
-        ap.boxplot(axes[1,iCur], "cases/day", plotSelCols=selCols, bInsetBoxPlot=True, title="%s-Cases/Day-MovAvgTop%d"%(ds.name, topN))
+        ap.boxplot(axes[1,iCurDS], "cases/day", plotSelCols=selCols, bInsetBoxPlot=True, title="%s-Cases/Day-MovAvgTop%d"%(ds.name, topN))
         # Diff of Raw data and more
-        plot_diffdata(ds, ap, axes, 2, iCur)
+        plot_diffdata(ds, ap, axes, 2, iCurDS)
         sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
-        iCur += 1
+        iCurDS += 1
     save_fig(fig, sGlobalMsg)
 
 
@@ -162,6 +162,6 @@ else:
 
 ap = analplot.AnalPlot()
 #plot_simple(allDS)
-plot_sel(allDS)
+plot_sel(allDS, allSel)
 
 # vim: set softtabstop=4 expandtab shiftwidth=4: #
