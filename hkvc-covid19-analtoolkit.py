@@ -52,7 +52,7 @@ def sel_cols(dataKey, topN, inSelIds, baseTitle, selTitle, bSelInclusive=True):
         theTitle = "%s-%sTop%d"%(baseTitle, selTitle, topN)
     else:
         selCols = ap.selcols_colhdr(dataKey, inSelIds)
-        theTitle = baseTitle+"-user"
+        theTitle = baseTitle+"-user%d"%(len(inSelIds))
     return selCols, theTitle
 
 
@@ -70,9 +70,8 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None
     ap.plotxy(axes[iARow+2,iACol], "%s.cumsum"%(dataKey), "%s.movavg"%(dataKey), plotSelCols=selCols,
                 title=theTitle, xscale="log", yscale="log", plotLegend=True)
     inset = axes[iARow+2,iACol].inset_axes([0.6,0.10,0.4,0.4])
-    selCols, theTitle = sel_cols("%s.diff.movavgT2"%(dataKey), 8, inSelIds, "%s-Cases/Day MAvgVsDiff"%(ds.name),"DiffMAvgT2", bSelInclusive=True)
+    selCols, theTitle = sel_cols("%s.diff.movavgT2"%(dataKey), 8, inSelIds, "%s-Cases/Day MAvgVsDiffMAvgT2"%(ds.name),"DiffMAvgT2", bSelInclusive=True)
     if bMODE_SCALEDIFF:
-        #ap.calc_scale("%s.diff.movavgT2"%(dataKey), "%s.diff.movavgT2.scale"%(dataKey))
         ap.calc_scale("%s.diff.movavgT2"%(dataKey))
         yDataKey = "%s.diff.movavgT2.scale"%(dataKey)
     else:

@@ -769,6 +769,7 @@ class AnalPlot:
                 tNX, tNY = self._textxy_super(ax, i, tX, tY, tTxt, textDX, textDY, xscale, yscale)
                 textDX[i] = tNX
                 textDY[i] = tNY
+                print("DBUG:AnalPlot:plotxy:arrow:{}:{},{} to {},{}".format(tTxt,tX,tY,tNX,tNY))
                 ax.arrow(tX,tY, (tNX-tX), (tNY-tY), color=(1,0,0)).set_alpha(0.3)
                 ax.text(tNX, tNY, tTxt)
         if title != None:
