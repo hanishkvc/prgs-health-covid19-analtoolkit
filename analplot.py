@@ -769,8 +769,11 @@ class AnalPlot:
                 tNX, tNY = self._textxy_super(ax, i, tX, tY, tTxt, textDX, textDY, xscale, yscale)
                 textDX[i] = tNX
                 textDY[i] = tNY
-                print("DBUG:AnalPlot:plotxy:arrow:{}:{},{} to {},{}".format(tTxt,tX,tY,tNX,tNY))
-                ax.arrow(tX,tY, (tNX-tX), (tNY-tY), color=(1,0,0)).set_alpha(0.3)
+                aXDelta = tNX-tX
+                aYDelta = tNY-tY
+                print("DBUG:AnalPlot:plotxy:arrow:{}:{},{} to {},{}; {},{}".format(tTxt,tX,tY,tNX,tNY,aXDelta,aYDelta))
+                if not ((aXDelta == 0.0) and (aYDelta == 0.0)):
+                    ax.arrow(tX,tY, aXDelta, aYDelta, color=(1,0,0)).set_alpha(0.3)
                 ax.text(tNX, tNY, tTxt)
         if title != None:
             if title.find("__AUTO__") != -1:
