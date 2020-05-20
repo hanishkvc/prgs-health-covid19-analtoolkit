@@ -93,7 +93,7 @@ def plot_sel(allDS, allSel):
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
         # Plot moving avg and raw data (inset)
         topN=8
-        theTitle = "%s-__AUTO__".format(ds.name)
+        theTitle = "%s-__AUTO__"%(ds.name)
         selCols, theTitle = sel_cols("cases/day.movavg", topN, theSelIds, theTitle, "movavg")
         ap.plot(axes[0,iCurDS], "cases/day.movavg", plotSelCols=selCols, plotLegend=True, title=theTitle, yscale="log")
         yscale = "log"
@@ -102,7 +102,7 @@ def plot_sel(allDS, allSel):
         ap.plot(inset, "cases/day", plotSelCols=selCols, yscale=yscale, bTranslucent=True, numXTicks=4, xtickMultOf=7, title=theTitle)
         # Boxplot Raw data
         topN=20
-        theTitle = "%s-__AUTO__".format(ds.name)
+        theTitle = "%s-__AUTO__"%(ds.name)
         selCols, theTitle = sel_cols("cases/day.movavg", topN, theSelIds, theTitle, "movavg")
         ap.boxplot(axes[1,iCurDS], "cases/day", plotSelCols=selCols, bInsetBoxPlot=True, title=theTitle)
         # Diff of Raw data and more
