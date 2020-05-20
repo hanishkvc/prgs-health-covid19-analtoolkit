@@ -125,6 +125,36 @@ def plot_sel(allDS, allSel):
     save_fig(fig, sGlobalMsg)
 
 
+def plot_movavgs(allDS, allSel):
+    """ Plot a set of interesting/informative/... plots
+        Uses the new auto calc as required functionality of AnalPlot
+        """
+    fig, axes = ap.subplots(plt,5,len(allDS))
+    iCurDS = 0
+    sGlobalMsg = ""
+    for ds in allDS:
+        ap.new_dataset()
+        if ds.name in allSel:
+            theSelIds = allSel[ds.name]
+        else:
+            theSelIds = None
+        dprint("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[-2])))
+        # The Raw data
+        ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
+        # Plot moving avg and raw data (inset)
+        topN=8
+        theTitle = "%s-__AUTO__"%(ds.name)
+        selCols, theTitle = sel_cols("cases/day.movavg", topN, theSelIds, theTitle, "movavg")
+        ap.plot(axes[0,iCurDS], "cases/day", plotSelCols=selCols, plotLegend=True, title=theTitle)
+        ap.plot(axes[1,iCurDS], "cases/day.movavg", plotSelCols=selCols, plotLegend=True, title=theTitle)
+        ap.plot(axes[2,iCurDS], "cases/day.movavgT2", plotSelCols=selCols, plotLegend=True, title=theTitle)
+        ap.plot(axes[3,iCurDS], "cases/day.movavgT3", plotSelCols=selCols, plotLegend=True, title=theTitle)
+        ap.plot(axes[4,iCurDS], "cases/day.movavgT4", plotSelCols=selCols, plotLegend=True, title=theTitle)
+        sGlobalMsg += "MA-{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
+        iCurDS += 1
+    save_fig(fig, sGlobalMsg)
+
+
 def save_fig(fig, sMsg):
     sMsg += "-hkvc"
     textMsg = sMsg + "; github.com/hanishkvc/prgs-health-covid19-analtoolkit.git"
@@ -195,5 +225,6 @@ if len(allDS) == 0:
 ap = analplot.AnalPlot()
 #plot_simple(allDS)
 plot_sel(allDS, allSel)
+plot_movavgs(allDS, allSel)
 
 # vim: set softtabstop=4 expandtab shiftwidth=4: #
