@@ -168,11 +168,9 @@ def processargs_and_load(args):
 
 
 
-if len(sys.argv) <= 1:
+allDS, allSel = processargs_and_load(sys.argv)
+if len(allDS) == 0:
     allDS = fetch()
-    allSel = {}
-else:
-    allDS, allSel = processargs_and_load(sys.argv)
 
 ap = analplot.AnalPlot()
 #plot_simple(allDS)
