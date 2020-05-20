@@ -65,15 +65,13 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None
                 title=theTitle)
     ap.plot(axes[iARow+1,iACol], "%s.rel2sum.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
                 title=theTitle)
-    selCols, selPers = ap.selcols_percentiles("%s.cumsum"%(dataKey), topN=25, bSelInclusive=True)
+    selCols, theTitle = sel_cols("%s.cumsum"%(dataKey), 25, inSelIds, "%s-__AUTO__"%(ds.name),"~cumsum", bSelInclusive=True)
     ap.plotxy(axes[iARow+2,iACol], "%s.cumsum"%(dataKey), "%s.movavg"%(dataKey), plotSelCols=selCols,
-                title="%s-__AUTO__~Top25(cumsum)"%(ds.name), xscale="log", yscale="log", plotLegend=True)
+                title=theTitle, xscale="log", yscale="log", plotLegend=True)
     inset = axes[iARow+2,iACol].inset_axes([0.6,0.10,0.4,0.4])
-    selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataKey), topN=8, bSelInclusive=True)
-    analplot.textxy_spread("custom", 0.55)
-    analplot.textxy_spread("default")
+    selCols, theTitle = sel_cols("%s.diff.movavgT2"%(dataKey), 8, inSelIds, "%s-Cases/Day MAvgVsDiff"%(ds.name),"DiffMAvgT2", bSelInclusive=True)
     ap.plotxy(inset, "%s.movavg"%(dataKey), "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols, bTranslucent=True,
-                title="Cases/Day mavgVSdiff(diffTop8)", xscale="log", yscale="log", plotLegend=True)
+                title=theTitle, xscale="log", yscale="log", plotLegend=True)
     analplot.textxy_spread("default")
 
 
