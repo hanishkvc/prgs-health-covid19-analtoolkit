@@ -51,7 +51,7 @@ def sel_cols(dataKey, topN, inSelIds, baseTitle, selTitle, bSelInclusive=True):
         selCols, selPers = ap.selcols_percentiles(dataKey, topN=topN, bSelInclusive=bSelInclusive)
         theTitle = "%s-%sTop%d"%(baseTitle, selTitle, topN)
     else:
-        selCols = ap.selcols_colhdr(inSelIds)
+        selCols = ap.selcols_colhdr(dataKey, inSelIds)
         theTitle = baseTitle+"-user"
     return selCols, theTitle
 

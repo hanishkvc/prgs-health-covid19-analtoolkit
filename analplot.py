@@ -295,6 +295,24 @@ class AnalPlot:
         return selCols, selPers
 
 
+    def selcols_colhdr(self, dataKey="raw", colIds=None):
+        """ Select those Columns of given dataset named dataKey, whose column
+            header names are given in colIds list
+
+            If colIds is None, then all cols are selected.
+            """
+        d, dCH, dRH = self.get_data(dataKey)
+        if colIds == None:
+            return dCH == dCH
+        selCols = []
+        for curId in dCH:
+            if curId in colIds:
+                selCols.append(True)
+            else:
+                selCols.append(False)
+        return(selCols)
+
+
     dCalcSimpleFuncs = {
         "diff": calc_diff,
         "cumsum": calc_cumsum,
