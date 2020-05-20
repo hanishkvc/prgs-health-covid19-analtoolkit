@@ -109,7 +109,7 @@ def save_fig(fig, sMsg):
     plt.show()
 
 
-def load_fromargs(args):
+def processargs_and_load(args):
     iArg = 1
     dsAll = []
     while iArg < len(args):
@@ -135,7 +135,7 @@ def load_fromargs(args):
 if len(sys.argv) <= 1:
     allDS = fetch()
 else:
-    allDS = load_fromargs(sys.argv)
+    allDS = processargs_and_load(sys.argv)
 
 ap = analplot.AnalPlot()
 #plot_simple(allDS)
