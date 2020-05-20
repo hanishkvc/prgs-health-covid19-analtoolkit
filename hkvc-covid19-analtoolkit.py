@@ -46,6 +46,16 @@ def plot_simple(allDS):
     save_fig(fig, sGlobalMsg)
 
 
+def sel_cols(dataKey, topN, inSelIds, baseTilte, selTitle):
+    if inSelIds == None:
+        selCols, selPers = ap.selcols_percentiles(dataKey, topN=topN)
+        theTitle = "%s-%sTop%d"%(baseTitle, selTitle, topN)
+    else:
+        selCols = ap.selcols_colhdr(inSelIds)
+        theTitle = baseTitle+"-user"
+    return selCols, theTitle
+
+
 def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None):
     selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataKey), topN=8)
     ap.plot(axes[iARow,iACol], "%s.diff.movavgT3"%(dataKey), plotSelCols=selCols, plotLegend=True,
@@ -86,12 +96,7 @@ def plot_sel(allDS, allSel):
         # Plot moving avg and raw data (inset)
         topN=8
         theTitle = "%s-__AUTO__".format(ds.name)
-        if theSelIds == None:
-            selCols, selPers = ap.selcols_percentiles("cases/day.movavg", topN=topN)
-            theTitle = "%s-movavgTop%d"%(theTitle, topN)
-        else:
-            selCols = ap.selcols_colhdr(theSelIds)
-            theTitle += "-user"
+        selCols, theTitle = sel_cols("cases/day.movavg", topN, theSelIds, theTitle, "movavg")
         ap.plot(axes[0,iCurDS], "cases/day.movavg", plotSelCols=selCols, plotLegend=True, title=theTitle, yscale="log")
         yscale = "log"
         yscale = None
@@ -100,12 +105,7 @@ def plot_sel(allDS, allSel):
         # Boxplot Raw data
         topN=20
         theTitle = "%s-__AUTO__".format(ds.name)
-        if theSelIds == None:
-            selCols, selPers = ap.selcols_percentiles("cases/day.movavg", topN=topN)
-            theTitle = "%s-movavgTop%d"%(theTitle, topN)
-        else:
-            selCols = ap.selcols_colhdr(theSelIds)
-            theTitle += "-user"
+        selCols, theTitle = sel_cols("cases/day.movavg", topN, theSelIds, theTitle, "movavg")
         ap.boxplot(axes[1,iCurDS], "cases/day", plotSelCols=selCols, bInsetBoxPlot=True, title=theTitle)
         # Diff of Raw data and more
         plot_diffdata(ds, ap, axes, 2, iCurDS, "cases/day", theSelIds)
