@@ -46,9 +46,9 @@ def plot_simple(allDS):
     save_fig(fig, sGlobalMsg)
 
 
-def sel_cols(dataKey, topN, inSelIds, baseTitle, selTitle):
+def sel_cols(dataKey, topN, inSelIds, baseTitle, selTitle, bSelInclusive=True):
     if inSelIds == None:
-        selCols, selPers = ap.selcols_percentiles(dataKey, topN=topN)
+        selCols, selPers = ap.selcols_percentiles(dataKey, topN=topN, bSelInclusive=bSelInclusive)
         theTitle = "%s-%sTop%d"%(baseTitle, selTitle, topN)
     else:
         selCols = ap.selcols_colhdr(inSelIds)
