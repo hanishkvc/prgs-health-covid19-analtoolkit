@@ -826,7 +826,7 @@ class AnalPlot:
             ax.set_facecolor([1,1,1,0.1])
             for l in ax.lines:
                 l.set_alpha(0.4)
-            ax.tick_params(color=[0,0,0,0.4], labelcolor=[0,0,0,0.4])
+            ax.tick_params(color=[0,0,0,0.4], labelcolor=[0,0,0,0.4], which="both")
             ax.title.set_alpha(0.4)
             for t in ax.texts:
                 t.set_alpha(0.4)
