@@ -19,8 +19,12 @@ function cleanup() {
 
 function test_run() {
 
+	rm -f /tmp/*png /tmp/*jpg
 	#./hkvc-covid19-analtoolkit.py --sel EUWorld IN IE UK AE CA US RU BR --sel Cov19In KL KA DL MH MP BR
 	./hkvc-covid19-analtoolkit.py
+	convert /tmp/*png /tmp/1.jpg
+	./hkvc-covid19-analtoolkit.py --no_scalediff
+	convert /tmp/*png /tmp/2.jpg
 	./hkvc-covid19-analtoolkit.py --cov19in data/Cov19In-20200520-confirmed.csv --euworld data/EUWorld-20200520.csv --sel EUWorld IN IE UK AE CA US RU BR --sel Cov19In KL KA DL MH GJ MP BR
 
 }

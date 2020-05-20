@@ -147,6 +147,7 @@ def processargs_sel(args, iArg):
 
 
 def processargs_and_load(args):
+    global bMODE_SCALEDIFF
     iArg = 1
     dsAll = []
     selAll = {}
@@ -167,6 +168,9 @@ def processargs_and_load(args):
             iArg += 1
             iArg, key, ids = processargs_sel(args, iArg)
             selAll[key] = ids
+        elif args[iArg] == "--no_scalediff":
+            bMODE_SCALEDIFF = False
+            iArg += 1
         else:
             print("ERRR:Main:load_fromargs:UnknownArg:%s"%(args[iArg]))
             iArg += 1
