@@ -177,9 +177,9 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
-    def calc_scale(self, inDataKey="raw", outDataKey="__AUTO__", inMin=None, inMax=None, outMin=0, outMax=1):
-        """ Scale the data from inMin-inMax to outMin-outMax
-            for each column in the specified input data
+    def calc_scale(self, inDataKey="raw", outDataKey="__AUTO__", inMin=None, inMax=None, outMin=0, outMax=1, axis=0):
+        """ Scale the data from inMin-inMax to outMin-outMax for each
+            row (axis=1) or column (axis=0) in the specified input data
             inDataKey: use data saved in this key
             outDataKey: save result in/using this key
                 if "__AUTO__": then actual outDataKey is inDataKey.scale
@@ -191,24 +191,50 @@ class AnalPlot:
             inMax: Use this as the max value for respective input data cols
             outMin: Use this as the min value for respective output data cols
             outMax: Use this as the max value for respective output data cols
+            axis: Whether to operate on data across rows or columns in the dataset
+                0: operate on data across rows, i.e on each column of data
+                1: operate on data across cols, i.e on each row of data
+            NOTE: this can work on a 2D data set, inturn on its rows or cols.
             """
         d, dCH, dRH = self.get_data(inDataKey)
-        if inMin == None:
-            inMin = np.min(d, axis=0)
-        elif type(inMin) == type(int()):
-            inMin = np.ones(d.shape[1])*inMin
-        if inMax == None:
-            inMax = np.max(d, axis=0)
-        elif type(inMax) == type(int()):
-            inMax = np.ones(d.shape[1])*inMax
-        if outMin == None:
-            outMin = 0
-        if type(outMin) == type(int()):
-            outMin = np.ones(d.shape[1])*outMin
-        if outMax == None:
-            outMax = 1
-        if type(outMax) == type(int()):
-            outMax = np.ones(d.shape[1])*outMax
+        if axis==0:
+            if inMin == None:
+                inMin = np.min(d, axis=0)
+            elif type(inMin) == type(int()):
+                inMin = np.ones(d.shape[1])*inMin
+            if inMax == None:
+                inMax = np.max(d, axis=0)
+            elif type(inMax) == type(int()):
+                inMax = np.ones(d.shape[1])*inMax
+            if outMin == None:
+                outMin = 0
+            if type(outMin) == type(int()):
+                outMin = np.ones(d.shape[1])*outMin
+            if outMax == None:
+                outMax = 1
+            if type(outMax) == type(int()):
+                outMax = np.ones(d.shape[1])*outMax
+        else:
+            if inMin == None:
+                inMin = np.min(d, axis)
+            elif type(inMin) == type(int()):
+                inMin = np.ones(d.shape[1-axis])*inMin
+            if inMax == None:
+                inMax = np.max(d, axis)
+            elif type(inMax) == type(int()):
+                inMax = np.ones(d.shape[1-axis])*inMax
+            if outMin == None:
+                outMin = 0
+            if type(outMin) == type(int()):
+                outMin = np.ones(d.shape[1-axis])*outMin
+            if outMax == None:
+                outMax = 1
+            if type(outMax) == type(int()):
+                outMax = np.ones(d.shape[1-axis])*outMax
+            inMin = inMin.reshape(d.shape[0],1)
+            inMax = inMax.reshape(d.shape[0],1)
+            outMin = outMin.reshape(d.shape[0],1)
+            outMax = outMax.reshape(d.shape[0],1)
         inRange = inMax-inMin
         outRange = outMax-outMin
         if outDataKey == "__AUTO__":
