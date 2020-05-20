@@ -171,12 +171,13 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
-    def calc_scale(self, inDataKey="raw", outDataKey="scale", inMin=None, inMax=None, outMin=0, outMax=1):
+    def calc_scale(self, inDataKey="raw", outDataKey="__AUTO__", inMin=None, inMax=None, outMin=0, outMax=1):
         """ Scale the data from inMin-inMax to outMin-outMax
             for each column in the specified input data
             inDataKey: use data saved in this key
             outDataKey: save result in/using this key
-                The actual outDataKey is inDataKey.outDataKey
+                if "__AUTO__": then actual outDataKey is inDataKey.scale
+                else: outDataKey itself is the actual outDataKey
             inMin: Use this as the min value for respective input data cols
                 None: Get min from the data cols itself
                 a int value: Use this as the min for each data col
@@ -204,7 +205,11 @@ class AnalPlot:
             outMax = np.ones(d.shape[1])*outMax
         inRange = inMax-inMin
         outRange = outMax-outMin
-        newDKey, newCHKey, newRHKey = self._get_datakeys("%s.%s"%(inDataKey, outDataKey))
+        if outDataKey == "__AUTO__":
+            theOutDataKey = "%s.scale"%(inDataKey)
+        else:
+            theOutDataKey = outDataKey
+        newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = (((d-inMin)/inRange)*outRange)+outMin
         self.data[newRHKey] = dRH
         self.data[newCHKey] = dCH
