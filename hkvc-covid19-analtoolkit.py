@@ -46,7 +46,7 @@ def plot_simple(allDS):
     save_fig(fig, sGlobalMsg)
 
 
-def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day"):
+def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None):
     selCols, selPers = ap.selcols_percentiles("%s.diff.movavgT2"%(dataKey), topN=8)
     ap.plot(axes[iARow,iACol], "%s.diff.movavgT3"%(dataKey), plotSelCols=selCols, plotLegend=True,
                 title="%s-__AUTO__-DiffMovAvgT2Top8"%(ds.name))
@@ -108,7 +108,7 @@ def plot_sel(allDS, allSel):
             theTitle += "-user"
         ap.boxplot(axes[1,iCurDS], "cases/day", plotSelCols=selCols, bInsetBoxPlot=True, title=theTitle)
         # Diff of Raw data and more
-        plot_diffdata(ds, ap, axes, 2, iCurDS)
+        plot_diffdata(ds, ap, axes, 2, iCurDS, "cases/day", theSelIds)
         sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCurDS += 1
     save_fig(fig, sGlobalMsg)
