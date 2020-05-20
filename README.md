@@ -60,6 +60,14 @@ it to do its job.
 
 ### Misc
 
+#### Other arguments
+
+--no_scalediff : Dont scale the diff data used in plotxy inset.
+
+--scalediff : scale the diff data used in plotxy inset.
+
+#### Test DataSrc classes
+
 To test datasrc class/module on its own
 
 python datasrc.py
