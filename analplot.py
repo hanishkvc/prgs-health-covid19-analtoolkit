@@ -381,9 +381,21 @@ class AnalPlot:
 
 
     def boxplot(self, ax, dataKey, plotSelCols=None, title=None, bInsetBoxPlot=False):
+        """ Boxplot the dataset selected using dataKey on the given plot axes ax.
+
+            plotSelCols: The subset of cols to plot from the dataset. If not specified,
+                then all cols from the dataset will be plotted.
+            Title: the Title to assign for the current boxplot.
+                If __AUTO__ is part of the title, it will be replaced with the dataKey.
+            bInsetBoxPlot: If True, then the same data is also boxplotted in log scale,
+                in a translucent manner on top of the original boxplot. This occupies
+                the top half of the current plot axes.
+            """
         tD, tDCH, dRH = self.get_data_selective(dataKey, plotSelCols)
         ax.boxplot(tD,labels=tDCH)
         if title != None:
+            if title.find("__AUTO__") != -1:
+                title = title.replace("__AUTO__", dataKey)
             ax.set_title(title)
         if bInsetBoxPlot:
             inset = ax.inset_axes([0.0,0.5,1.0,0.5])
