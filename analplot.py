@@ -557,6 +557,14 @@ class AnalPlot:
 
 
     def axis_adjust(self, ax, dX, dY, xscale, yscale):
+        """ Adjust the data limits for the given plot axes's x and y
+            axis, based on the min and max value in the list of x
+            and y values to be plotted.
+
+            When plotting on a log scale, the entry which corresponds
+            to 0 in x or y axis may not be shown, because the new limit
+            which is being set will keep 0 out of its plot window.
+            """
         if self.dbgAxisAdjustCntr > 0:
             print("DBUG:AnalPlot:_textxy:axis:1:{}".format(ax.axis()))
         tXMin = np.min(dX)
