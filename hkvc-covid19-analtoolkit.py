@@ -56,6 +56,7 @@ def sel_cols(dataKey, topN, inSelIds, baseTitle, selTitle, bSelInclusive=True):
     return selCols, theTitle
 
 
+bMODE_SCALEDIFF=True
 def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None):
     selCols, theTitle = sel_cols("%s.diff.movavgT2"%(dataKey), 8, inSelIds, "%s-__AUTO__"%(ds.name),"DiffMovAvgT2")
     ap.plot(axes[iARow,iACol], "%s.diff.movavgT3"%(dataKey), plotSelCols=selCols, plotLegend=True,
@@ -70,8 +71,13 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None
                 title=theTitle, xscale="log", yscale="log", plotLegend=True)
     inset = axes[iARow+2,iACol].inset_axes([0.6,0.10,0.4,0.4])
     selCols, theTitle = sel_cols("%s.diff.movavgT2"%(dataKey), 8, inSelIds, "%s-Cases/Day MAvgVsDiff"%(ds.name),"DiffMAvgT2", bSelInclusive=True)
-    ap.calc_scale("%s.diff.movavgT2"%(dataKey), "%s.diff.movavgT2.scale"%(dataKey))
-    ap.plotxy(inset, "%s.movavg"%(dataKey), "%s.diff.movavgT2.scale"%(dataKey), plotSelCols=selCols, bTranslucent=True,
+    if bMODE_SCALEDIFF:
+        #ap.calc_scale("%s.diff.movavgT2"%(dataKey), "%s.diff.movavgT2.scale"%(dataKey))
+        ap.calc_scale("%s.diff.movavgT2"%(dataKey))
+        yDataKey = "%s.diff.movavgT2.scale"%(dataKey)
+    else:
+        yDataKey = "%s.diff.movavgT2"%(dataKey)
+    ap.plotxy(inset, "%s.movavg"%(dataKey), yDataKey, plotSelCols=selCols, bTranslucent=True,
                 title=theTitle, xscale="log", yscale="log", plotLegend=True)
     analplot.textxy_spread("default")
 
