@@ -40,10 +40,14 @@ hkvc-covid19-analtoolkit.py --sel Cov19In  KL KA DL MH --sel EUWorld IN US IE AE
 
 ##### date field
 
+The logic assumes that libreoffice is configured for language setting
+to have date format of DD/MM/YYYY (for ex: English-India).
+
 If the xls to csv conversion generates the date field in a format
-different from MM/DD/YYYY, on your machine, then edit the iY, iM, iD
+different from DD/MM/YYYY, on your machine, then edit the iY, iM, iD
 arguments passed within EUWorldDataSrc.conv_date func of EUWorld
-datasrc class.
+datasrc class. OR ELSE, change the date format in language setting of
+libreoffice to DD/MM/YYYY format.
 
 ##### loading libreoffice
 
