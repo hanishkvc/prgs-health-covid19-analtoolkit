@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Covid19 AnalToolkit
-# v20200502IST1808, HanishKVC
+# v20200520IST2217, HanishKVC
 # GPL
 #
 
@@ -78,9 +78,9 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None
     if bMODE_SCALEDIFF:
         ap.calc_scale("%s.diff.movavgT2"%(dataKey), axis=1)
         yDataKey = "%s.diff.movavgT2.scale"%(dataKey)
-        dbgSelCols = ap.selcols_colhdr(dataKey, ['IN', 'SA'])
-        ap.print_data_selective("%s.diff.movavgT2"%(dataKey), dbgSelCols)
-        ap.print_data_selective("%s.diff.movavgT2.scale"%(dataKey), dbgSelCols)
+        #dbgSelCols = ap.selcols_colhdr(dataKey, ['IN', 'SA'])
+        #ap.print_data_selective("%s.diff.movavgT2"%(dataKey), dbgSelCols)
+        #ap.print_data_selective("%s.diff.movavgT2.scale"%(dataKey), dbgSelCols)
     else:
         yDataKey = "%s.diff.movavgT2"%(dataKey)
     ap.plotxy(inset, "%s.movavg"%(dataKey), yDataKey, plotSelCols=selCols, bTranslucent=True,
