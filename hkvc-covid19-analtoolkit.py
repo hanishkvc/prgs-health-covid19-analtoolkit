@@ -61,19 +61,11 @@ def sel_cols(dataKey, topN, inSelIds, baseTitle, selTitle, bSelInclusive=True):
 # because plotxy will keep 0 out of its plot window using its
 # axis_adjust logic.
 bMODE_SCALEDIFF=True
-def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None):
-    selCols, theTitle = sel_cols("%s.diff.movavgT2"%(dataKey), 8, inSelIds, "%s-__AUTO__"%(ds.name),"DiffMovAvgT2")
-    ap.plot(axes[iARow,iACol], "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
-                title=theTitle)
-    inset = axes[iARow,iACol].inset_axes([0.13,0.55,0.64,0.4])
-    ap.plot(inset, "%s.diff"%(dataKey), plotSelCols=selCols, plotLegend=None, bTranslucent=True,
-                title=theTitle)
-    ap.plot(axes[iARow+1,iACol], "%s.rel2sum.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
-                title=theTitle)
+def plot_xy(ds, ap, axes, iARow, iACol, dataKey, inSelIds):
     selCols, theTitle = sel_cols("%s.cumsum"%(dataKey), 25, inSelIds, "%s-__AUTO__"%(ds.name),"~cumsum", bSelInclusive=True)
-    ap.plotxy(axes[iARow+2,iACol], "%s.cumsum"%(dataKey), "%s.movavg"%(dataKey), plotSelCols=selCols,
+    ap.plotxy(axes[iARow,iACol], "%s.cumsum"%(dataKey), "%s.movavg"%(dataKey), plotSelCols=selCols,
                 title=theTitle, xscale="log", yscale="log", plotLegend=True)
-    inset = axes[iARow+2,iACol].inset_axes([0.6,0.10,0.4,0.4])
+    inset = axes[iARow,iACol].inset_axes([0.6,0.10,0.4,0.4])
     selCols, theTitle = sel_cols("%s.diff.movavgT2"%(dataKey), 8, inSelIds, "Cases/Day MAvVsDifMAvT2","DifMAvT2", bSelInclusive=True)
     if bMODE_SCALEDIFF:
         ap.calc_scale("%s.diff.movavgT2"%(dataKey), axis=1)
@@ -86,6 +78,20 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None
     ap.plotxy(inset, "%s.movavg"%(dataKey), yDataKey, plotSelCols=selCols, bTranslucent=True,
                 title=theTitle, xscale="log", yscale="log", plotLegend=True)
     analplot.textxy_spread("default")
+    return iARow+1
+
+
+def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None):
+    selCols, theTitle = sel_cols("%s.diff.movavgT2"%(dataKey), 8, inSelIds, "%s-__AUTO__"%(ds.name),"DiffMovAvgT2")
+    ap.plot(axes[iARow,iACol], "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
+                title=theTitle)
+    inset = axes[iARow,iACol].inset_axes([0.13,0.55,0.64,0.4])
+    ap.plot(inset, "%s.diff"%(dataKey), plotSelCols=selCols, plotLegend=None, bTranslucent=True,
+                title=theTitle)
+    ap.plot(axes[iARow+1,iACol], "%s.rel2sum.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
+                title=theTitle)
+    iARow = plot_xy(ds, ap, axes, iARow+2, iACol, dataKey, inSelIds)
+    return iARow
 
 
 def plot_sel(allDS, allSel):
