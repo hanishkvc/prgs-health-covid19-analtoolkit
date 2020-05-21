@@ -205,12 +205,12 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
-    def _call_calc_scale(self, inDataKey, lArgNames, lArgVals):
+    def _call_calc_scale(self, inDataKey, outDataKey, lArgNames, lArgVals):
         if "axis" in lArgNames:
             axis = int(lArgVals[lArgNames.index("axis")])
         else:
             axis = 0
-        self.dCalcFuncsWithArgs['scale'][0](self, dataKey=inDataKey, axis=axis)
+        self.dCalcFuncsWithArgs['scale'][0](self, dataKey=inDataKey, outDataKey=outDataKey, axis=axis)
 
 
     def calc_scale(self, dataKey="raw", outDataKey="__AUTO__", inMin=None, inMax=None, outMin=0, outMax=1, axis=0):
@@ -450,7 +450,7 @@ class AnalPlot:
                 for arg in lArgs:
                     lArgNames.append(arg.split('=')[0])
                     lArgVals.append(arg.split('=')[1])
-            self.dCalcFuncsWithArgs[sFName][1](self, sBDKey, lArgNames, lArgVals)
+            self.dCalcFuncsWithArgs[sFName][1](self, sBDKey, dataKey, lArgNames, lArgVals)
             return self._get_data(dataKey)
         # Dont understand the data ops function being refered
         raise NotImplementedError("AnalPlot:get_data:{}:Func[{}] not found...\n\tAvailable DataSets:{}".format(dataKey, sCmd, self.data.keys()))
@@ -973,7 +973,7 @@ if __name__ == "__main__":
     ap.plot(axes[1,1], 'MyData>scaleA0>movavg', title="__AUTO__")
     ap.plot(axes[2,1], 'MyData>scale(axis=1)', title="__AUTO__")
     ap.print_data_selective('MyData>scale(axis=1)')
-    ap.plot(axes[3,1], 'MyData>scaleA1>movavg', title="__AUTO__")
+    ap.plot(axes[3,1], 'MyData>scale(axis=1)>movavg', title="__AUTO__")
     # Some additional checks
     ap.print_data_selective('MyData')
     ap.calc_movavg('MyData', outDataKey='MyData>a1movavg', axis=1)
