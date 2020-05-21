@@ -2,11 +2,17 @@
 # Helper script for managing related stuff
 # v20200520IST1644, HanishKVC
 
-function setup_python_modules() {
+function setup_git_submodules() {
 
 	#ln -s ../../../../../../Libs/python/xmlparser/xmlparser.py xmlparser.py
 	git submodule add https://github.com/hanishkvc/libs-python-xmlparser.git libs/xmlparser
 	git submodule add https://github.com/hanishkvc/prgs-libreoffice-pyuno_toolkit.git libs/hkvc_pyuno_toolkit
+
+}
+
+function update_git_submodules() {
+
+	git submodule update --remote
 
 }
 
