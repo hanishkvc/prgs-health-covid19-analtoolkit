@@ -289,17 +289,30 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
-    def calc_movavg(self, dataKey="raw", avgOver=7, outDataKey="__AUTO__"):
+    def calc_movavg(self, dataKey="raw", avgOver=7, outDataKey="__AUTO__", axis=0):
+        """ Calculate sliding window averages for values in the dataset
+            along each row (axis=1) or column (axis=0).
+            avgOver: the sliding window size
+            """
         d, dCH, dRH = self.get_data(dataKey)
         tWeight = np.ones(avgOver)/avgOver
-        dataConv = np.zeros((d.shape[0]-(avgOver-1),d.shape[1]))
-        for i in range(0,d.shape[1]):
-            dataConv[:,i] = np.convolve(d[:,i], tWeight, 'valid')
+        if axis == 0:
+            dataConv = np.zeros((d.shape[0]-(avgOver-1),d.shape[1]))
+            for i in range(0,d.shape[1]):
+                dataConv[:,i] = np.convolve(d[:,i], tWeight, 'valid')
+        else:
+            dataConv = np.zeros((d.shape[0],d.shape[1]-(avgOver-1)))
+            for i in range(0,d.shape[0]):
+                dataConv[i,:] = np.convolve(d[i,:], tWeight, 'valid')
         theOutDataKey = self._outdatakey(outDataKey, "movavg", dataKey)
         newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = dataConv
-        self.data[newRHKey] = list(range(dataConv.shape[0]))
-        self.data[newCHKey] = dCH
+        if axis == 0:
+            self.data[newRHKey] = list(range(dataConv.shape[0]))
+            self.data[newCHKey] = dCH
+        else:
+            self.data[newRHKey] = dRH
+            self.data[newCHKey] = list(range(dataConv.shape[1]))
 
 
     def calc_movavg_ex(self, dataKey="raw", avgOver=7, times=2, bRoundToDeci8=True, outDataKey="__AUTO__"):
