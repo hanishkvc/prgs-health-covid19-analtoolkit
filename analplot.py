@@ -876,12 +876,20 @@ if __name__ == "__main__":
 
     import matplotlib.pyplot as plt
 
+    sTestData = "default"
+    if len(sys.argv) > 1:
+        sTestData = sys.argv[1]
     # Autocalling of operations like done below use default values
     # for the respective operation/function arguments
     # As movavg by default avgs over a window of 7 data values
     # and inturn retains only those values which could use the
     # full span of avging window, so data size needs to be large enough
-    t1 = np.random.uniform(-10,10,(20,5))
+    if sTestData == "--0_200":
+        t1 = np.arange(0,200).reshape(20,10)
+    elif sTestData == "--ones":
+        t1 = np.ones(200).reshape(20,10)
+    else:
+        t1 = np.random.uniform(-10,10,(20,5))
     ap = AnalPlot()
     ap.set_raw(t1,dataKey='MyData')
     fig, axes = ap.subplots(plt, 5, 2)
