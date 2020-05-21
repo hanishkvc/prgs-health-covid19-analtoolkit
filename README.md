@@ -1,6 +1,6 @@
 # COVID19 Data Analysis
 Author: HanishKVC
-Version: v20200520IST0241
+Version: v20200521IST1528
 
 ## Basic working version of generic logic; Branch:master WIP
 
@@ -8,6 +8,9 @@ Version: v20200520IST0241
 
 This contains a set of simple python scripts to process and plot
 covid19 data about India and World.
+
+NOTE: It also contains two useful python modules, which can be used
+by other programs they are datasrc.py and analplot.py
 
 Option1: Fetch and AnalPlot EUWorld and Cov19In based datasets
 
@@ -56,7 +59,11 @@ conversion. So when the program is run for the first time in a given
 user session, it may take more time than what is currently accounted
 for the libreoffice to start up. In which case, the logic will timeout
 and exit. So one is required to rerun the program a 2nd time to get
-it to do its job.
+it to do its job. With the latest update the underlying program uses
+a better way of connecting to libreoffice, so chances of this issue
+creeping up should be less. The current default timeout is around
+128 seconds, if libreoffice doesnt start even after 128 seconds, then
+it will timeout.
 
 ### Misc
 
@@ -66,11 +73,12 @@ it to do its job.
 
 --scalediff : scale the diff data used in plotxy inset.
 
-#### Test DataSrc classes
+#### Test DataSrc/AnalPlot classes
 
-To test datasrc class/module on its own
+To test datasrc/analplot class/module on its own
 
 python datasrc.py
+python analplot.py
 
 ## Old working logic; Branch:v20200423IST2000_BasicFull
 
