@@ -977,8 +977,9 @@ if __name__ == "__main__":
     ap.plot(axes[4,0], 'MyData>rel2sum', title="__AUTO__")
     ap.print_data_selective('MyData>rel2sum')
     # 2nd column of plots
-    #ap.calc_scale('MyData', 'MyData>scaleA0', axis=0)
-    #ap.calc_scale('MyData', 'MyData>scaleA1', axis=1)
+    ap.calc_scale('MyData', 'MyData>scaleA0', axis=0) # This should match autocalcd MyData>scale data
+    ap.print_data_selective('MyData>scaleA0')
+    ap.calc_scale('MyData', 'MyData>scaleA1', axis=1) # This should match autocalcd MyData>scale(axis=1) data
     ap.plot(axes[0,1], 'MyData>scale', title="__AUTO__")
     ap.print_data_selective('MyData>scale')
     ap.plot(axes[1,1], 'MyData>scale>movavg', title="__AUTO__")
