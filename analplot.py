@@ -217,10 +217,12 @@ class AnalPlot:
 
 
     def _call_calc_scale(self, inDataKey, outDataKey, lArgNames, lArgVals):
-        if "axis" in lArgNames:
-            axis = int(lArgVals[lArgNames.index("axis")])
-        else:
-            axis = 0
+        axis = 0
+        for arg in lArgNames:
+            if (arg == "axis") or (arg == "A"):
+                axis = int(lArgVals[lArgNames.index(arg)])
+            else:
+                print("WARN:AnalPlot:callCalcScale:Unknown arg[%s]"%(arg))
         self.dCalcFuncsWithArgs['scale'][0](self, dataKey=inDataKey, outDataKey=outDataKey, axis=axis)
 
 
