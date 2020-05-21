@@ -922,7 +922,7 @@ if __name__ == "__main__":
     elif sTestData == "--ones":
         t1 = np.ones(200).reshape(20,10)
     else:
-        t1 = np.random.uniform(-10,10,(20,5))
+        t1 = np.random.uniform(-10,10,(20,10))
     ap = AnalPlot()
     ap.set_raw(t1,dataKey='MyData')
     fig, axes = ap.subplots(plt, 5, 2)
