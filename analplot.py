@@ -404,6 +404,14 @@ class AnalPlot:
     dCalcFuncsWithArg = {
         "movavgT": calc_movavg_ex,
     }
+    dCalcFuncsWithArgs = {
+        "scale": [calc_scale, _call_calc_scale],
+    }
+
+
+    def _call_calc_scale(self, inDataKey, lArgNames, lArgVals):
+
+
     def get_data(self, dataKey="raw"):
         """ Return the specified data and its col and row headers
             Create them by calling required calc functions, if possible.
@@ -424,6 +432,21 @@ class AnalPlot:
                     argTimes = int(sCmd.replace("movavgT",""))
                     self.dCalcFuncsWithArg[fname](self, sBDKey, times=argTimes)
                     return self._get_data(dataKey)
+        # Handle funcs with arguments using the new syntax
+        lTemp = sCmd.split('(',1)
+        sFName = lTemp[0]
+        if sFName in dCalcFuncsWithArgs:
+            lArgNames = []
+            lArgVals = []
+            if len(lTemp) > 1:
+                lTemp[1] = lTemp[1][:-1]
+                sArgs = lTemp[1]
+                lArgs = sArgs.split(',')
+                for arg in lArgs:
+                    lArgNames.append(arg.split('=')[0])
+                    lArgVals.append(arg.split('=')[1])
+            self.dCalcFuncsWithArgs[sFName][1](self, sBDKey, lArgNames, lArgVals)
+        # Dont understand the data ops function being refered
         raise NotImplementedError("AnalPlot:get_data:{}:Func[{}] not found...\n\tAvailable DataSets:{}".format(dataKey, sCmd, self.data.keys()))
 
 
