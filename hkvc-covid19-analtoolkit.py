@@ -197,6 +197,7 @@ def processargs_sel(args, iArg):
 
 def processargs_and_load(args):
     global bMODE_SCALEDIFF
+    global bTEST_MOVAVGS
     iArg = 1
     dsAll = []
     selAll = {}
@@ -222,6 +223,9 @@ def processargs_and_load(args):
             iArg += 1
         elif args[iArg] == "--scalediff":
             bMODE_SCALEDIFF = True
+            iArg += 1
+        elif args[iArg] == "--test_movavgs":
+            bTEST_MOVAVGS = True
             iArg += 1
         else:
             print("ERRR:Main:load_fromargs:UnknownArg:%s"%(args[iArg]))
