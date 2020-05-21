@@ -223,40 +223,23 @@ class AnalPlot:
             NOTE: this can work on a 2D data set, inturn on its rows or cols.
             """
         d, dCH, dRH = self.get_data(dataKey)
-        if axis==0:
-            if inMin == None:
-                inMin = np.min(d, axis=0)
-            elif type(inMin) == type(int()):
-                inMin = np.ones(d.shape[1])*inMin
-            if inMax == None:
-                inMax = np.max(d, axis=0)
-            elif type(inMax) == type(int()):
-                inMax = np.ones(d.shape[1])*inMax
-            if outMin == None:
-                outMin = 0
-            if type(outMin) == type(int()):
-                outMin = np.ones(d.shape[1])*outMin
-            if outMax == None:
-                outMax = 1
-            if type(outMax) == type(int()):
-                outMax = np.ones(d.shape[1])*outMax
-        else:
-            if inMin == None:
-                inMin = np.min(d, axis)
-            elif type(inMin) == type(int()):
-                inMin = np.ones(d.shape[1-axis])*inMin
-            if inMax == None:
-                inMax = np.max(d, axis)
-            elif type(inMax) == type(int()):
-                inMax = np.ones(d.shape[1-axis])*inMax
-            if outMin == None:
-                outMin = 0
-            if type(outMin) == type(int()):
-                outMin = np.ones(d.shape[1-axis])*outMin
-            if outMax == None:
-                outMax = 1
-            if type(outMax) == type(int()):
-                outMax = np.ones(d.shape[1-axis])*outMax
+        if inMin == None:
+            inMin = np.min(d, axis)
+        elif type(inMin) == type(int()):
+            inMin = np.ones(d.shape[1-axis])*inMin
+        if inMax == None:
+            inMax = np.max(d, axis)
+        elif type(inMax) == type(int()):
+            inMax = np.ones(d.shape[1-axis])*inMax
+        if outMin == None:
+            outMin = 0
+        if type(outMin) == type(int()):
+            outMin = np.ones(d.shape[1-axis])*outMin
+        if outMax == None:
+            outMax = 1
+        if type(outMax) == type(int()):
+            outMax = np.ones(d.shape[1-axis])*outMax
+        if axis==1:
             inMin = inMin.reshape(d.shape[0],1)
             inMax = inMax.reshape(d.shape[0],1)
             outMin = outMin.reshape(d.shape[0],1)
