@@ -253,20 +253,38 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
-    def calc_diff(self, dataKey="raw", outDataKey="__AUTO__"):
+    def calc_diff(self, dataKey="raw", outDataKey="__AUTO__", axis=0):
+        """ Calculate the diff between adjacent values in the dataset.
+            axis=0: diff across adjacent elements in each column
+            axis=1: diff across adjacent elements in each row
+            dataKey: the key used to access the data to operate on.
+            outDataKey: key used to identify/store the results of operation.
+            NOTE: It can work with 2D datasets, either across its rows or cols
+            """
         d, dCH, dRH = self.get_data(dataKey)
         theOutDataKey = self._outdatakey(outDataKey, "diff", dataKey)
         newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
-        self.data[newDKey] = np.diff(d, axis=0)
-        self.data[newRHKey] = dRH[1:]
-        self.data[newCHKey] = dCH
+        self.data[newDKey] = np.diff(d, axis=axis)
+        if axis == 0:
+            self.data[newRHKey] = dRH[1:]
+            self.data[newCHKey] = dCH
+        else:
+            self.data[newRHKey] = dRH
+            self.data[newCHKey] = dCH[1:]
 
 
-    def calc_cumsum(self, dataKey="raw", outDataKey="__AUTO__"):
+    def calc_cumsum(self, dataKey="raw", outDataKey="__AUTO__", axis=0):
+        """ Calculate the cumsum across adjacent values in the dataset.
+            axis=0: cumsum across adjacent elements in each column
+            axis=1: cumsum across adjacent elements in each row
+            dataKey: the key used to access the data to operate on.
+            outDataKey: key used to identify/store the results of operation.
+            NOTE: It can work with 2D datasets, either across its rows or cols
+            """
         d, dCH, dRH = self.get_data(dataKey)
         theOutDataKey = self._outdatakey(outDataKey, "cumsum", dataKey)
         newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
-        self.data[newDKey] = np.cumsum(d, axis=0)
+        self.data[newDKey] = np.cumsum(d, axis=axis)
         self.data[newRHKey] = dRH
         self.data[newCHKey] = dCH
 
