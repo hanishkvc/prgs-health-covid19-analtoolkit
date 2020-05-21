@@ -410,6 +410,11 @@ class AnalPlot:
 
 
     def _call_calc_scale(self, inDataKey, lArgNames, lArgVals):
+        if "axis" in lArgNames:
+            axis = lArgVals[lArgNames.index("axis")]
+        else:
+            axis = 0
+        self.dCalcFuncsWithArgs['scale'][0](self, dataKey=inDataKey, axis=axis)
 
 
     def get_data(self, dataKey="raw"):
