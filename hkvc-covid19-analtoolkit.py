@@ -87,6 +87,7 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None
     inset = axes[iARow,iACol].inset_axes([0.13,0.55,0.64,0.4])
     ap.plot(inset, "%s>diff"%(dataKey), plotSelCols=selCols, plotLegend=None, bTranslucent=True,
                 title=theTitle)
+    #ap.plot(axes[iARow+1,iACol], "%s>scale>movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
     ap.plot(axes[iARow+1,iACol], "%s>rel2sum>movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
                 title=theTitle)
     iARow = plot_xy(ds, ap, axes, iARow+2, iACol, dataKey, inSelIds)
@@ -144,7 +145,7 @@ def plot_movavgs(allDS, allSel):
     """ Plot a set of interesting/informative/... plots
         Uses the new auto calc as required functionality of AnalPlot
         """
-    fig, axes = ap.subplots(plt,10,len(allDS))
+    fig, axes = ap.subplots(plt,20,len(allDS))
     iCurDS = 0
     sGlobalMsg = ""
     for ds in allDS:
@@ -161,6 +162,8 @@ def plot_movavgs(allDS, allSel):
         theTitle = "%s-__AUTO__"%(ds.name)
         selCols, theTitle = sel_cols("cases/day>movavg", topN, theSelIds, theTitle, "movavg")
         iRow = _plot_movavgs(ap, axes, 0, iCurDS, "cases/day", selCols, theTitle)
+        iRow = _plot_movavgs(ap, axes, iRow, iCurDS, "cases/day>scale", selCols, theTitle)
+        iRow = _plot_movavgs(ap, axes, iRow, iCurDS, "cases/day>rel2sum", selCols, theTitle)
         iRow = _plot_movavgs(ap, axes, iRow, iCurDS, "cases/day>diff", selCols, theTitle)
         sGlobalMsg += "MA-{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCurDS += 1
