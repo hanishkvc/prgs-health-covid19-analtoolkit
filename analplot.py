@@ -10,6 +10,8 @@ import sys
 
 
 
+DATAOPSCHAINER='>'
+
 DBG_PLOTXYRECT_MSG=False
 DBG_TEXTXY=False
 
@@ -165,7 +167,7 @@ class AnalPlot:
                 to operate on by the calc_??? functions.
             """
         if outDataKey == "__AUTO__":
-            theOutDataKey = "%s>%s"%(inDataKey, autoKey)
+            theOutDataKey = "%s%s%s"%(inDataKey, DATAOPSCHAINER, autoKey)
         else:
             theOutDataKey = outDataKey
         return theOutDataKey
@@ -411,7 +413,7 @@ class AnalPlot:
         if dataKey in self.data:
             return self._get_data(dataKey)
         # This means data not in dict, lets see if we can create it
-        [sBDKey, sCmd] = dataKey.rsplit('>',1)
+        [sBDKey, sCmd] = dataKey.rsplit(DATAOPSCHAINER,1)
         # Create using a simple calc func
         if sCmd in self.dCalcSimpleFuncs:
             self.dCalcSimpleFuncs[sCmd](self, sBDKey)
