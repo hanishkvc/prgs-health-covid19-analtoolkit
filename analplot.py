@@ -165,7 +165,7 @@ class AnalPlot:
                 to operate on by the calc_??? functions.
             """
         if outDataKey == "__AUTO__":
-            theOutDataKey = "%s.%s"%(inDataKey, autoKey)
+            theOutDataKey = "%s>%s"%(inDataKey, autoKey)
         else:
             theOutDataKey = outDataKey
         return theOutDataKey
@@ -411,7 +411,7 @@ class AnalPlot:
         if dataKey in self.data:
             return self._get_data(dataKey)
         # This means data not in dict, lets see if we can create it
-        [sBDKey, sCmd] = dataKey.rsplit('.',1)
+        [sBDKey, sCmd] = dataKey.rsplit('>',1)
         # Create using a simple calc func
         if sCmd in self.dCalcSimpleFuncs:
             self.dCalcSimpleFuncs[sCmd](self, sBDKey)
@@ -927,26 +927,26 @@ if __name__ == "__main__":
     # 1st column of plots
     ap.plot(axes[0,0], 'MyData', title="__AUTO__")
     ap.print_data_selective('MyData')
-    ap.plot(axes[1,0], 'MyData.movavg', title="__AUTO__")
-    ap.print_data_selective('MyData.movavg')
-    ap.plot(axes[2,0], 'MyData.movavgT2', title="__AUTO__")
-    ap.plot(axes[3,0], 'MyData.rel2mean', title="__AUTO__")
-    ap.print_data_selective('MyData.rel2mean')
-    ap.plot(axes[4,0], 'MyData.rel2sum', title="__AUTO__")
-    ap.print_data_selective('MyData.rel2sum')
+    ap.plot(axes[1,0], 'MyData>movavg', title="__AUTO__")
+    ap.print_data_selective('MyData>movavg')
+    ap.plot(axes[2,0], 'MyData>movavgT2', title="__AUTO__")
+    ap.plot(axes[3,0], 'MyData>rel2mean', title="__AUTO__")
+    ap.print_data_selective('MyData>rel2mean')
+    ap.plot(axes[4,0], 'MyData>rel2sum', title="__AUTO__")
+    ap.print_data_selective('MyData>rel2sum')
     # 2nd column of plots
-    ap.calc_scale('MyData', 'MyData.scaleA0', axis=0)
-    ap.calc_scale('MyData', 'MyData.scaleA1', axis=1)
-    ap.plot(axes[0,1], 'MyData.scaleA0', title="__AUTO__")
-    ap.print_data_selective('MyData.scaleA0')
-    ap.plot(axes[1,1], 'MyData.scaleA0.movavg', title="__AUTO__")
-    ap.plot(axes[2,1], 'MyData.scaleA1', title="__AUTO__")
-    ap.print_data_selective('MyData.scaleA1')
-    ap.plot(axes[3,1], 'MyData.scaleA1.movavg', title="__AUTO__")
+    ap.calc_scale('MyData', 'MyData>scaleA0', axis=0)
+    ap.calc_scale('MyData', 'MyData>scaleA1', axis=1)
+    ap.plot(axes[0,1], 'MyData>scaleA0', title="__AUTO__")
+    ap.print_data_selective('MyData>scaleA0')
+    ap.plot(axes[1,1], 'MyData>scaleA0>movavg', title="__AUTO__")
+    ap.plot(axes[2,1], 'MyData>scaleA1', title="__AUTO__")
+    ap.print_data_selective('MyData>scaleA1')
+    ap.plot(axes[3,1], 'MyData>scaleA1>movavg', title="__AUTO__")
     # Some additional checks
     ap.print_data_selective('MyData')
-    ap.calc_movavg('MyData', outDataKey='MyData.a1movavg', axis=1)
-    ap.print_data_selective('MyData.a1movavg')
+    ap.calc_movavg('MyData', outDataKey='MyData>a1movavg', axis=1)
+    ap.print_data_selective('MyData>a1movavg')
     # Save and Show plots
     fig.set_tight_layout(True)
     fig.savefig('/tmp/analplot_test.png')
