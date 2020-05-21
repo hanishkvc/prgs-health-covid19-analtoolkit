@@ -870,23 +870,28 @@ if __name__ == "__main__":
 
     import matplotlib.pyplot as plt
 
-    t1 = np.random.uniform(-10,10,(3,5))
+    # Autocalling of operations like done below use default values
+    # for the respective operation/function arguments
+    # As movavg by default avgs over a window of 7 data values
+    # and inturn retains only those values which could use the
+    # full span of avging window, so data size needs to be large enough
+    t1 = np.random.uniform(-10,10,(20,5))
     ap = AnalPlot()
     ap.set_raw(t1,dataKey='MyData')
     fig, axes = ap.subplots(plt, 5, 2)
     # 1st column of plots
-    ap.plot(axes[0,0], 'MyData')
-    ap.plot(axes[1,0], 'MyData.movavg')
-    ap.plot(axes[2,0], 'MyData.movavgT2')
-    ap.plot(axes[3,0], 'MyData.rel2mean')
-    ap.plot(axes[4,0], 'MyData.rel2sum')
+    ap.plot(axes[0,0], 'MyData', title="__AUTO__")
+    ap.plot(axes[1,0], 'MyData.movavg', title="__AUTO__")
+    ap.plot(axes[2,0], 'MyData.movavgT2', title="__AUTO__")
+    ap.plot(axes[3,0], 'MyData.rel2mean', title="__AUTO__")
+    ap.plot(axes[4,0], 'MyData.rel2sum', title="__AUTO__")
     # 2nd column of plots
     ap.calc_scale('MyData', 'MyData.scaleA0', axis=0)
     ap.calc_scale('MyData', 'MyData.scaleA1', axis=1)
-    ap.plot(axes[0,1], 'MyData.scaleA0')
-    ap.plot(axes[1,1], 'MyData.scaleA0.movavg')
-    ap.plot(axes[2,1], 'MyData.scaleA1')
-    ap.plot(axes[3,1], 'MyData.scaleA1.movavg')
+    ap.plot(axes[0,1], 'MyData.scaleA0', title="__AUTO__")
+    ap.plot(axes[1,1], 'MyData.scaleA0.movavg', title="__AUTO__")
+    ap.plot(axes[2,1], 'MyData.scaleA1', title="__AUTO__")
+    ap.plot(axes[3,1], 'MyData.scaleA1.movavg', title="__AUTO__")
     plt.show()
 
 
