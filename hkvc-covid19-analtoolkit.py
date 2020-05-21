@@ -70,9 +70,6 @@ def plot_xy(ds, ap, axes, iARow, iACol, dataKey, inSelIds):
     if bMODE_SCALEDIFF:
         ap.calc_scale("%s.diff.movavgT2"%(dataKey), axis=1)
         yDataKey = "%s.diff.movavgT2.scale"%(dataKey)
-        #dbgSelCols = ap.selcols_colhdr(dataKey, ['IN', 'SA'])
-        #ap.print_data_selective("%s.diff.movavgT2"%(dataKey), dbgSelCols)
-        #ap.print_data_selective("%s.diff.movavgT2.scale"%(dataKey), dbgSelCols)
     else:
         yDataKey = "%s.diff.movavgT2"%(dataKey)
     ap.plotxy(inset, "%s.movavg"%(dataKey), yDataKey, plotSelCols=selCols, bTranslucent=True,
@@ -83,7 +80,7 @@ def plot_xy(ds, ap, axes, iARow, iACol, dataKey, inSelIds):
 
 def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None):
     selCols, theTitle = sel_cols("%s.diff.movavgT2"%(dataKey), 8, inSelIds, "%s-__AUTO__"%(ds.name),"DiffMovAvgT2")
-    ap.plot(axes[iARow,iACol], "%s.diff.movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
+    ap.plot(axes[iARow,iACol], "%s.diff.movavgT3"%(dataKey), plotSelCols=selCols, plotLegend=True,
                 title=theTitle)
     inset = axes[iARow,iACol].inset_axes([0.13,0.55,0.64,0.4])
     ap.plot(inset, "%s.diff"%(dataKey), plotSelCols=selCols, plotLegend=None, bTranslucent=True,
@@ -140,6 +137,7 @@ def _plot_movavgs(ap, axes, iRow, iCol, dataKey, selCols, theTitle):
     return iRow+5
 
 
+bTEST_MOVAVGS=False
 def plot_movavgs(allDS, allSel):
     """ Plot a set of interesting/informative/... plots
         Uses the new auto calc as required functionality of AnalPlot
@@ -237,6 +235,7 @@ if len(allDS) == 0:
 ap = analplot.AnalPlot()
 #plot_simple(allDS)
 plot_sel(allDS, allSel)
-plot_movavgs(allDS, allSel)
+if bTEST_MOVAVGS:
+    plot_movavgs(allDS, allSel)
 
 # vim: set softtabstop=4 expandtab shiftwidth=4: #
