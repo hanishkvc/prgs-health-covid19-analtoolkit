@@ -66,12 +66,14 @@ def plot_xy(ds, ap, axes, iARow, iACol, dataKey, inSelIds):
     ap.plotxy(axes[iARow,iACol], "%s.cumsum"%(dataKey), "%s.movavg"%(dataKey), plotSelCols=selCols,
                 title=theTitle, xscale="log", yscale="log", plotLegend=True)
     inset = axes[iARow,iACol].inset_axes([0.6,0.10,0.4,0.4])
-    selCols, theTitle = sel_cols("%s.diff.movavgT2"%(dataKey), 8, inSelIds, "Cases/Day MAvVsDifMAvT2","DifMAvT2", bSelInclusive=True)
     if bMODE_SCALEDIFF:
         ap.calc_scale("%s.diff.movavgT2"%(dataKey), axis=1)
         yDataKey = "%s.diff.movavgT2.scale"%(dataKey)
+        sAddTitle = "scale"
     else:
         yDataKey = "%s.diff.movavgT2"%(dataKey)
+        sAddTitle = ""
+    selCols, theTitle = sel_cols("%s.diff.movavgT2"%(dataKey), 8, inSelIds, "Cases/Day MAvVsDifMAvT2%s"%(sAddTitle),"DifMAvT2", bSelInclusive=True)
     ap.plotxy(inset, "%s.movavg"%(dataKey), yDataKey, plotSelCols=selCols, bTranslucent=True,
                 title=theTitle, xscale="log", yscale="log", plotLegend=True)
     analplot.textxy_spread("default")
