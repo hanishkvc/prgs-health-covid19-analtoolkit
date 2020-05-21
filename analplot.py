@@ -154,8 +154,15 @@ class AnalPlot:
         return colsWithVal
 
 
-    def _outdatakey(outDataKey, autoKey, inDataKey):
-        """ return the outDataKey given the controlling parameters
+    def _outdatakey(self, outDataKey, autoKey, inDataKey):
+        """ return a outDataKey given the controlling parameters
+            outDataKey: This could either be a explicit keyname to use
+                or else it can be __AUTO__. If auto, then inDataKey
+                and autoKey are concatenated together with a dot inbtw.
+            autoKey: The keyname to suffix to inDataKey, if __AUTO__
+                is specified for outDataKey.
+            inDataKey: the inDataKey which corresponds to the input data
+                to operate on by the calc_??? functions.
             """
         if outDataKey == "__AUTO__":
             theOutDataKey = "%s.%s"%(inDataKey, autoKey)
