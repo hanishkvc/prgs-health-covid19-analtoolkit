@@ -52,6 +52,17 @@ def textxy_spread(mode="default", mult=1):
 
 
 class AnalPlot:
+    """ AnalPlot allows one to process and plot datasets in multiple ways.
+
+        One could either call the processing functions explicitly first and
+        then inturn use that data in a plot or print. OR ELSE one can let
+        AnalPlot to automatically call the required data operations, even
+        chaining them if required, if the user refers to the datasets in
+        predefined ways, when using them in a plot or print or ...
+
+        MyDataSet1>DataOp1>ADataOpWithArgs(Arg1=Val1,Arg2=Val2)>DataOpN ...
+
+        """
 
 
     def __init__(self):
@@ -966,11 +977,11 @@ if __name__ == "__main__":
     ap.plot(axes[4,0], 'MyData>rel2sum', title="__AUTO__")
     ap.print_data_selective('MyData>rel2sum')
     # 2nd column of plots
-    ap.calc_scale('MyData', 'MyData>scaleA0', axis=0)
+    #ap.calc_scale('MyData', 'MyData>scaleA0', axis=0)
     #ap.calc_scale('MyData', 'MyData>scaleA1', axis=1)
-    ap.plot(axes[0,1], 'MyData>scaleA0', title="__AUTO__")
-    ap.print_data_selective('MyData>scaleA0')
-    ap.plot(axes[1,1], 'MyData>scaleA0>movavg', title="__AUTO__")
+    ap.plot(axes[0,1], 'MyData>scale', title="__AUTO__")
+    ap.print_data_selective('MyData>scale')
+    ap.plot(axes[1,1], 'MyData>scale>movavg', title="__AUTO__")
     ap.plot(axes[2,1], 'MyData>scale(axis=1)', title="__AUTO__")
     ap.print_data_selective('MyData>scale(axis=1)')
     ap.plot(axes[3,1], 'MyData>scale(axis=1)>movavg', title="__AUTO__")
