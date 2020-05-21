@@ -52,6 +52,12 @@ def textxy_spread(mode="default", mult=1):
 class AnalPlot:
 
 
+    def __init__(self):
+        """ Initialise a new instance of AnalPlot class
+            """
+        self.new_dataset()
+
+
     def _get_datakeys(self, dataKey="raw"):
         """ get the datakeys required to access a given data
             and its associated column and row headers
@@ -858,6 +864,30 @@ def test_textxy():
     ap._textxy(1, 41, 42, "test", d[:,1], d[:,2], "lin", "lin")
     return d
 
+
+
+if __name__ == "__main__":
+
+    import matplotlib.pyplot as plt
+
+    t1 = np.random.uniform(-10,10,(3,5))
+    ap = AnalPlot()
+    ap.set_raw(t1,dataKey='MyData')
+    fig, axes = ap.subplots(plt, 5, 2)
+    # 1st column of plots
+    ap.plot(axes[0,0], 'MyData')
+    ap.plot(axes[1,0], 'MyData.movavg')
+    ap.plot(axes[2,0], 'MyData.movavgT2')
+    ap.plot(axes[3,0], 'MyData.rel2mean')
+    ap.plot(axes[4,0], 'MyData.rel2sum')
+    # 2nd column of plots
+    ap.calc_scale('MyData', 'MyData.scaleA0', axis=0)
+    ap.calc_scale('MyData', 'MyData.scaleA1', axis=1)
+    ap.plot(axes[0,1], 'MyData.scaleA0')
+    ap.plot(axes[1,1], 'MyData.scaleA0.movavg')
+    ap.plot(axes[2,1], 'MyData.scaleA1')
+    ap.plot(axes[3,1], 'MyData.scaleA1.movavg')
+    plt.show()
 
 
 # vim: set softtabstop=4 shiftwidth=4 expandtab: #
