@@ -69,6 +69,8 @@ it will timeout.
 
 #### Other arguments
 
+--test_mixmatch : allows one to test/compare different data operations
+
 --no_scalediff : Dont scale the diff data used in plotxy inset.
 
 --scalediff : scale the diff data used in plotxy inset.

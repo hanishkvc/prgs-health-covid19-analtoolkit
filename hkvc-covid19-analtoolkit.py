@@ -140,15 +140,13 @@ def _plot_movavgs(ap, axes, iRow, iCol, dataKey, selCols, theTitle):
     return iRow+5
 
 
-bTEST_MOVAVGS=False
-def plot_movavgs(allDS, allSel):
+bTEST_MIXMATCH=False
+def plot_mixmatch(allDS, allSel):
     """ Plot a set of interesting/informative/... plots
         Uses the new auto calc as required functionality of AnalPlot
         """
-    fig, axes = ap.subplots(plt,20,len(allDS))
-    iCurDS = 0
-    sGlobalMsg = ""
     for ds in allDS:
+        fig, axes = ap.subplots(plt,5,4)
         ap.new_dataset()
         if ds.name in allSel:
             theSelIds = allSel[ds.name]
@@ -161,13 +159,12 @@ def plot_movavgs(allDS, allSel):
         topN=8
         theTitle = "%s-__AUTO__"%(ds.name)
         selCols, theTitle = sel_cols("cases/day>movavg", topN, theSelIds, theTitle, "movavg")
-        iRow = _plot_movavgs(ap, axes, 0, iCurDS, "cases/day", selCols, theTitle)
-        iRow = _plot_movavgs(ap, axes, iRow, iCurDS, "cases/day>scale", selCols, theTitle)
-        iRow = _plot_movavgs(ap, axes, iRow, iCurDS, "cases/day>rel2sum", selCols, theTitle)
-        iRow = _plot_movavgs(ap, axes, iRow, iCurDS, "cases/day>diff", selCols, theTitle)
-        sGlobalMsg += "MA-{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
-        iCurDS += 1
-    save_fig(fig, sGlobalMsg)
+        _plot_movavgs(ap, axes, 0, 0, "cases/day", selCols, theTitle)
+        _plot_movavgs(ap, axes, 0, 1, "cases/day>scale", selCols, theTitle)
+        _plot_movavgs(ap, axes, 0, 2, "cases/day>rel2sum", selCols, theTitle)
+        _plot_movavgs(ap, axes, 0, 3, "cases/day>diff", selCols, theTitle)
+        sGlobalMsg = "MMMA-{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
+        save_fig(fig, sGlobalMsg)
 
 
 def save_fig(fig, sMsg):
@@ -200,7 +197,7 @@ def processargs_sel(args, iArg):
 
 def processargs_and_load(args):
     global bMODE_SCALEDIFF
-    global bTEST_MOVAVGS
+    global bTEST_MIXMATCH
     iArg = 1
     dsAll = []
     selAll = {}
@@ -227,8 +224,8 @@ def processargs_and_load(args):
         elif args[iArg] == "--scalediff":
             bMODE_SCALEDIFF = True
             iArg += 1
-        elif args[iArg] == "--test_movavgs":
-            bTEST_MOVAVGS = True
+        elif args[iArg] == "--test_mixmatch":
+            bTEST_MIXMATCH = True
             iArg += 1
         else:
             print("ERRR:Main:load_fromargs:UnknownArg:%s"%(args[iArg]))
@@ -244,7 +241,7 @@ if len(allDS) == 0:
 ap = analplot.AnalPlot()
 #plot_simple(allDS)
 plot_sel(allDS, allSel)
-if bTEST_MOVAVGS:
-    plot_movavgs(allDS, allSel)
+if bTEST_MIXMATCH:
+    plot_mixmatch(allDS, allSel)
 
 # vim: set softtabstop=4 expandtab shiftwidth=4: #
