@@ -943,6 +943,11 @@ if __name__ == "__main__":
     ap.plot(axes[2,1], 'MyData.scaleA1', title="__AUTO__")
     ap.print_data_selective('MyData.scaleA1')
     ap.plot(axes[3,1], 'MyData.scaleA1.movavg', title="__AUTO__")
+    # Some additional checks
+    ap.print_data_selective('MyData')
+    ap.calc_movavg('MyData', outDataKey='MyData.a1movavg', axis=1)
+    ap.print_data_selective('MyData.a1movavg')
+    # Save and Show plots
     fig.set_tight_layout(True)
     fig.savefig('/tmp/analplot_test.png')
     plt.show()
