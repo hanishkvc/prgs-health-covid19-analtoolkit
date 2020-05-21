@@ -274,7 +274,7 @@ class AnalPlot:
         d, dCH, dRH = self.get_data(dataKey)
         tWeight = np.ones(avgOver)/avgOver
         dataConv = np.zeros((d.shape[0]-(avgOver-1),d.shape[1]))
-        for i in range(1,d.shape[1]):
+        for i in range(0,d.shape[1]):
             dataConv[:,i] = np.convolve(d[:,i], tWeight, 'valid')
         newDKey, newCHKey, newRHKey = self._get_datakeys("%s.movavg"%(dataKey))
         self.data[newDKey] = dataConv
@@ -288,7 +288,7 @@ class AnalPlot:
         dCur = d
         for time in range(times):
             dataConv = np.zeros((dCur.shape[0]-(avgOver-1),dCur.shape[1]))
-            for i in range(1,dCur.shape[1]):
+            for i in range(0,dCur.shape[1]):
                 dataConv[:,i] = np.convolve(dCur[:,i], tWeight, 'valid')
             dCur = dataConv
         if bRoundToDeci8:
