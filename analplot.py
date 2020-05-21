@@ -909,7 +909,9 @@ if __name__ == "__main__":
     ap.print_data_selective('MyData.movavg')
     ap.plot(axes[2,0], 'MyData.movavgT2', title="__AUTO__")
     ap.plot(axes[3,0], 'MyData.rel2mean', title="__AUTO__")
+    ap.print_data_selective('MyData.rel2mean')
     ap.plot(axes[4,0], 'MyData.rel2sum', title="__AUTO__")
+    ap.print_data_selective('MyData.rel2sum')
     # 2nd column of plots
     ap.calc_scale('MyData', 'MyData.scaleA0', axis=0)
     ap.calc_scale('MyData', 'MyData.scaleA1', axis=1)
