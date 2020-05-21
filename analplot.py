@@ -196,12 +196,12 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
-    def calc_scale(self, inDataKey="raw", outDataKey="__AUTO__", inMin=None, inMax=None, outMin=0, outMax=1, axis=0):
+    def calc_scale(self, dataKey="raw", outDataKey="__AUTO__", inMin=None, inMax=None, outMin=0, outMax=1, axis=0):
         """ Scale the data from inMin-inMax to outMin-outMax for each
             row (axis=1) or column (axis=0) in the specified input data
-            inDataKey: use data saved in this key
+            dataKey: use data saved in/under this key, as the input data to scale
             outDataKey: save result in/using this key
-                if "__AUTO__": then actual outDataKey is inDataKey.scale
+                if "__AUTO__": then actual outDataKey is dataKey.scale
                 else: outDataKey itself is the actual outDataKey
             inMin: Use this as the min value for respective input data cols
                 None: Get min from the data cols itself
@@ -215,7 +215,7 @@ class AnalPlot:
                 1: operate on data across cols, i.e on each row of data
             NOTE: this can work on a 2D data set, inturn on its rows or cols.
             """
-        d, dCH, dRH = self.get_data(inDataKey)
+        d, dCH, dRH = self.get_data(dataKey)
         if axis==0:
             if inMin == None:
                 inMin = np.min(d, axis=0)
@@ -256,7 +256,7 @@ class AnalPlot:
             outMax = outMax.reshape(d.shape[0],1)
         inRange = inMax-inMin
         outRange = outMax-outMin
-        theOutDataKey = self._outdatakey(outDataKey, "scale", inDataKey)
+        theOutDataKey = self._outdatakey(outDataKey, "scale", dataKey)
         newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = (((d-inMin)/inRange)*outRange)+outMin
         self.data[newRHKey] = dRH
