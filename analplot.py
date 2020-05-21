@@ -154,14 +154,25 @@ class AnalPlot:
         return colsWithVal
 
 
-    def calc_rel2mean(self, dataKey="raw", bHandleColsWith0=True):
+    def _outdatakey(outDataKey, autoKey, inDataKey):
+        """ return the outDataKey given the controlling parameters
+            """
+        if outDataKey == "__AUTO__":
+            theOutDataKey = "%s.%s"%(inDataKey, autoKey)
+        else:
+            theOutDataKey = outDataKey
+        return theOutDataKey
+
+
+    def calc_rel2mean(self, dataKey="raw", bHandleColsWith0=True, outDataKey="__AUTO__"):
         """ Calculate the mean for each col and store val/mean
             for each val in the respective columns.
             """
         d, dCH, dRH = self.get_data(dataKey)
         if bHandleColsWith0:
             colsWith0 = self.get_cols_withval(dataKey, 0)
-        newDKey, newCHKey, newRHKey = self._get_datakeys("%s.rel2mean"%(dataKey))
+        theOutDataKey = self._outdatakey(outDataKey, "rel2mean", dataKey)
+        newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = d/np.mean(d, axis=0)
         if bHandleColsWith0:
             self.data[newDKey][:,colsWith0] = 0
@@ -169,14 +180,15 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
-    def calc_rel2sum(self, dataKey="raw", bHandleColsWith0=True):
+    def calc_rel2sum(self, dataKey="raw", bHandleColsWith0=True, outDataKey="__AUTO__"):
         """ Calculate the sum for each col and store value/sum
             for each value in the respective columns.
             """
         d, dCH, dRH = self.get_data(dataKey)
         if bHandleColsWith0:
             colsWith0 = self.get_cols_withval(dataKey, 0)
-        newDKey, newCHKey, newRHKey = self._get_datakeys("%s.rel2sum"%(dataKey))
+        theOutDataKey = self._outdatakey(outDataKey, "rel2sum", dataKey)
+        newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = d/np.sum(d, axis=0)
         if bHandleColsWith0:
             self.data[newDKey][:,colsWith0] = 0
@@ -244,45 +256,45 @@ class AnalPlot:
             outMax = outMax.reshape(d.shape[0],1)
         inRange = inMax-inMin
         outRange = outMax-outMin
-        if outDataKey == "__AUTO__":
-            theOutDataKey = "%s.scale"%(inDataKey)
-        else:
-            theOutDataKey = outDataKey
+        theOutDataKey = self._outdatakey(outDataKey, "scale", inDataKey)
         newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = (((d-inMin)/inRange)*outRange)+outMin
         self.data[newRHKey] = dRH
         self.data[newCHKey] = dCH
 
 
-    def calc_diff(self, dataKey="raw"):
+    def calc_diff(self, dataKey="raw", outDataKey="__AUTO__"):
         d, dCH, dRH = self.get_data(dataKey)
-        newDKey, newCHKey, newRHKey = self._get_datakeys("%s.diff"%(dataKey))
+        theOutDataKey = self._outdatakey(outDataKey, "diff", dataKey)
+        newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = np.diff(d, axis=0)
         self.data[newRHKey] = dRH[1:]
         self.data[newCHKey] = dCH
 
 
-    def calc_cumsum(self, dataKey="raw"):
+    def calc_cumsum(self, dataKey="raw", outDataKey="__AUTO__"):
         d, dCH, dRH = self.get_data(dataKey)
-        newDKey, newCHKey, newRHKey = self._get_datakeys("%s.cumsum"%(dataKey))
+        theOutDataKey = self._outdatakey(outDataKey, "cumsum", dataKey)
+        newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = np.cumsum(d, axis=0)
         self.data[newRHKey] = dRH
         self.data[newCHKey] = dCH
 
 
-    def calc_movavg(self, dataKey="raw", avgOver=7):
+    def calc_movavg(self, dataKey="raw", avgOver=7, outDataKey="__AUTO__"):
         d, dCH, dRH = self.get_data(dataKey)
         tWeight = np.ones(avgOver)/avgOver
         dataConv = np.zeros((d.shape[0]-(avgOver-1),d.shape[1]))
         for i in range(0,d.shape[1]):
             dataConv[:,i] = np.convolve(d[:,i], tWeight, 'valid')
-        newDKey, newCHKey, newRHKey = self._get_datakeys("%s.movavg"%(dataKey))
+        theOutDataKey = self._outdatakey(outDataKey, "movavg", dataKey)
+        newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = dataConv
         self.data[newRHKey] = list(range(dataConv.shape[0]))
         self.data[newCHKey] = dCH
 
 
-    def calc_movavg_ex(self, dataKey="raw", avgOver=7, times=2, bRoundToDeci8=True):
+    def calc_movavg_ex(self, dataKey="raw", avgOver=7, times=2, bRoundToDeci8=True, outDataKey="__AUTO__"):
         d, dCH, dRH = self.get_data(dataKey)
         tWeight = np.ones(avgOver)/avgOver
         dCur = d
@@ -293,7 +305,8 @@ class AnalPlot:
             dCur = dataConv
         if bRoundToDeci8:
             dCur = np.round(dCur, 8)
-        newDKey, newCHKey, newRHKey = self._get_datakeys("%s.movavgT%d"%(dataKey,times))
+        theOutDataKey = self._outdatakey(outDataKey, "movavgT%d"%(times), dataKey)
+        newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = dCur
         self.data[newRHKey] = list(range(dataConv.shape[0]))
         self.data[newCHKey] = dCH
