@@ -892,6 +892,8 @@ if __name__ == "__main__":
     ap.plot(axes[1,1], 'MyData.scaleA0.movavg', title="__AUTO__")
     ap.plot(axes[2,1], 'MyData.scaleA1', title="__AUTO__")
     ap.plot(axes[3,1], 'MyData.scaleA1.movavg', title="__AUTO__")
+    fig.set_tight_layout(True)
+    fig.savefig('/tmp/analplot_test.png')
     plt.show()
 
 
