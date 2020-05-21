@@ -205,6 +205,14 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
+    def _call_calc_scale(self, inDataKey, lArgNames, lArgVals):
+        if "axis" in lArgNames:
+            axis = int(lArgVals[lArgNames.index("axis")])
+        else:
+            axis = 0
+        self.dCalcFuncsWithArgs['scale'][0](self, dataKey=inDataKey, axis=axis)
+
+
     def calc_scale(self, dataKey="raw", outDataKey="__AUTO__", inMin=None, inMax=None, outMin=0, outMax=1, axis=0):
         """ Scale the data from inMin-inMax to outMin-outMax for each
             row (axis=1) or column (axis=0) in the specified input data
@@ -409,14 +417,6 @@ class AnalPlot:
     }
 
 
-    def _call_calc_scale(self, inDataKey, lArgNames, lArgVals):
-        if "axis" in lArgNames:
-            axis = lArgVals[lArgNames.index("axis")]
-        else:
-            axis = 0
-        self.dCalcFuncsWithArgs['scale'][0](self, dataKey=inDataKey, axis=axis)
-
-
     def get_data(self, dataKey="raw"):
         """ Return the specified data and its col and row headers
             Create them by calling required calc functions, if possible.
@@ -440,7 +440,7 @@ class AnalPlot:
         # Handle funcs with arguments using the new syntax
         lTemp = sCmd.split('(',1)
         sFName = lTemp[0]
-        if sFName in dCalcFuncsWithArgs:
+        if sFName in self.dCalcFuncsWithArgs:
             lArgNames = []
             lArgVals = []
             if len(lTemp) > 1:
@@ -451,6 +451,7 @@ class AnalPlot:
                     lArgNames.append(arg.split('=')[0])
                     lArgVals.append(arg.split('=')[1])
             self.dCalcFuncsWithArgs[sFName][1](self, sBDKey, lArgNames, lArgVals)
+            return self._get_data(dataKey)
         # Dont understand the data ops function being refered
         raise NotImplementedError("AnalPlot:get_data:{}:Func[{}] not found...\n\tAvailable DataSets:{}".format(dataKey, sCmd, self.data.keys()))
 
@@ -966,12 +967,12 @@ if __name__ == "__main__":
     ap.print_data_selective('MyData>rel2sum')
     # 2nd column of plots
     ap.calc_scale('MyData', 'MyData>scaleA0', axis=0)
-    ap.calc_scale('MyData', 'MyData>scaleA1', axis=1)
+    #ap.calc_scale('MyData', 'MyData>scaleA1', axis=1)
     ap.plot(axes[0,1], 'MyData>scaleA0', title="__AUTO__")
     ap.print_data_selective('MyData>scaleA0')
     ap.plot(axes[1,1], 'MyData>scaleA0>movavg', title="__AUTO__")
-    ap.plot(axes[2,1], 'MyData>scaleA1', title="__AUTO__")
-    ap.print_data_selective('MyData>scaleA1')
+    ap.plot(axes[2,1], 'MyData>scale(axis=1)', title="__AUTO__")
+    ap.print_data_selective('MyData>scale(axis=1)')
     ap.plot(axes[3,1], 'MyData>scaleA1>movavg', title="__AUTO__")
     # Some additional checks
     ap.print_data_selective('MyData')
