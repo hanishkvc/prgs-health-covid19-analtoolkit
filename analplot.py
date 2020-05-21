@@ -659,18 +659,22 @@ class AnalPlot:
             theX = np.log10(dX)
             tX = np.log10(curX)
             xRange = np.log10(xMax) - np.log10(xMin)
+            tXMid = np.log10(xMin) + (xRange/2)
         else:
             theX = dX
             tX = curX
             xRange = xMax-xMin
+            tXMid = xMin + (xRange/2)
         if yscale == "log":
             theY = np.log10(dY)
             tY = np.log10(curY)
             yRange = np.log10(yMax) - np.log10(yMin)
+            tYMid = np.log10(yMin) + (yRange/2)
         else:
             theY = dY
             tY = curY
             yRange = yMax-yMin
+            tYMid = yMin + (yRange/2)
         self.textxyXRange = xRange
         self.textxyYRange = yRange
         xDiff = theX-tX
@@ -678,8 +682,6 @@ class AnalPlot:
         bbox = ax.get_window_extent()
         if self.dbgAxisAdjustCntr == 0:
             print("DBUG:AnalPlot:textxy:bbox",bbox)
-            tXMid = np.log10(xMin) + (xRange/2)
-            tYMid = np.log10(yMin) + (yRange/2)
             tXDelta = xRange/4
             tYDelta = yRange/4
             self._test_plotxy_rect(ax, tXMid-tXDelta, tYMid-tYDelta, tXMid+tXDelta, tYMid+tYDelta, xscale, yscale)
