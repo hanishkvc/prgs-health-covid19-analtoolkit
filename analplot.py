@@ -401,7 +401,7 @@ class AnalPlot:
             dCur = dataConv
         if bRoundToDeci8:
             dCur = np.round(dCur, 8)
-        theOutDataKey = self._outdatakey(outDataKey, "movavgT%d"%(times), dataKey)
+        theOutDataKey = self._outdatakey(outDataKey, "movavg", dataKey)
         newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = dCur
         if axis == 0:
@@ -475,9 +475,6 @@ class AnalPlot:
         "rel2mean": calc_rel2mean,
         "rel2sum": calc_rel2sum,
     }
-    dCalcFuncsWithArg = {
-        "movavgT": calc_movavg_ex,
-    }
     dCalcFuncsWithArgs = {
         "scale": [calc_scale, _call_calc_scale],
         "diff": [calc_diff, _call_calc_diff],
@@ -500,12 +497,6 @@ class AnalPlot:
         if sCmd in self.dCalcSimpleFuncs:
             self.dCalcSimpleFuncs[sCmd](self, sBDKey)
             return self._get_data(dataKey)
-        for fname in self.dCalcFuncsWithArg:
-            if sCmd.startswith(fname):
-                if fname == "movavgT":
-                    argTimes = int(sCmd.replace("movavgT",""))
-                    self.dCalcFuncsWithArg[fname](self, sBDKey, times=argTimes)
-                    return self._get_data(dataKey)
         # Handle funcs with arguments using the new syntax
         lTemp = sCmd.split('(',1)
         sFName = lTemp[0]
