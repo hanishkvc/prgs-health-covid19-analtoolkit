@@ -426,7 +426,7 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
-    def calc_movavg(self, dataKey="raw", avgOver=7, outDataKey="__AUTO__", axis=0):
+    def calc_movavg_old(self, dataKey="raw", avgOver=7, outDataKey="__AUTO__", axis=0):
         """ Calculate sliding window averages for values in the dataset
             along each row (axis=1) or column (axis=0).
             avgOver: the sliding window size
@@ -455,11 +455,8 @@ class AnalPlot:
     def _call_calc_movavg(self, inDataKey, outDataKey, lArgNames, lArgVals):
         """ Helper routine to call calc_movavg related to dataKey DataOpsChaining
 
-            NOTE: default for times is set to 1 and not the func's default arg value of 2
-            so that this logic can be also used to get the semantics of normal movavg call
-            when no arguments are given.
-            TODO: even thou axis option is specified, movavg_ex yet to be updated to support
-            the axis argument.
+            OLD NOTE: default for times is 1, so that this logic can be also used
+            to get the semantics of normal movavg call when no arguments are given.
             """
         axis = 0
         times = 1
@@ -473,7 +470,14 @@ class AnalPlot:
         self.dCalcFuncsWithArgs['movavg'][0](self, dataKey=inDataKey, outDataKey=outDataKey, times=times, axis=axis)
 
 
-    def calc_movavg_ex(self, dataKey="raw", avgOver=7, times=2, bRoundToDeci8=True, outDataKey="__AUTO__", axis=0):
+    def calc_movavg(self, dataKey="raw", avgOver=7, times=1, bRoundToDeci8=True, outDataKey="__AUTO__", axis=0):
+        """ Calculate sliding window averages for values in the dataset
+            along each row (axis=1) or column (axis=0).
+            avgOver: the sliding window size
+            times: the number of times movavg should be applied to specified data
+            bRoundToDeci8: this forces the values to be rounded down to 8 decimal
+                places if required.
+            """
         d, dCH, dRH = self.get_data(dataKey)
         tWeight = np.ones(avgOver)/avgOver
         dCur = d
@@ -568,7 +572,7 @@ class AnalPlot:
         "scale": [calc_scale, _call_calc_scale],
         "diff": [calc_diff, _call_calc_diff],
         "cumsum": [calc_cumsum, _call_calc_cumsum],
-        "movavg": [calc_movavg_ex, _call_calc_movavg],
+        "movavg": [calc_movavg, _call_calc_movavg],
         "rel2mean": [calc_rel2mean, _call_calc_rel2mean],
         "rel2sum": [calc_rel2sum, _call_calc_rel2sum],
     }
