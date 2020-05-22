@@ -42,8 +42,9 @@ function test_run_11() {
 
 function test_run() {
 
+	sDate=`date +%Y%m%d`
 	./hkvc-covid19-analtoolkit.py
-	./hkvc-covid19-analtoolkit.py --cov19in data/Cov19In-20200520-confirmed.csv --euworld data/EUWorld-20200520.csv --sel EUWorld IN IE UK AE CA US RU BR --sel Cov19In KL KA DL MH GJ MP BR
+	./hkvc-covid19-analtoolkit.py --cov19in data/Cov19In-$sDate-confirmed.csv --euworld data/EUWorld-$sDate.csv --sel EUWorld IN IE UK AE CA US RU BR --sel Cov19In KL KA DL MH GJ MP BR
 
 }
 

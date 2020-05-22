@@ -2,15 +2,16 @@
 Author: HanishKVC
 Version: v20200521IST1528
 
-## Basic working version of generic logic; Branch:master WIP
+## Covid19 Analtoolkit, Branch:master WIP
 
 ### Overview
 
 This contains a set of simple python scripts to process and plot
-covid19 data about India and World.
+covid19 data about India and World. This is the version built on
+top of generic helper modules.
 
-NOTE: It also contains two useful python modules, which can be used
-by other programs they are datasrc.py and analplot.py
+NOTE: It contains two useful python modules, which can be used by
+other programs they are datasrc.py and analplot.py
 
 Option1: Fetch and AnalPlot EUWorld and Cov19In based datasets
 
@@ -22,7 +23,7 @@ fetched/converted csv datasets
 hkvc-covid19-analtoolkit.py [--cov19in data/Cov19In-DATE-confirmed.csv] [--euworld data/EUWorld-DATE.csv]
 
 NOTE: Remember to look at the saved image. The Plot window shown
-will be messed up due to too many plots which wont fit the screen.
+may be messed up due to too many plots which wont fit the screen.
 
 ### Analyse and Plot user selected geoIDs
 
@@ -75,12 +76,52 @@ it will timeout.
 
 --scalediff : scale the diff data used in plotxy inset.
 
-#### Test DataSrc/AnalPlot classes
 
-To test datasrc/analplot class/module on its own
+
+## DataSrc/AnalPlot classes/Modules
+
+### Overview
+
+These are two useful python modules, which can be used by other programs.
+
+#### DataSrc
+
+DataSrc allows one to download and convert data from the net, so that it
+can be used.
+
+#### AnalPlot
+
+AnalPlot allows one to load data and inturn look at the data after applying
+different data operations on it, as required. Analplot allows one to just
+ask for a given processed data to be printed/displayed and the logic will
+automatically generate the required data by calling the data operations
+as required on the available data, in a efficient way. This requires the
+user to specify the data in AnalPlot's dataKey DataOpsChaining notation.
+
+dataKey DataOpsChaining notation:
+
+'MyData>DataOp1>DataOp2>DataOpWithArgs3(Arg1=Val1,Arg2=Val2)>...>DataOpN
+
+Available DataOps are
+
+* diff, cumsum, movavg, scale
+
+* rel2sum, rel2mean
+
+However if one wants, one can even directly call the calc functions, as
+required, and later use the generated data for futher processing and or
+plotting.
+
+The available plot types are plot, plotxy and boxplot.
+
+### Test
+
+To test datasrc/analplot class/module on its own, one could run
 
 python datasrc.py
 python analplot.py
+
+
 
 ## Old working logic; Branch:v20200423IST2000_BasicFull
 
