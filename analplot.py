@@ -310,6 +310,18 @@ class AnalPlot:
             self.data[newCHKey] = dCH[1:]
 
 
+    def _call_calc_cumsum(self, inDataKey, outDataKey, lArgNames, lArgVals):
+        """ Helper routine to call calc_cumsum related to dataKey DataOpsChaining
+            """
+        axis = 0
+        for arg in lArgNames:
+            if (arg == "axis") or (arg == "A"):
+                axis = int(lArgVals[lArgNames.index(arg)])
+            else:
+                print("WARN:AnalPlot:callCalcCumSum:Unknown arg[%s]"%(arg))
+        self.dCalcFuncsWithArgs['cumsum'][0](self, dataKey=inDataKey, outDataKey=outDataKey, axis=axis)
+
+
     def calc_cumsum(self, dataKey="raw", outDataKey="__AUTO__", axis=0):
         """ Calculate the cumsum across adjacent values in the dataset.
             axis=0: cumsum across adjacent elements in each column
@@ -350,6 +362,27 @@ class AnalPlot:
         else:
             self.data[newRHKey] = dRH
             self.data[newCHKey] = list(range(dataConv.shape[1]))
+
+
+    def _call_calc_movavg(self, inDataKey, outDataKey, lArgNames, lArgVals):
+        """ Helper routine to call calc_movavg related to dataKey DataOpsChaining
+
+            NOTE: default for times is set to 1 and not the func's default arg value of 2
+            so that this logic can be also used to get the semantics of normal movavg call
+            when no arguments are given.
+            TODO: even thou axis option is specified, movavg_ex yet to be updated to support
+            the axis argument.
+            """
+        axis = 0
+        times = 1
+        for arg in lArgNames:
+            if (arg == "axis") or (arg == "A"):
+                axis = int(lArgVals[lArgNames.index(arg)])
+            elif (arg == "times") or (arg == "T"):
+                times = int(lArgVals[lArgNames.index(arg)])
+            else:
+                print("WARN:AnalPlot:callCalcMovAvg:Unknown arg[%s]"%(arg))
+        self.dCalcFuncsWithArgs['movavg'][0](self, dataKey=inDataKey, outDataKey=outDataKey, times=times, axis=axis)
 
 
     def calc_movavg_ex(self, dataKey="raw", avgOver=7, times=2, bRoundToDeci8=True, outDataKey="__AUTO__"):
@@ -430,11 +463,8 @@ class AnalPlot:
 
 
     dCalcSimpleFuncs = {
-        "diff": calc_diff,
-        "cumsum": calc_cumsum,
         "rel2mean": calc_rel2mean,
         "rel2sum": calc_rel2sum,
-        "movavg": calc_movavg
     }
     dCalcFuncsWithArg = {
         "movavgT": calc_movavg_ex,
@@ -442,6 +472,8 @@ class AnalPlot:
     dCalcFuncsWithArgs = {
         "scale": [calc_scale, _call_calc_scale],
         "diff": [calc_diff, _call_calc_diff],
+        "cumsum": [calc_cumsum, _call_calc_cumsum],
+        "movavg": [calc_movavg_ex, _call_calc_movavg],
     }
 
 
