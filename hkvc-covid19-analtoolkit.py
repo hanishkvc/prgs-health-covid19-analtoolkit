@@ -82,10 +82,10 @@ def plot_xy(ds, ap, axes, iARow, iACol, dataKey, inSelIds):
 
 def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None):
     selCols, theTitle = sel_cols("%s>diff>movavg(T=2)"%(dataKey), 8, inSelIds, "%s-__AUTO__"%(ds.name),"DiffMovAvgT2")
-    ap.plot(axes[iARow,iACol], "%s>diff>movavg(T=3)"%(dataKey), plotSelCols=selCols, plotLegend=True,
+    ap.plot(axes[iARow,iACol], "%s>rel2sum>movavg(T=2)"%(dataKey), plotSelCols=selCols, plotLegend=True,
                 title=theTitle)
     inset = axes[iARow,iACol].inset_axes([0.13,0.55,0.64,0.4])
-    ap.plot(inset, "%s>diff"%(dataKey), plotSelCols=selCols, plotLegend=None, bTranslucent=True,
+    ap.plot(inset, "%s>diff>movavg(T=3)"%(dataKey), plotSelCols=selCols, plotLegend=None, bTranslucent=True,
                 title=theTitle)
     iARow = plot_xy(ds, ap, axes, iARow+1, iACol, dataKey, inSelIds)
     return iARow
