@@ -385,22 +385,31 @@ class AnalPlot:
         self.dCalcFuncsWithArgs['movavg'][0](self, dataKey=inDataKey, outDataKey=outDataKey, times=times, axis=axis)
 
 
-    def calc_movavg_ex(self, dataKey="raw", avgOver=7, times=2, bRoundToDeci8=True, outDataKey="__AUTO__"):
+    def calc_movavg_ex(self, dataKey="raw", avgOver=7, times=2, bRoundToDeci8=True, outDataKey="__AUTO__", axis=0):
         d, dCH, dRH = self.get_data(dataKey)
         tWeight = np.ones(avgOver)/avgOver
         dCur = d
         for time in range(times):
-            dataConv = np.zeros((dCur.shape[0]-(avgOver-1),dCur.shape[1]))
-            for i in range(0,dCur.shape[1]):
-                dataConv[:,i] = np.convolve(dCur[:,i], tWeight, 'valid')
+            if axis == 0:
+                dataConv = np.zeros((dCur.shape[0]-(avgOver-1),dCur.shape[1]))
+                for i in range(0,dCur.shape[1]):
+                    dataConv[:,i] = np.convolve(dCur[:,i], tWeight, 'valid')
+            else:
+                dataConv = np.zeros((dCur.shape[0],dCur.shape[1]-(avgOver-1)))
+                for i in range(0,dCur.shape[0]):
+                    dataConv[i,:] = np.convolve(dCur[i,:], tWeight, 'valid')
             dCur = dataConv
         if bRoundToDeci8:
             dCur = np.round(dCur, 8)
         theOutDataKey = self._outdatakey(outDataKey, "movavgT%d"%(times), dataKey)
         newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = dCur
-        self.data[newRHKey] = list(range(dataConv.shape[0]))
-        self.data[newCHKey] = dCH
+        if axis == 0:
+            self.data[newRHKey] = list(range(dataConv.shape[0]))
+            self.data[newCHKey] = dCH
+        else:
+            self.data[newRHKey] = dRH
+            self.data[newCHKey] = list(range(dataConv.shape[1]))
 
 
     def selcols_percentiles(self, dataKey="raw", selRow=-1, selPers=[0,100], bSelInclusive=True, topN=None, botN=None):
