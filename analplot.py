@@ -492,7 +492,7 @@ class AnalPlot:
         theOutDataKey = self._outdatakey(outDataKey, "movavg", dataKey)
         newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = dCur
-        indexDelta = ((avgOver-1)*times)/2
+        indexDelta = int(((avgOver-1)*times)/2)
         if axis == 0:
             #self.data[newRHKey] = list(range(dataConv.shape[0]))
             self.data[newRHKey] = dRH[indexDelta:-indexDelta]
@@ -1082,6 +1082,15 @@ def test_textxy():
     ap=AnalPlot()
     ap._textxy(1, 41, 42, "test", d[:,1], d[:,2], "lin", "lin")
     return d
+
+
+
+def test_data_simple():
+    """ Generate a very simple test data based instance of AnalPlot
+        """
+    ap=AnalPlot()
+    ap.set_raw(np.arange(20).reshape(5,4))
+    return ap
 
 
 
