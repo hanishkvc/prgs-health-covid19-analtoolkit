@@ -1020,7 +1020,7 @@ if __name__ == "__main__":
     ap.print_data_selective('MyData')
     ap.plot(axes[1,0], 'MyData>movavg', title="__AUTO__")
     ap.print_data_selective('MyData>movavg')
-    ap.plot(axes[2,0], 'MyData>movavgT2', title="__AUTO__")
+    ap.plot(axes[2,0], 'MyData>movavg(T=2)', title="__AUTO__")
     ap.plot(axes[3,0], 'MyData>rel2mean', title="__AUTO__")
     ap.print_data_selective('MyData>rel2mean')
     ap.plot(axes[4,0], 'MyData>rel2sum', title="__AUTO__")
