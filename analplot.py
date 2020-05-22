@@ -180,6 +180,19 @@ class AnalPlot:
         return colsWithVal
 
 
+    def get_rows_withval(self, dataKey="raw", val = 0):
+        """ Find rows which contain the given val in all its cols
+            """
+        d, dCH, dRH = self.get_data(dataKey)
+        rowsWithGivenValOnly = []
+        for i in range(d.shape[0]):
+            tMin = np.min(d[i,:])
+            tMax = np.max(d[i,:])
+            if (tMin == val) and (tMax == val):
+                rowsWithGivenValOnly.append(i)
+        return rowsWithGivenValOnly
+
+
     def _outdatakey(self, outDataKey, autoKey, inDataKey):
         """ return a outDataKey given the controlling parameters
             outDataKey: This could either be a explicit keyname to use
