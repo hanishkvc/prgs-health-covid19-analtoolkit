@@ -121,9 +121,17 @@ class AnalPlot:
             rowHdr: the associated row header
                     i.e what each row corresponds to
             dataKey: the base key to use for refering to this data
+
+            NOTE: If row or col header is not specified, then a numerical
+            one is automatically created, which counts from 0 to row or
+            col size as required.
             """
         sDKey, sCHKey, sRHKey = self._get_datakeys(dataKey)
         self.data[sDKey] = data
+        if rowHdr == None:
+            rowHdr = np.arange(data.shape[0])
+        if colHdr == None:
+            colHdr = np.arange(data.shape[1])
         self.data[sRHKey] = rowHdr
         if type(colHdr) == type(list()):
             colHdr = np.array(colHdr)
@@ -484,12 +492,15 @@ class AnalPlot:
         theOutDataKey = self._outdatakey(outDataKey, "movavg", dataKey)
         newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = dCur
+        indexDelta = ((avgOver-1)*times)/2
         if axis == 0:
-            self.data[newRHKey] = list(range(dataConv.shape[0]))
+            #self.data[newRHKey] = list(range(dataConv.shape[0]))
+            self.data[newRHKey] = dRH[indexDelta:-indexDelta]
             self.data[newCHKey] = dCH
         else:
             self.data[newRHKey] = dRH
-            self.data[newCHKey] = list(range(dataConv.shape[1]))
+            #self.data[newCHKey] = list(range(dataConv.shape[1]))
+            self.data[newCHKey] = dCH[indexDelta:-indexDelta]
 
 
     def selcols_percentiles(self, dataKey="raw", selRow=-1, selPers=[0,100], bSelInclusive=True, topN=None, botN=None):
