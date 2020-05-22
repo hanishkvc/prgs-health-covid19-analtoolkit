@@ -91,6 +91,19 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None
     return iARow
 
 
+def plot_data_movavgTopN(ds, ap, axes, iARow, iACol, dataKey="cases/day", topN=8, inSelIds=None):
+    """ Plot data of regions selected based on cases/day>movavgTopN
+        """
+    theTitle = "%s-__AUTO__"%(ds.name)
+    selCols, theTitle = sel_cols("%s>movavg"%(dataKey), topN, inSelIds, theTitle, "movavg")
+    ap.plot(axes[iARow,iACol], "%s>movavg"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle, yscale="log")
+    yscale = None
+    inset = axes[iARow,iACol].inset_axes([0.36,0.05,0.64,0.4])
+    ap.plot(inset, "%s>rel2sum>movavg(T=2)"%(dataKey), plotSelCols=selCols, yscale=yscale, bTranslucent=True, title=theTitle)
+    #ap.plot(inset, "%s"%(dataKey), plotSelCols=selCols, yscale=yscale, bTranslucent=True, numXTicks=4, xtickMultOf=7, title=theTitle)
+    return iARow+1
+
+
 def plot_sel(allDS, allSel):
     """ Plot a set of interesting/informative/... plots
         Uses the new auto calc as required functionality of AnalPlot
@@ -108,14 +121,7 @@ def plot_sel(allDS, allSel):
         # The Raw data
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
         # Plot moving avg and raw data (inset)
-        topN=8
-        theTitle = "%s-__AUTO__"%(ds.name)
-        selCols, theTitle = sel_cols("cases/day>movavg", topN, theSelIds, theTitle, "movavg")
-        ap.plot(axes[0,iCurDS], "cases/day>movavg", plotSelCols=selCols, plotLegend=True, title=theTitle, yscale="log")
-        yscale = None
-        inset = axes[0,iCurDS].inset_axes([0.36,0.05,0.64,0.4])
-        ap.plot(inset, "cases/day>rel2sum>movavg(T=2)", plotSelCols=selCols, yscale=yscale, bTranslucent=True, title=theTitle)
-        #ap.plot(inset, "cases/day", plotSelCols=selCols, yscale=yscale, bTranslucent=True, numXTicks=4, xtickMultOf=7, title=theTitle)
+        iARow = plot_data_movavgTopN(ds, ap, axes, 0, iCurDS, "cases/day", 8, theSelIds)
         # Boxplot Raw data
         topN=20
         theTitle = "%s-__AUTO__"%(ds.name)
