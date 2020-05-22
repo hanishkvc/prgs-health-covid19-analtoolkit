@@ -210,18 +210,33 @@ class AnalPlot:
         return theOutDataKey
 
 
-    def calc_rel2mean(self, dataKey="raw", bHandleColsWith0=True, outDataKey="__AUTO__"):
-        """ Calculate the mean for each col and store val/mean
-            for each val in the respective columns.
+    def calc_rel2mean(self, dataKey="raw", bHandleRowsOrColsWith0=True, outDataKey="__AUTO__", axis=0):
+        """ Calculate the mean for each row or col in the dataset and
+            store the result of val/respective_mean for each value
+
+            axis=0: Calc mean for each column.
+            axis=1: Calc mean for each row.
+
+            bHandleRowsOrColsWith0=True: Rows or Cols which contain only 0 in them
+                retain the same after rel2mean is calculated. Whether it applies to
+                rows or columns depends on if axis is 1 or 0.
+                Without this such rows or cols will become nan.
             """
         d, dCH, dRH = self.get_data(dataKey)
-        if bHandleColsWith0:
-            colsWith0 = self.get_cols_withval(dataKey, 0)
+        if bHandleRowsOrColsWith0:
+            if axis == 0:
+                colsWith0 = self.get_cols_withval(dataKey, 0)
+            else:
+                rowsWith0 = self.get_rows_withval(dataKey, 0)
         theOutDataKey = self._outdatakey(outDataKey, "rel2mean", dataKey)
         newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
-        self.data[newDKey] = d/np.mean(d, axis=0)
-        if bHandleColsWith0:
-            self.data[newDKey][:,colsWith0] = 0
+        if bHandleRowsOrColsWith0:
+            if axis == 0:
+                self.data[newDKey] = d/np.mean(d, axis=axis)
+                self.data[newDKey][:,colsWith0] = 0
+            else
+                self.data[newDKey] = d/np.mean(d, axis=axis).reshape(d.shape[0],1)
+                self.data[newDKey][rowsWith0,:] = 0
         self.data[newRHKey] = dRH
         self.data[newCHKey] = dCH
 
