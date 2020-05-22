@@ -217,6 +217,8 @@ class AnalPlot:
 
 
     def _call_calc_scale(self, inDataKey, outDataKey, lArgNames, lArgVals):
+        """ Helper routine to call calc_scale related to dataKey DataOpsChaining
+            """
         axis = 0
         for arg in lArgNames:
             if (arg == "axis") or (arg == "A"):
@@ -274,6 +276,18 @@ class AnalPlot:
         self.data[newDKey] = (((d-inMin)/inRange)*outRange)+outMin
         self.data[newRHKey] = dRH
         self.data[newCHKey] = dCH
+
+
+    def _call_calc_diff(self, inDataKey, outDataKey, lArgNames, lArgVals):
+        """ Helper routine to call calc_diff related to dataKey DataOpsChaining
+            """
+        axis = 0
+        for arg in lArgNames:
+            if (arg == "axis") or (arg == "A"):
+                axis = int(lArgVals[lArgNames.index(arg)])
+            else:
+                print("WARN:AnalPlot:callCalcDiff:Unknown arg[%s]"%(arg))
+        self.dCalcFuncsWithArgs['diff'][0](self, dataKey=inDataKey, outDataKey=outDataKey, axis=axis)
 
 
     def calc_diff(self, dataKey="raw", outDataKey="__AUTO__", axis=0):
@@ -427,6 +441,7 @@ class AnalPlot:
     }
     dCalcFuncsWithArgs = {
         "scale": [calc_scale, _call_calc_scale],
+        "diff": [calc_diff, _call_calc_diff],
     }
 
 
