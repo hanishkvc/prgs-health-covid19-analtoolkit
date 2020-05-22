@@ -64,7 +64,7 @@ bMODE_SCALEDIFF=True
 def plot_xy(ds, ap, axes, iARow, iACol, dataKey, topNCS, topND, inSelIds):
     """ PlotXY data based on cumsum and diff.movavg topN
         """
-    selCols, theTitle = sel_cols("%s>cumsum"%(dataKey), topNCS, inSelIds, "%s-__AUTO__"%(ds.name),"~cumsum", bSelInclusive=True)
+    selCols, theTitle = sel_cols("%s>cumsum"%(dataKey), topNCS, inSelIds, "%s-__AUTO__"%(ds.name),"cumsum", bSelInclusive=True)
     ap.plotxy(axes[iARow,iACol], "%s>cumsum"%(dataKey), "%s>movavg"%(dataKey), plotSelCols=selCols,
                 title=theTitle, xscale="log", yscale="log", plotLegend=True)
     inset = axes[iARow,iACol].inset_axes([0.6,0.10,0.4,0.4])
@@ -133,14 +133,14 @@ def plot_sel(allDS, allSel):
         # The Raw data
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
         iARow = 0
-        # Plot data based on Cases/Day>MovingAvg TopN
-        iARow = plot_data_movavgTopN(ds, ap, axes, iARow, iCurDS, "cases/day", 8, theSelIds)
-        # Boxplot Raw data based on Cases/Day>MovingAvg TopN
-        iARow = boxplot_data_movavgTopN(ds, ap, axes, iARow, iCurDS, "cases/day", 25, theSelIds)
-        # Plot data based on Cases/Day>Diff>MovingAvg TopN
-        iARow = plot_data_diffTopN(ds, ap, axes, iARow, iCurDS, "cases/day", 8, theSelIds)
         # PlotXY data based on cumsum and diff topN
         iARow = plot_xy(ds, ap, axes, iARow, iCurDS, "cases/day", 25, 8, theSelIds)
+        # Boxplot Raw data based on Cases/Day>MovingAvg TopN
+        iARow = boxplot_data_movavgTopN(ds, ap, axes, iARow, iCurDS, "cases/day", 25, theSelIds)
+        # Plot data based on Cases/Day>MovingAvg TopN
+        iARow = plot_data_movavgTopN(ds, ap, axes, iARow, iCurDS, "cases/day", 8, theSelIds)
+        # Plot data based on Cases/Day>Diff>MovingAvg TopN
+        iARow = plot_data_diffTopN(ds, ap, axes, iARow, iCurDS, "cases/day", 8, theSelIds)
         sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCurDS += 1
     save_fig(fig, sGlobalMsg)
