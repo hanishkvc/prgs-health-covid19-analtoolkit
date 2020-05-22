@@ -246,11 +246,23 @@ class AnalPlot:
             if axis == 0:
                 self.data[newDKey] = d/np.mean(d, axis=axis)
                 self.data[newDKey][:,colsWith0] = 0
-            else
+            else:
                 self.data[newDKey] = d/np.mean(d, axis=axis).reshape(d.shape[0],1)
                 self.data[newDKey][rowsWith0,:] = 0
         self.data[newRHKey] = dRH
         self.data[newCHKey] = dCH
+
+
+    def _call_calc_rel2sum(self, inDataKey, outDataKey, lArgNames, lArgVals):
+        """ Helper routine to call calc_rel2sum; related to dataKey DataOpsChaining
+            """
+        axis = 0
+        for arg in lArgNames:
+            if (arg == "axis") or (arg == "A"):
+                axis = int(lArgVals[lArgNames.index(arg)])
+            else:
+                print("WARN:AnalPlot:callCalcRel2Sum:Unknown arg[%s]"%(arg))
+        self.dCalcFuncsWithArgs['rel2sum'][0](self, dataKey=inDataKey, outDataKey=outDataKey, axis=axis)
 
 
     def calc_rel2sum(self, dataKey="raw", bHandleRowsOrColsWith0=True, outDataKey="__AUTO__", axis=0):
@@ -540,7 +552,6 @@ class AnalPlot:
 
 
     dCalcSimpleFuncs = {
-        "rel2sum": calc_rel2sum,
     }
     dCalcFuncsWithArgs = {
         "scale": [calc_scale, _call_calc_scale],
@@ -548,6 +559,7 @@ class AnalPlot:
         "cumsum": [calc_cumsum, _call_calc_cumsum],
         "movavg": [calc_movavg_ex, _call_calc_movavg],
         "rel2mean": [calc_rel2mean, _call_calc_rel2mean],
+        "rel2sum": [calc_rel2sum, _call_calc_rel2sum],
     }
 
 
