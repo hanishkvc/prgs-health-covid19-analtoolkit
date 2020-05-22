@@ -102,8 +102,7 @@ def plot_data_movavgTopN(ds, ap, axes, iARow, iACol, dataKey="cases/day", topN=8
     ap.plot(axes[iARow,iACol], "%s>movavg"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle, yscale="log")
     yscale = None
     inset = axes[iARow,iACol].inset_axes([0.36,0.05,0.64,0.4])
-    ap.plot(inset, "%s>rel2sum>movavg(T=2)"%(dataKey), plotSelCols=selCols, yscale=yscale, bTranslucent=True, title=theTitle)
-    #ap.plot(inset, "%s"%(dataKey), plotSelCols=selCols, yscale=yscale, bTranslucent=True, numXTicks=4, xtickMultOf=7, title=theTitle)
+    ap.plot(inset, "%s>rel2sum>movavg(T=2)"%(dataKey), plotSelCols=selCols, yscale=yscale, bTranslucent=True, numXTicks=4, xtickMultOf=7, title=theTitle)
     return iARow+1
 
 
