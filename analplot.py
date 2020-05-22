@@ -128,9 +128,9 @@ class AnalPlot:
             """
         sDKey, sCHKey, sRHKey = self._get_datakeys(dataKey)
         self.data[sDKey] = data
-        if rowHdr == None:
+        if type(rowHdr) == type(None):
             rowHdr = np.arange(data.shape[0])
-        if colHdr == None:
+        if type(colHdr) == type(None):
             colHdr = np.arange(data.shape[1])
         self.data[sRHKey] = rowHdr
         if type(colHdr) == type(list()):
