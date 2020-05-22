@@ -226,8 +226,8 @@ class AnalPlot:
         """ Calculate the mean for each row or col in the dataset and
             store the result of val/respective_mean for each value
 
-            axis=0: Calc mean for each column.
-            axis=1: Calc mean for each row.
+            axis=0: Calc val/mean for each column.
+            axis=1: Calc val/mean for each row.
 
             bHandleRowsOrColsWith0=True: Rows or Cols which contain only 0 in them
                 retain the same after rel2mean is calculated. Whether it applies to
@@ -253,18 +253,33 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
-    def calc_rel2sum(self, dataKey="raw", bHandleColsWith0=True, outDataKey="__AUTO__"):
-        """ Calculate the sum for each col and store value/sum
-            for each value in the respective columns.
+    def calc_rel2sum(self, dataKey="raw", bHandleRowsOrColsWith0=True, outDataKey="__AUTO__", axis=0):
+        """ Calculate the sum for each row or col in the dataset and
+            store value/respective_rowOrCol_sum for each value in the dataset.
+
+            axis=0: Calc val/sum for each column.
+            axis=1: Calc val/sum for each row.
+
+            bHandleRowsOrColsWith0=True: Rows or Cols which contain only 0 in them
+                retain the same after rel2mean is calculated. Whether it applies to
+                rows or columns depends on if axis is 1 or 0.
+                Without this such rows or cols will contain nan in them.
             """
         d, dCH, dRH = self.get_data(dataKey)
-        if bHandleColsWith0:
-            colsWith0 = self.get_cols_withval(dataKey, 0)
+        if bHandleRowsOrColsWith0:
+            if axis == 0:
+                colsWith0 = self.get_cols_withval(dataKey, 0)
+            else:
+                rowsWith0 = self.get_rows_withval(dataKey, 0)
         theOutDataKey = self._outdatakey(outDataKey, "rel2sum", dataKey)
         newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
-        self.data[newDKey] = d/np.sum(d, axis=0)
-        if bHandleColsWith0:
-            self.data[newDKey][:,colsWith0] = 0
+        if bHandleRowsOrColsWith0:
+            if axis == 0:
+                self.data[newDKey] = d/np.sum(d, axis=0)
+                self.data[newDKey][:,colsWith0] = 0
+            else:
+                self.data[newDKey] = d/np.sum(d, axis=1).reshape(d.shape[0],1)
+                self.data[newDKey][rowsWith0,:] = 0
         self.data[newRHKey] = dRH
         self.data[newCHKey] = dCH
 
