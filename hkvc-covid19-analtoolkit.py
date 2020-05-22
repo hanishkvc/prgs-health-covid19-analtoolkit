@@ -104,6 +104,15 @@ def plot_data_movavgTopN(ds, ap, axes, iARow, iACol, dataKey="cases/day", topN=8
     return iARow+1
 
 
+def boxplot_data_movavgTopN(ds, ap, axes, iARow, iACol, dataKey="cases/day", topN=20, inSelIds=None):
+    """ BoxPlot data of regions selected based on cases/day>movavgTopN
+        """
+    theTitle = "%s-__AUTO__"%(ds.name)
+    selCols, theTitle = sel_cols("%s>movavg"%(dataKey), topN, inSelIds, theTitle, "movavg")
+    ap.boxplot(axes[iARow,iACol], dataKey, plotSelCols=selCols, bInsetBoxPlot=True, title=theTitle)
+    return iARow+1
+
+
 def plot_sel(allDS, allSel):
     """ Plot a set of interesting/informative/... plots
         Uses the new auto calc as required functionality of AnalPlot
@@ -120,15 +129,13 @@ def plot_sel(allDS, allSel):
         dprint("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[-2])))
         # The Raw data
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
-        # Plot moving avg and raw data (inset)
-        iARow = plot_data_movavgTopN(ds, ap, axes, 0, iCurDS, "cases/day", 8, theSelIds)
+        iARow = 0
+        # Plot moving avg of Data and related
+        iARow = plot_data_movavgTopN(ds, ap, axes, iARow, iCurDS, "cases/day", 8, theSelIds)
         # Boxplot Raw data
-        topN=20
-        theTitle = "%s-__AUTO__"%(ds.name)
-        selCols, theTitle = sel_cols("cases/day>movavg", topN, theSelIds, theTitle, "movavg")
-        ap.boxplot(axes[1,iCurDS], "cases/day", plotSelCols=selCols, bInsetBoxPlot=True, title=theTitle)
+        iARow = boxplot_data_movavgTopN(ds, ap, axes, iARow, iCurDS, "cases/day", 25, theSelIds)
         # Diff of Raw data and more
-        plot_diffdata(ds, ap, axes, 2, iCurDS, "cases/day", theSelIds)
+        plot_diffdata(ds, ap, axes, iARow, iCurDS, "cases/day", theSelIds)
         sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCurDS += 1
     save_fig(fig, sGlobalMsg)
