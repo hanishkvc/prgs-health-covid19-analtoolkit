@@ -112,6 +112,10 @@ However if one wants, one can even directly call the calc functions, as
 required, and later use the generated data for futher processing and or
 plotting.
 
+In either case the results of each data op step is internally cached, so
+that if the same is needed as part of some other calculation, it can be
+reused directly without needing to calculate again.
+
 The available plot types are plot, plotxy and boxplot.
 
 ### Test

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # Analyse Plot data sets
-# v20200512IST1126, HanishKVC
+# v20200522IST2114, HanishKVC
 # LGPL
 #
 
@@ -52,15 +52,28 @@ def textxy_spread(mode="default", mult=1):
 
 
 class AnalPlot:
-    """ AnalPlot allows one to process and plot datasets in multiple ways.
+    """ AnalPlot allows one to store, process and plot datasets in multiple ways.
 
-        One could either call the processing functions explicitly first and
-        then inturn use that data in a plot or print. OR ELSE one can let
-        AnalPlot to automatically call the required data operations, even
-        chaining them if required, if the user refers to the datasets in
-        predefined ways, when using them in a plot or print or ...
+        One could either call the processing functions explicitly first and then
+        inturn use that data in a plot or print or further processing. OR ELSE
+        one can let AnalPlot to automatically call the required data operations
+        on its own to get the required data, even chaining the data operations
+        if required, provided the user refers to the datasets in predefined ways,
+        when using them in a plot or print or another calculation...
 
-        MyDataSet1>DataOp1>ADataOpWithArgs(Arg1=Val1,Arg2=Val2)>DataOpN ...
+        This predefined notation is called the dataKey dataOpsChaining, because
+        in AnalPlot one refers to data stored in it using dataKeys. And if one
+        specifies the dataKey using the dataOpsChaining notation, then AnalPlot
+        will automatically trigger the required data operations in the required
+        order, if any of the intermediate or final dataset is not already
+        available or calculated in the given AnalPlot instance.
+
+        MyDataSet1>DataOp1>ADataOpWithArgs(Arg1=Val1,Arg2=Val2)>...>DataOpN
+
+        Note that AnalPlot always caches the results of data operations supported
+        by it internally using a user specified dataKey or else a auto generated
+        dataKey (which follows the dataOpsChaining notation). By default it eats
+        memory to gain on processing ;-)
 
         """
 
