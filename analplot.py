@@ -210,6 +210,18 @@ class AnalPlot:
         return theOutDataKey
 
 
+    def _call_calc_rel2mean(self, inDataKey, outDataKey, lArgNames, lArgVals):
+        """ Helper routine to call calc_rel2mean; related to dataKey DataOpsChaining
+            """
+        axis = 0
+        for arg in lArgNames:
+            if (arg == "axis") or (arg == "A"):
+                axis = int(lArgVals[lArgNames.index(arg)])
+            else:
+                print("WARN:AnalPlot:callCalcRel2Mean:Unknown arg[%s]"%(arg))
+        self.dCalcFuncsWithArgs['rel2mean'][0](self, dataKey=inDataKey, outDataKey=outDataKey, axis=axis)
+
+
     def calc_rel2mean(self, dataKey="raw", bHandleRowsOrColsWith0=True, outDataKey="__AUTO__", axis=0):
         """ Calculate the mean for each row or col in the dataset and
             store the result of val/respective_mean for each value
@@ -513,7 +525,6 @@ class AnalPlot:
 
 
     dCalcSimpleFuncs = {
-        "rel2mean": calc_rel2mean,
         "rel2sum": calc_rel2sum,
     }
     dCalcFuncsWithArgs = {
@@ -521,6 +532,7 @@ class AnalPlot:
         "diff": [calc_diff, _call_calc_diff],
         "cumsum": [calc_cumsum, _call_calc_cumsum],
         "movavg": [calc_movavg_ex, _call_calc_movavg],
+        "rel2mean": [calc_rel2mean, _call_calc_rel2mean],
     }
 
 
