@@ -34,6 +34,12 @@ function test_run_10() {
 
 }
 
+function test_run_11() {
+
+	./hkvc-covid19-analtoolkit.py --test_mixmatch
+
+}
+
 function test_run() {
 
 	./hkvc-covid19-analtoolkit.py

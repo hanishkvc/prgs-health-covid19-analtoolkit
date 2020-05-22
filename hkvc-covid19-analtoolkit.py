@@ -140,7 +140,7 @@ def plot_sel(allDS, allSel):
         # Plot data based on Cases/Day>Diff>MovingAvg TopN
         iARow = plot_data_diffTopN(ds, ap, axes, iARow, iCurDS, "cases/day", 8, theSelIds)
         # PlotXY data based on cumsum and diff topN
-        iARow = plot_xy(ds, ap, axes, iARow, iACol, "cases/day", 25, 8, inSelIds)
+        iARow = plot_xy(ds, ap, axes, iARow, iCurDS, "cases/day", 25, 8, theSelIds)
         sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCurDS += 1
     save_fig(fig, sGlobalMsg)
