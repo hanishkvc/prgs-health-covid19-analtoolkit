@@ -87,10 +87,7 @@ def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None
     inset = axes[iARow,iACol].inset_axes([0.13,0.55,0.64,0.4])
     ap.plot(inset, "%s>diff"%(dataKey), plotSelCols=selCols, plotLegend=None, bTranslucent=True,
                 title=theTitle)
-    #ap.plot(axes[iARow+1,iACol], "%s>scale>movavg(T=2)"%(dataKey), plotSelCols=selCols, plotLegend=True,
-    ap.plot(axes[iARow+1,iACol], "%s>rel2sum>movavg(T=2)"%(dataKey), plotSelCols=selCols, plotLegend=True,
-                title=theTitle)
-    iARow = plot_xy(ds, ap, axes, iARow+2, iACol, dataKey, inSelIds)
+    iARow = plot_xy(ds, ap, axes, iARow+1, iACol, dataKey, inSelIds)
     return iARow
 
 
@@ -98,7 +95,7 @@ def plot_sel(allDS, allSel):
     """ Plot a set of interesting/informative/... plots
         Uses the new auto calc as required functionality of AnalPlot
         """
-    fig, axes = ap.subplots(plt,5,len(allDS))
+    fig, axes = ap.subplots(plt,4,len(allDS))
     iCurDS = 0
     sGlobalMsg = ""
     for ds in allDS:
@@ -115,10 +112,10 @@ def plot_sel(allDS, allSel):
         theTitle = "%s-__AUTO__"%(ds.name)
         selCols, theTitle = sel_cols("cases/day>movavg", topN, theSelIds, theTitle, "movavg")
         ap.plot(axes[0,iCurDS], "cases/day>movavg", plotSelCols=selCols, plotLegend=True, title=theTitle, yscale="log")
-        yscale = "log"
         yscale = None
         inset = axes[0,iCurDS].inset_axes([0.36,0.05,0.64,0.4])
-        ap.plot(inset, "cases/day", plotSelCols=selCols, yscale=yscale, bTranslucent=True, numXTicks=4, xtickMultOf=7, title=theTitle)
+        ap.plot(inset, "cases/day>rel2sum>movavg(T=2)", plotSelCols=selCols, yscale=yscale, bTranslucent=True, title=theTitle)
+        #ap.plot(inset, "cases/day", plotSelCols=selCols, yscale=yscale, bTranslucent=True, numXTicks=4, xtickMultOf=7, title=theTitle)
         # Boxplot Raw data
         topN=20
         theTitle = "%s-__AUTO__"%(ds.name)
