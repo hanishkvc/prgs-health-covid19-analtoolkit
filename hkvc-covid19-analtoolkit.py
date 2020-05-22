@@ -67,13 +67,13 @@ def plot_xy(ds, ap, axes, iARow, iACol, dataKey, inSelIds):
                 title=theTitle, xscale="log", yscale="log", plotLegend=True)
     inset = axes[iARow,iACol].inset_axes([0.6,0.10,0.4,0.4])
     if bMODE_SCALEDIFF:
-        ap.calc_scale("%s>diff>movavgT2"%(dataKey), axis=1)
-        yDataKey = "%s>diff>movavgT2>scale"%(dataKey)
+        ap.calc_scale("%s>diff>movavg(T=2)"%(dataKey), axis=1)
+        yDataKey = "%s>diff>movavg(T=2)>scale"%(dataKey)
         sAddTitle = "scale"
     else:
-        yDataKey = "%s>diff>movavgT2"%(dataKey)
+        yDataKey = "%s>diff>movavg(T=2)"%(dataKey)
         sAddTitle = ""
-    selCols, theTitle = sel_cols("%s>diff>movavgT2"%(dataKey), 8, inSelIds, "Cases/Day MAvVsDifMAvT2%s"%(sAddTitle),"DifMAvT2", bSelInclusive=True)
+    selCols, theTitle = sel_cols("%s>diff>movavg(T=2)"%(dataKey), 8, inSelIds, "Cases/Day MAvVsDifMAvT2%s"%(sAddTitle),"DifMAvT2", bSelInclusive=True)
     ap.plotxy(inset, "%s>movavg"%(dataKey), yDataKey, plotSelCols=selCols, bTranslucent=True,
                 title=theTitle, xscale="log", yscale="log", plotLegend=True)
     analplot.textxy_spread("default")
@@ -81,14 +81,14 @@ def plot_xy(ds, ap, axes, iARow, iACol, dataKey, inSelIds):
 
 
 def plot_diffdata(ds, ap, axes, iARow, iACol, dataKey="cases/day", inSelIds=None):
-    selCols, theTitle = sel_cols("%s>diff>movavgT2"%(dataKey), 8, inSelIds, "%s-__AUTO__"%(ds.name),"DiffMovAvgT2")
-    ap.plot(axes[iARow,iACol], "%s>diff>movavgT3"%(dataKey), plotSelCols=selCols, plotLegend=True,
+    selCols, theTitle = sel_cols("%s>diff>movavg(T=2)"%(dataKey), 8, inSelIds, "%s-__AUTO__"%(ds.name),"DiffMovAvgT2")
+    ap.plot(axes[iARow,iACol], "%s>diff>movavg(T=3)"%(dataKey), plotSelCols=selCols, plotLegend=True,
                 title=theTitle)
     inset = axes[iARow,iACol].inset_axes([0.13,0.55,0.64,0.4])
     ap.plot(inset, "%s>diff"%(dataKey), plotSelCols=selCols, plotLegend=None, bTranslucent=True,
                 title=theTitle)
-    #ap.plot(axes[iARow+1,iACol], "%s>scale>movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
-    ap.plot(axes[iARow+1,iACol], "%s>rel2sum>movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True,
+    #ap.plot(axes[iARow+1,iACol], "%s>scale>movavg(T=2)"%(dataKey), plotSelCols=selCols, plotLegend=True,
+    ap.plot(axes[iARow+1,iACol], "%s>rel2sum>movavg(T=2)"%(dataKey), plotSelCols=selCols, plotLegend=True,
                 title=theTitle)
     iARow = plot_xy(ds, ap, axes, iARow+2, iACol, dataKey, inSelIds)
     return iARow
@@ -134,9 +134,9 @@ def plot_sel(allDS, allSel):
 def _plot_movavgs(ap, axes, iRow, iCol, dataKey, selCols, theTitle):
     ap.plot(axes[iRow+0,iCol], dataKey, plotSelCols=selCols, plotLegend=True, title=theTitle)
     ap.plot(axes[iRow+1,iCol], "%s>movavg"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
-    ap.plot(axes[iRow+2,iCol], "%s>movavgT2"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
-    ap.plot(axes[iRow+3,iCol], "%s>movavgT3"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
-    ap.plot(axes[iRow+4,iCol], "%s>movavgT4"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
+    ap.plot(axes[iRow+2,iCol], "%s>movavg(T=2)"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
+    ap.plot(axes[iRow+3,iCol], "%s>movavg(T=3)"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
+    ap.plot(axes[iRow+4,iCol], "%s>movavg(T=4)"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
     return iRow+5
 
 
