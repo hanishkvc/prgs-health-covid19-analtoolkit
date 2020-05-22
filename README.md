@@ -83,6 +83,11 @@ it will timeout.
 ### Overview
 
 These are two useful python modules, which can be used by other programs.
+Go through the source as well as the usage/test sample code at the end
+to understand these modules and use them.
+
+Also from within python one can do help(analplot) or help(datasrc) to get
+details about these python modules.
 
 #### DataSrc
 
