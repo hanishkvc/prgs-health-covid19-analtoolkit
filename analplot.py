@@ -1113,13 +1113,27 @@ class AnalPlot:
             next apply the specified dataOps, lastly select the cols which
             belong to the specified percentile range when the values of the
             last row are looked at.
+
+            Returns: It returns info about selected cols which fall in the given
+            percentile range in two formats.
+            One consisting of a list of corresponding cols' column header values.
+            Another list which is numeric. For positions in selCols list, which
+                correspond to cols in given percentile range, it will contain 1,
+                and in other positions, it will caontain -1.
+                i.e selColsInPercentileRange related positions have 1 and
+                selColsOutsidePercentileRange related positions have -1
+                NOTE that this list is limited to selCols only and not all the
+                cols in the given dataKey.
             """
         d, dCH, dRH = self.get_data_selective(dataKey, selCols, selRows)
         self.set_raw(d, rowHdr=dRH, colHdr=dCH, dataKey='_T1')
         dOpsKey = "%s>%s"%('_T1', dataOps)
         oD, oCH, oRH = self.get_data(dOpsKey)
         selCols, selPers = self.selcols_percentiles(dOpsKey, selPers=percentileRange)
-        return oCH[selCols]
+        dprint("DBUG:AnalPlot:group_simple:selCols:{}".format(selCols))
+        selColsNumBased = np.ones(len(selCols))
+        selColsNumBased[~selCols] = -1
+        return oCH[selCols], selColsNumBased
 
 
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
