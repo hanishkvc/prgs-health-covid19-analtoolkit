@@ -1080,7 +1080,7 @@ class AnalPlot:
                 ax.text(tNX, tNY, tTxt)
         if title != None:
             if title.find("__AUTO__") != -1:
-                sAuto = "%s vs %s"%(dataKeyX, dataKeyY)
+                sAuto = "X%sVsY%s"%(dataKeyX, dataKeyY)
                 title = title.replace("__AUTO__", sAuto)
             ax.set_title(title)
         ax.set_xscale(xscale)
