@@ -1008,7 +1008,7 @@ class AnalPlot:
 
 
     def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None, bTranslucent=False,
-                    colorControlVals=None, colorControlLimits=[0], colorMarkers=['ro','gx']):
+                    colorControlVals=None, colorControlLimits=[0], colorMarkers=['ro','go']):
         """ Plot the specified subset of cols from two related datasets such that
             values of the selected row of these cols in one of the dataset acts as
             the x value and the values of the selected row of these cols in the
@@ -1049,7 +1049,7 @@ class AnalPlot:
                 theColors[cCV < curCLimit] = iColor
                 iColor += 1
             theColors[cCV > curCLimit] = iColor
-            for i in map(lambda x,y,i: ax.plot(x,y,colorMarkers[i]), dX[selRow,:], dY[selRow,:], theColors):
+            for i in map(lambda x,y,i: ax.plot(x,y,colorMarkers[int(i)]), dX[selRow,:], dY[selRow,:], theColors):
                 pass
         #ax.scatter(dX[selRow,:], dY[selRow,:])
         print("DBUG:AnalPlot:plotxy:Cols %s"%(dCHX))
