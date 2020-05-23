@@ -1007,7 +1007,8 @@ class AnalPlot:
         return curX, curY
 
 
-    def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None, bTranslucent=False):
+    def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None, bTranslucent=False,
+                    colorControlVals=None, colorControlLimits=[0], colorMarkers=['ro','gx']):
         """ Plot the specified subset of cols from two related datasets such that
             values of the selected row of these cols in one of the dataset acts as
             the x value and the values of the selected row of these cols in the
@@ -1021,6 +1022,16 @@ class AnalPlot:
             plotSelCols: list of cols which should be represented in the plot.
             title: None or title to plot. Specified title can contain "__AUTO__"
                 __AUTO__ in title replaced by string "<dataKeyX> vs <dataKeyY>"
+
+            Controlling color of Markers:
+            The array colorControlVals, contains values which control what color
+            to show based on where they fit wrt the colorControlLimits array.
+
+            The vals may fall into groups as discussed below
+                values LESSTHAN CCL[0]
+                values WITHIN CCL[i] and CCL[i+1]; for each pair of values in CCL
+                values GREATERTHAN CCL[-1]
+            For each group the color and marker to use is given by colorMarkers
             """
         if DBG_TEXTXY:
             self.dTestPlotXYRect = { 'FR': [0, 1], 'BR': [0, 1] }
@@ -1028,7 +1039,19 @@ class AnalPlot:
             self.dTestPlotXYRect = {}
         dX, dCHX, dRHX = self.get_data_selective(dataKeyX, plotSelCols)
         dY, dCHY, dRHY = self.get_data_selective(dataKeyY, plotSelCols)
-        ax.plot(dX[selRow,:], dY[selRow,:], ".")
+        if type(colorControlVals) == type(None):
+            ax.plot(dX[selRow,:], dY[selRow,:], ".")
+        else:
+            cCV = np.array(colorControlVals)
+            theColors = np.ones(len(cCV))
+            iColor = 0
+            for curCLimit in colorControlLimits:
+                theColors[cCV < curCLimit] = iColor
+                iColor += 1
+            theColors[cCV > curCLimit] = iColor
+            for i in map(lambda x,y,i: ax.plot(x,y,colorMarkers[i]), dX[selRow,:], dY[selRow,:], theColors):
+                pass
+        #ax.scatter(dX[selRow,:], dY[selRow,:])
         print("DBUG:AnalPlot:plotxy:Cols %s"%(dCHX))
         if plotLegend != None:
             textDX = dX[selRow,:]
