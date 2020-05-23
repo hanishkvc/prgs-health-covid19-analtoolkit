@@ -58,8 +58,9 @@ class AnalPlot:
         inturn use that data in a plot or print or further processing. OR ELSE
         one can let AnalPlot to automatically call the required data operations
         on its own to get the required data, even chaining the data operations
-        if required, provided the user refers to the datasets in predefined ways,
-        when using them in a plot or print or another calculation...
+        if required, provided the user refers to the datasets (i.e dataKeys) in
+        predefined ways, when using them in a plot or print or another calculation
+        or when getting the data ...
 
         This predefined notation is called the dataKey dataOpsChaining, because
         in AnalPlot one refers to data stored in it using dataKeys. And if one
@@ -74,6 +75,12 @@ class AnalPlot:
         by it internally using a user specified dataKey or else a auto generated
         dataKey (which follows the dataOpsChaining notation). By default it eats
         memory to gain on processing ;-)
+
+        Implementation Note:
+        get_data and inturn auto calc logic path checks if data is already available
+        before triggering a data operation to generate the data if required. However
+        if one calls the calc_???? function directly, it will redo its calculation
+        even if the result data is already available.
 
         """
 
@@ -582,7 +589,6 @@ class AnalPlot:
         """ Return the specified data and its col and row headers
             Create them by calling required calc functions, if possible.
 
-            TODO: Need to handle movavgT so as to extract times from name
             """
         if dataKey in self.data:
             return self._get_data(dataKey)
