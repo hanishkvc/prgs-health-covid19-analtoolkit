@@ -66,6 +66,22 @@ creeping up should be less. The current default timeout is around
 128 seconds, if libreoffice doesnt start even after 128 seconds, then
 it will timeout.
 
+
+### Data got from
+
+#### India related data got from
+
+http://api.covid19india.org/states_daily_csv/confirmed.csv
+
+This contains data till the day (or the prev date, depending on at what time it was fetched), when it is fetched.
+
+#### World related data got from
+
+https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide-YYYY-MM-DD.xlsx
+
+Note: Replace YYYY, MM and DD with the date one is interested in. It will contain data till that date.
+
+
 ### Misc
 
 #### Other arguments
@@ -105,7 +121,7 @@ user to specify the data in AnalPlot's dataKey DataOpsChaining notation.
 
 dataKey DataOpsChaining notation:
 
-'MyData>DataOp1>DataOp2>DataOpWithArgs3(Arg1=Val1,Arg2=Val2)>...>DataOpN
+'MyData>DataOp1>DataOp2>DataOpWithArgs3(Arg1=Val1,Arg2=Val2)>...>DataOpN'
 
 Available DataOps are
 
