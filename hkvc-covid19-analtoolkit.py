@@ -63,6 +63,8 @@ def sel_cols(dataKey, topN, inSelIds, baseTitle, selTitle, bSelInclusive=True):
 bMODE_SCALEDIFF=True
 def plot_xy(ds, ap, axes, iARow, iACol, dataKey, topNCS, topND, inSelIds):
     """ PlotXY data based on cumsum and diff.movavg topN
+        It also highlights the regions where cases/day is changing
+        in a relatively worse fashion, in red.
         """
     selCols, theTitle = sel_cols("%s>cumsum"%(dataKey), topNCS, inSelIds, "%s-__AUTO__"%(ds.name),"cumsum", bSelInclusive=True)
     if False:
@@ -70,9 +72,9 @@ def plot_xy(ds, ap, axes, iARow, iACol, dataKey, topNCS, topND, inSelIds):
         colorControlVals[0:int(len(colorControlVals)/2)] = -1
     else:
         theGSCols, colorControlVals = ap.group_simple(dataKey, selCols, dataOps="diff>movavg(T=2)")
-        print("DBUG:Main:plot_xy:selCols:{}; GroupSimpleCols:{}".format(selCols, theGSCols))
+        dprint("DBUG:Main:plot_xy:selCols:{}; GroupSimpleCols:{}".format(selCols, theGSCols))
     ap.plotxy(axes[iARow,iACol], "%s>cumsum"%(dataKey), "%s>movavg"%(dataKey), plotSelCols=selCols,
-                title=theTitle, xscale="log", yscale="log", plotLegend=True, colorControlVals=colorControlVals, colorMarkers=['g.','r.'])
+                title=theTitle, xscale="log", yscale="log", plotLegend=True, colorControlVals=colorControlVals, colorMarkers=['g.','ro'])
     inset = axes[iARow,iACol].inset_axes([0.6,0.10,0.4,0.4])
     if bMODE_SCALEDIFF:
         ap.calc_scale("%s>diff>movavg(T=2)"%(dataKey), axis=1)
