@@ -1095,15 +1095,30 @@ class AnalPlot:
                 t.set_alpha(0.4)
 
 
-    def group_simple(self, dataKey, selCols=None, selRows=None, axis=0):
+    def group_simple(self, dataKey, selCols=None, selRows=None, dataOps='movavg', percentileTopN):
         """ Group the specified subset of data from the specified data set
             into few groups based on some simple criteria for now.
             dataKey: the data set to work on
             selCols: the list of cols to select
             selRows: the list of rows to select
-            axis: axis along which to compare and decide the groups.
+            dataOps: dataKey dataOpsChaining notation based set of operations
+                to apply on the selected subset of data.
+            percentileTopN: select the Top N columns from the selected subset
+                of data, by applying percentile on the results of the dataOps
+                on that selected subset of data.
+
+            So put in a simple way:
+            For the specified dataset, first select a subset of rows and cols,
+            next apply the specified dataOps, lastly select the cols which
+            belong to the TopN percentile when the values of the last row are
+            looked at.
             """
         d, dCH, dRH = self.get_data_selective(dataKey, selCols, selRows)
+        self.set_raw(d, rowHdr=dRH, colHdr=dCH, dataKey='_T1')
+        dOpsKey = "%s>%s"%('_T1', dataOps)
+        oD, oCH, oRH = self.get_data(dOpsKey)
+        selCols, selPers = selcols_percentile(dOpsKey, topN=percentileTopN)
+        return oCH[selCols]
 
 
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
