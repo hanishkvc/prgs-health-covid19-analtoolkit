@@ -155,7 +155,7 @@ class AnalPlot:
         return d, dCH, dRH
 
 
-    def get_data_selective(self, dataKey="raw", selCols=None):
+    def get_data_selective(self, dataKey="raw", selCols=None, selRows=None):
         """ Return the specified data and its col and row headers
             ie similar to get_data, except that the returned cols
             correspond to (i.e limited to) specified cols only.
@@ -165,13 +165,16 @@ class AnalPlot:
                 will be selected to be returned.
             """
         d, dCH, dRH = self.get_data(dataKey)
-        if type(selCols) == type(None):
-            tD = d
-            tDCH = dCH
-        else:
-            tD = d[:,selCols]
-            tDCH = dCH[selCols]
-        return tD, tDCH, dRH
+        tD = d
+        tDCH = dCH
+        tDRH = dRH
+        if type(selCols) != type(None):
+            tD = tD[:,selCols]
+            tDCH = tDCH[selCols]
+        if type(selRows) != type(None):
+            tD = tD[selRows,:]
+            tDRH = tDRH[selRows]
+        return tD, tDCH, tDRH
 
 
     def print_data_selective(self, dataKey="raw", selCols=None):
@@ -1090,6 +1093,17 @@ class AnalPlot:
             ax.title.set_alpha(0.4)
             for t in ax.texts:
                 t.set_alpha(0.4)
+
+
+    def group_simple(self, dataKey, selCols=None, selRows=None, axis=0):
+        """ Group the specified subset of data from the specified data set
+            into few groups based on some simple criteria for now.
+            dataKey: the data set to work on
+            selCols: the list of cols to select
+            selRows: the list of rows to select
+            axis: axis along which to compare and decide the groups.
+            """
+        d, dCH, dRH = self.get_data_selective(dataKey, selCols, selRows)
 
 
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
