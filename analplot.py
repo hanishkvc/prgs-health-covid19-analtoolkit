@@ -1009,13 +1009,15 @@ class AnalPlot:
 
     def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None, bTranslucent=False):
         """ Plot the specified subset of cols from two related datasets such that
-            values of these cols in one of the dataset acts as the x value
-            and the values of these cols in the other dataset acts as the y value
+            values of the selected row of these cols in one of the dataset acts as
+            the x value and the values of the selected row of these cols in the
+            other dataset acts as the y value.
+
             ax: the axes or inset in which to plot.
             dataKeyX: the dataset to use for X axis related values.
             dataKeyY: the dataset to use for Y axis related values.
-            selRow: Specifies which row in the given datasets should represent
-                the cols in the xy plot.
+            selRow: Specifies which row in the given x and y datasets' selected
+                cols provides the x and y values for the xy plot.
             plotSelCols: list of cols which should be represented in the plot.
             title: None or title to plot. Specified title can contain "__AUTO__"
                 __AUTO__ in title replaced by string "<dataKeyX> vs <dataKeyY>"
@@ -1042,7 +1044,7 @@ class AnalPlot:
                 aYDelta = tNY-tY
                 print("DBUG:AnalPlot:plotxy:arrow:{}:{},{} to {},{}; {},{}".format(tTxt,tX,tY,tNX,tNY,aXDelta,aYDelta))
                 if not ((aXDelta == 0.0) and (aYDelta == 0.0)):
-                    ax.arrow(tX,tY, aXDelta, aYDelta, color=(1,0,0)).set_alpha(0.3)
+                    ax.arrow(tX,tY, aXDelta, aYDelta, color=(0,0,1)).set_alpha(0.3)
                 ax.text(tNX, tNY, tTxt)
         if title != None:
             if title.find("__AUTO__") != -1:
