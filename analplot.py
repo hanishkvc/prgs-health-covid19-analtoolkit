@@ -1205,6 +1205,15 @@ class AnalPlot:
 
             ax: a plot axes, which can be used to look at a visual view/debug of the
                 underlying logic.
+
+            NOTE: Now the local centers identified are cross-checked to see if they
+            are near enough to merge into a new local center. And this testis done,
+            till we no longer get new collased/merged local centers.
+
+            However this also has the side-effect that, local centers can move away
+            from the edges, through merging. And this can in some cases, lead to the
+            edge point(s) becoming nearer and inturn assigned to a previously unrelated
+            but relatively speaking near in a way local center.
             """
         # 1. The data subset to work on
         dX, dXCH, dXRH = self.get_data_selective(dataKeyX, selCols, selRows)
@@ -1229,16 +1238,19 @@ class AnalPlot:
         # Currently I am not giving weightage to the initial local centers
         # based on how many neighbours it might have. Have to think about
         # this bit more later.
-        lcX,lcY = self._localcenters_neighboursDist(lcX, lcY, curDist*1.2)
-        lcX,lcY = self._localcenters_neighboursDist(lcX, lcY, curDist*1.2)
+        iPrevGrps, iCurGrps = -2, -1
+        while iPrevGrps != iCurGrps:
+            iPrevGrps = iCurGrps
+            lcX,lcY = self._localcenters_neighboursDist(lcX, lcY, curDist*1.2)
+            lc = np.array(list(zip(lcX, lcY)))
+            lc = np.unique(lc, axis=0)
+            iCurGrps = len(lc)
         print("DBUG:AnalPlot:GSNeighbours:lcX,lcY:{}".format(list(zip(lcX, lcY))))
         if ax != None:
             ax.plot(lcX,lcY, "b.")
             ax.axis('square')
             ax.set_xlim(-10,10)
             ax.set_ylim(-10,10)
-        lc = np.array(list(zip(lcX, lcY)))
-        lc = np.unique(lc, axis=0)
         # 3. Map each point of interest(i.e a col in the selected subset)
         # to its nearest local center
         lGroup = []
