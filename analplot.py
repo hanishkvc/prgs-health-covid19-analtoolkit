@@ -640,7 +640,7 @@ class AnalPlot:
                 NOTE: Not just the data, but also their associated col and row
                 header data is also deleted.
             """
-        print("DBUG:AnalPlot:del_data:%s"%(dataKey))
+        dprint("DBUG:AnalPlot:del_data:%s"%(dataKey))
         sDKey, sCHKey, sRHKey = self._get_datakeys(dataKey)
         self.data.pop(sDKey)
         self.data.pop(sCHKey)
@@ -650,7 +650,7 @@ class AnalPlot:
             for key in tKeys:
                 if key.startswith(dataKey):
                     self.data.pop(key)
-        print("DBUG:AnalPlot:del_data:End:%s"%(self.data.keys()))
+        print("DBUG:AnalPlot:del_data:%s:%s"%(dataKey, self.data.keys()))
 
 
     def plot(self, ax, dataKey, plotSelCols=None, title=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None, bTranslucent=False):
@@ -1128,7 +1128,7 @@ class AnalPlot:
                 t.set_alpha(0.4)
 
 
-    def group_simple_percentiles(self, dataKey, selCols=None, selRows=None, dataOps='movavg', percentileRange=[70,100]):
+    def group_simple_percentiles(self, dataKey, selCols=None, selRows=None, dataOps='movavg', percentileRange=[70,100], tempBaseKey="_T_GSP_"):
         """ Group the specified subset of data from the specified data set
             into few groups based on some simple criteria for now.
             dataKey: the data set to work on
@@ -1158,11 +1158,11 @@ class AnalPlot:
                 NOTE that this list is limited to selCols only and not all the
                 cols in the given dataKey.
 
-            NOTE: it uses _GSPT1_ and associated dataOpsChaining as a temporary
-            dataKey namespace for its internal operations.
+            NOTE: it uses _T_GSP_ and associated dataOpsChaining as a temporary
+            dataKey namespace for its internal operations, by default. User can
+            change this by setting the tempBaseKey argument, if required.
             """
         d, dCH, dRH = self.get_data_selective(dataKey, selCols, selRows)
-        tempBaseKey="_GSPT1_"
         self.set_raw(d, rowHdr=dRH, colHdr=dCH, dataKey=tempBaseKey)
         dOpsKey = "%s>%s"%(tempBaseKey, dataOps)
         oD, oCH, oRH = self.get_data(dOpsKey)
@@ -1170,7 +1170,6 @@ class AnalPlot:
         dprint("DBUG:AnalPlot:group_simple_percentiles:selCols:{}".format(selCols))
         selColsNumBased = np.ones(len(selCols))
         selColsNumBased[~selCols] = -1
-        self.del_data(dOpsKey)
         self.del_data(tempBaseKey)
         return oCH[selCols], selColsNumBased
 
