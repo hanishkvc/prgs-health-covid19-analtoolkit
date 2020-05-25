@@ -1179,15 +1179,30 @@ class AnalPlot:
         """ Group the specified subset of data from the given data set
             into few groups based on how near they are to one another
             """
-        # The data subset to work on
+        # 1. The data subset to work on
         dX, dXCH, dXRH = self.get_data_selective(dataKeyX, selCols, selRows)
         dY, dYCH, dYRH = self.get_data_selective(dataKeyY, selCols, selRows)
         theX = dX[-1,:]
         theY = dY[-1,:]
-        # Find local poles
+        # 2. Find local poles
+        # The base distance for neighbours to start with
+        xMin, xMax = np.min(theX), np.max(theX)
+        yMin, yMax = np.min(theY), np.max(theY)
+        curDist = ((xMax-xMin)**2 - (yMax-yMin)**2)/4
+        # Find local groups
+        lX, lY = [], []
         for x,y in zip(theX, theY):
-        
-        # Map each point/col to nearest pole
+            dist = (theX-x)**2 - (theY-y)**2
+            grpX = theX[dist<curDist]
+            grpY = theY[dist<curDist]
+            gxMin, gxMax = np.min(grpX), np.max(grpX)
+            gyMin, gyMax = np.min(grpY), np.max(grpY)
+            tX = np.mean([gxMin, gxMax])
+            tY = np.mean([gyMin, gyMax])
+            lX.append(tX)
+            lY.append(tY)
+        # consolidate local groups
+        # 3. Map each point/col to nearest pole
 
 
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
