@@ -1189,7 +1189,7 @@ class AnalPlot:
         return np.array(lX), np.array(lY)
 
 
-    def group_simple_neighbours(self, dataKeyX, dataKeyY, selCols=None, selRows=None, dataOps='movavg', numOfGroups=4):
+    def group_simple_neighbours(self, dataKeyX, dataKeyY, selCols=None, selRows=None, dataOps='movavg', numOfGroups=4, ax=None):
         """ Group the specified subset of data from the given data set
             into few groups based on how near they are to one another
             """
@@ -1198,7 +1198,9 @@ class AnalPlot:
         dY, dYCH, dYRH = self.get_data_selective(dataKeyY, selCols, selRows)
         theX = dX[-1,:]
         theY = dY[-1,:]
-        print("DBUG:AnalPlot:GSNeighbours:theX {}, theY {}".format(theX, theY))
+        if ax != None:
+            ax.plot(theX,theY, "ro")
+        print("DBUG:AnalPlot:GSNeighbours:theX,theY:{}".format(list(zip(theX, theY))))
         # 2. Find local centers
         # The base distance for neighbours to start with
         xMin, xMax = np.min(theX), np.max(theX)
@@ -1207,12 +1209,19 @@ class AnalPlot:
         print("DBUG:AnalPlot:GSNeighbours:xMin,xMax {},{}:yMin,yMax {},{}:curDist {}".format(xMin,xMax,yMin,yMax,curDist))
         # get the local centers, corresponding to each point of interest
         lcX,lcY = self._localcenters_neighboursDist(theX, theY, curDist)
-        print("DBUG:AnalPlot:GSNeighbours:lcX {}, lcY {}".format(lcX, lcY))
+        if ax != None:
+            ax.plot(lcX,lcY, "g*")
+        print("DBUG:AnalPlot:GSNeighbours:lcX,lcY:{}".format(list(zip(lcX, lcY))))
         # consolidate local centers, in case they are near to one another.
         # Currently I am not giving weightage to the initial local centers
         # based on how many neighbours it might have. Have to think about
         # this bit more later.
         lcX,lcY = self._localcenters_neighboursDist(lcX, lcY, curDist*1.2)
+        if ax != None:
+            ax.plot(lcX,lcY, "b.")
+            ax.axis('square')
+            ax.set_xlim(-10,10)
+            ax.set_ylim(-10,10)
         lc = np.array(list(zip(lcX, lcY)))
         lc = np.unique(lc, axis=0)
         # 3. Map each point of interest(i.e a col in the selected subset)
@@ -1263,7 +1272,7 @@ def test_data_simple():
 
 def test_groupsimple_neighbours():
     fig, axes = ap.subplots(plt, 2, 2)
-    lc, colorControlVals = ap.group_simple_neighbours('MyData>movavg', 'MyData', selCols=None, selRows=None, dataOps='movavg', numOfGroups=4)
+    lc, colorControlVals = ap.group_simple_neighbours('MyData>movavg', 'MyData', selCols=None, selRows=None, ax=axes[1,0])
     print(lc, colorControlVals)
     ap.plotxy(axes[0,0], 'MyData>movavg', 'MyData', colorControlVals=colorControlVals, colorControlLimits=list(range(len(lc))),
                 colorMarkers=['ro','go','bo','mo','vo'][:len(colorControlVals)])
