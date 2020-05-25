@@ -1175,6 +1175,21 @@ class AnalPlot:
         return [oCH[selColsP], oCH[~selColsP]], selColsPNumBased
 
 
+    def _localcenters_neighboursDist(self, theX, theY, theDist):
+        lX, lY = [], []
+        for x,y in zip(theX, theY):
+            dist = (theX-x)**2 + (theY-y)**2
+            grpX = theX[dist<theDist]
+            grpY = theY[dist<theDist]
+            gxMin, gxMax = np.min(grpX), np.max(grpX)
+            gyMin, gyMax = np.min(grpY), np.max(grpY)
+            tX = np.mean([gxMin, gxMax])
+            tY = np.mean([gyMin, gyMax])
+            lX.append(tX)
+            lY.append(tY)
+        return np.array(lX), np.array(lY)
+
+
     def group_simple_neighbours(self, dataKeyX, dataKeyY, selCols=None, selRows=None, dataOps='movavg', numOfGroups=4):
         """ Group the specified subset of data from the given data set
             into few groups based on how near they are to one another
@@ -1184,25 +1199,23 @@ class AnalPlot:
         dY, dYCH, dYRH = self.get_data_selective(dataKeyY, selCols, selRows)
         theX = dX[-1,:]
         theY = dY[-1,:]
-        # 2. Find local poles
+        # 2. Find local centers
         # The base distance for neighbours to start with
         xMin, xMax = np.min(theX), np.max(theX)
         yMin, yMax = np.min(theY), np.max(theY)
-        curDist = ((xMax-xMin)**2 - (yMax-yMin)**2)/4
+        curDist = ((xMax-xMin)**2 + (yMax-yMin)**2)/4
         # Find local groups
-        lX, lY = [], []
-        for x,y in zip(theX, theY):
-            dist = (theX-x)**2 - (theY-y)**2
-            grpX = theX[dist<curDist]
-            grpY = theY[dist<curDist]
-            gxMin, gxMax = np.min(grpX), np.max(grpX)
-            gyMin, gyMax = np.min(grpY), np.max(grpY)
-            tX = np.mean([gxMin, gxMax])
-            tY = np.mean([gyMin, gyMax])
-            lX.append(tX)
-            lY.append(tY)
+        lcX,lcY = self._localcenters_neighboursDist(theX, theY, curDist)
         # consolidate local groups
-        # 3. Map each point/col to nearest pole
+        lcX,lcY = self._localcenters_neighboursDist(lcX, lcY, curDist*1.2)
+        lc = np.array(list(zip(lcX, lcY)))
+        lc = np.unique(lc, axis=0)
+        # 3. Map each point/col to nearest local centers
+        lGroup = []
+        for x,y in zip(theX, theY):
+            dist = (lc[:,0]-x)**2 + (lc[:,1]-y)**2
+            lGroup.append(np.argwhere(dist == np.min(dist))[0][0])
+        return lc, lGroup
 
 
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
