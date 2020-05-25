@@ -1204,13 +1204,17 @@ class AnalPlot:
         xMin, xMax = np.min(theX), np.max(theX)
         yMin, yMax = np.min(theY), np.max(theY)
         curDist = ((xMax-xMin)**2 + (yMax-yMin)**2)/4
-        # Find local groups
+        # get the local centers, corresponding to each point of interest
         lcX,lcY = self._localcenters_neighboursDist(theX, theY, curDist)
-        # consolidate local groups
+        # consolidate local centers, in case they are near to one another.
+        # Currently I am not giving weightage to the initial local centers
+        # based on how many neighbours it might have. Have to think about
+        # this bit more later.
         lcX,lcY = self._localcenters_neighboursDist(lcX, lcY, curDist*1.2)
         lc = np.array(list(zip(lcX, lcY)))
         lc = np.unique(lc, axis=0)
-        # 3. Map each point/col to nearest local centers
+        # 3. Map each point of interest(i.e a col in the selected subset)
+        # to its nearest local center
         lGroup = []
         for x,y in zip(theX, theY):
             dist = (lc[:,0]-x)**2 + (lc[:,1]-y)**2
