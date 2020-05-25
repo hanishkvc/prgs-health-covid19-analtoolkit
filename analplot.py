@@ -623,13 +623,32 @@ class AnalPlot:
         raise NotImplementedError("AnalPlot:get_data:{}:Func[{}] not found...\n\tAvailable DataSets:{}".format(dataKey, sCmd, self.data.keys()))
 
 
-    def del_data(self, dataKey):
+    def del_data(self, dataKey, bDelDataDerivedFromThis=True):
         """ Remove the specified dataKey and its associated data and headers
+
+            bDelDataDerivedFromThis = True: will also delete all data created
+                by using the specified dataKey as the base in the dataOpsChaining,
+                provided the dataKey names of all these data start with dataKey.
+                This is the case if calc_????? functions are allowed to set the
+                dataKey for their calculated data.
+
+                NOTE: If some unrelated dataset is stored in the AnalPlot instance
+                with a dataKey name whose starting part matchs the dataKey passed
+                to del_data, then even it and its derived datasets will/can get
+                deleted.
+
+                NOTE: Not just the data, but also their associated col and row
+                header data is also deleted.
             """
         sDKey, sCHKey, sRHKey = self._get_datakeys(dataKey)
         self.data.pop(sDKey)
         self.data.pop(sCHKey)
         self.data.pop(sRHKey)
+        if bDelDataDerivedFromThis:
+            tKeys = list(self.data.keys())
+            for key in tKeys:
+                if key.startswith(dataKey):
+                    self.data.pop(key)
 
 
     def plot(self, ax, dataKey, plotSelCols=None, title=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None, bTranslucent=False):
