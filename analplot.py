@@ -590,8 +590,11 @@ class AnalPlot:
 
     def get_data(self, dataKey="raw"):
         """ Return the specified data and its col and row headers
-            Create them by calling required calc functions, if possible.
+            Create them by calling required calc functions, if required and possible.
 
+            NOTE: If data is already available, then return it. Only if it is not
+            there, try to create it by assuming that the given dataKey follows
+            dataKey dataOpsChaining notatation and inturn calling specified dataOps.
             """
         if dataKey in self.data:
             return self._get_data(dataKey)
@@ -618,6 +621,15 @@ class AnalPlot:
             return self._get_data(dataKey)
         # Dont understand the data ops function being refered
         raise NotImplementedError("AnalPlot:get_data:{}:Func[{}] not found...\n\tAvailable DataSets:{}".format(dataKey, sCmd, self.data.keys()))
+
+
+    def del_data(self, dataKey):
+        """ Remove the specified dataKey and its associated data and headers
+            """
+        sDKey, sCHKey, sRHKey = self._get_datakeys(dataKey)
+        self.data.pop(sDKey)
+        self.data.pop(sCHKey)
+        self.data.pop(sRHKey)
 
 
     def plot(self, ax, dataKey, plotSelCols=None, title=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None, bTranslucent=False):
@@ -1124,15 +1136,21 @@ class AnalPlot:
                 selColsOutsidePercentileRange related positions have -1
                 NOTE that this list is limited to selCols only and not all the
                 cols in the given dataKey.
+
+            NOTE: it uses _GSPT1_ and associated dataOpsChaining as a temporary
+            dataKey namespace for its internal operations.
             """
         d, dCH, dRH = self.get_data_selective(dataKey, selCols, selRows)
-        self.set_raw(d, rowHdr=dRH, colHdr=dCH, dataKey='_T1')
-        dOpsKey = "%s>%s"%('_T1', dataOps)
+        tempBaseKey="_GSPT1_"
+        self.set_raw(d, rowHdr=dRH, colHdr=dCH, dataKey=tempBaseKey)
+        dOpsKey = "%s>%s"%(tempBaseKey, dataOps)
         oD, oCH, oRH = self.get_data(dOpsKey)
         selCols, selPers = self.selcols_percentiles(dOpsKey, selPers=percentileRange)
         dprint("DBUG:AnalPlot:group_simple_percentiles:selCols:{}".format(selCols))
         selColsNumBased = np.ones(len(selCols))
         selColsNumBased[~selCols] = -1
+        self.del_data(dOpsKey)
+        self.del_data(tempBaseKey)
         return oCH[selCols], selColsNumBased
 
 
