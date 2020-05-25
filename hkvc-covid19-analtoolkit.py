@@ -71,7 +71,7 @@ def plot_xy(ds, ap, axes, iARow, iACol, dataKey, topNCS, topND, inSelIds):
         colorControlVals = np.ones(ap.data[dataKey].shape[1])
         colorControlVals[0:int(len(colorControlVals)/2)] = -1
     else:
-        theGSCols, colorControlVals = ap.group_simple(dataKey, selCols, dataOps="diff>movavg(T=2)")
+        theGSCols, colorControlVals = ap.group_simple_percentiles(dataKey, selCols, dataOps="diff>movavg(T=2)")
         dprint("DBUG:Main:plot_xy:selCols:{}; GroupSimpleCols:{}".format(selCols, theGSCols))
     ap.plotxy(axes[iARow,iACol], "%s>cumsum"%(dataKey), "%s>movavg"%(dataKey), plotSelCols=selCols,
                 title=theTitle, xscale="log", yscale="log", plotLegend=True, colorControlVals=colorControlVals, colorMarkers=['g.','ro'])

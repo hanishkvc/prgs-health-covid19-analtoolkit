@@ -1095,7 +1095,7 @@ class AnalPlot:
                 t.set_alpha(0.4)
 
 
-    def group_simple(self, dataKey, selCols=None, selRows=None, dataOps='movavg', percentileRange=[70,100]):
+    def group_simple_percentiles(self, dataKey, selCols=None, selRows=None, dataOps='movavg', percentileRange=[70,100]):
         """ Group the specified subset of data from the specified data set
             into few groups based on some simple criteria for now.
             dataKey: the data set to work on
@@ -1130,7 +1130,7 @@ class AnalPlot:
         dOpsKey = "%s>%s"%('_T1', dataOps)
         oD, oCH, oRH = self.get_data(dOpsKey)
         selCols, selPers = self.selcols_percentiles(dOpsKey, selPers=percentileRange)
-        dprint("DBUG:AnalPlot:group_simple:selCols:{}".format(selCols))
+        dprint("DBUG:AnalPlot:group_simple_percentiles:selCols:{}".format(selCols))
         selColsNumBased = np.ones(len(selCols))
         selColsNumBased[~selCols] = -1
         return oCH[selCols], selColsNumBased
