@@ -1175,6 +1175,12 @@ class AnalPlot:
         return [oCH[selColsP], oCH[~selColsP]], selColsPNumBased
 
 
+    def group_simple_neighbours(self, dataKey, selCols=None, selRows=None, dataOps='movavg', numOfGroups=4):
+        """ Group the specified subset of data from the given data set
+            into few groups based on how near they are to one another
+            """
+
+
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
         """ Same as pyplot's subplots, except that this also sets the size
             of the figure, based on how many rows and cols are there.
