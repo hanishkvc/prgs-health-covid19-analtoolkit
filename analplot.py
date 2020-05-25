@@ -1217,6 +1217,7 @@ class AnalPlot:
         # based on how many neighbours it might have. Have to think about
         # this bit more later.
         lcX,lcY = self._localcenters_neighboursDist(lcX, lcY, curDist*1.2)
+        lcX,lcY = self._localcenters_neighboursDist(lcX, lcY, curDist*1.2)
         if ax != None:
             ax.plot(lcX,lcY, "b.")
             ax.axis('square')
@@ -1275,7 +1276,7 @@ def test_groupsimple_neighbours():
     lc, colorControlVals = ap.group_simple_neighbours('MyData>movavg', 'MyData', selCols=None, selRows=None, ax=axes[1,0])
     print(lc, colorControlVals)
     ap.plotxy(axes[0,0], 'MyData>movavg', 'MyData', colorControlVals=colorControlVals, colorControlLimits=list(range(len(lc))),
-                colorMarkers=['ro','go','bo','mo','vo'][:len(colorControlVals)])
+                colorMarkers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'][:len(lc)])
     fig.savefig('/tmp/analplot_test2.png')
     plt.show()
 
