@@ -1177,7 +1177,7 @@ class AnalPlot:
     def _localcenters_neighboursDist(self, theX, theY, theDist):
         lX, lY = [], []
         for x,y in zip(theX, theY):
-            dist = (theX-x)**2 + (theY-y)**2
+            dist = np.sqrt((theX-x)**2 + (theY-y)**2)
             grpX = theX[dist<theDist]
             grpY = theY[dist<theDist]
             gxMin, gxMax = np.min(grpX), np.max(grpX)
@@ -1203,8 +1203,8 @@ class AnalPlot:
         # The base distance for neighbours to start with
         xMin, xMax = np.min(theX), np.max(theX)
         yMin, yMax = np.min(theY), np.max(theY)
-        curDist = ((xMax-xMin)**2 + (yMax-yMin)**2)/4
-        print("DBUG:AnalPlot:GSNeighbours:curDist {}".format(curDist))
+        curDist = np.sqrt((xMax-xMin)**2 + (yMax-yMin)**2)/4
+        print("DBUG:AnalPlot:GSNeighbours:xMin,xMax {},{}:yMin,yMax {},{}:curDist {}".format(xMin,xMax,yMin,yMax,curDist))
         # get the local centers, corresponding to each point of interest
         lcX,lcY = self._localcenters_neighboursDist(theX, theY, curDist)
         print("DBUG:AnalPlot:GSNeighbours:lcX {}, lcY {}".format(lcX, lcY))
@@ -1219,7 +1219,7 @@ class AnalPlot:
         # to its nearest local center
         lGroup = []
         for x,y in zip(theX, theY):
-            dist = (lc[:,0]-x)**2 + (lc[:,1]-y)**2
+            dist = np.sqrt((lc[:,0]-x)**2 + (lc[:,1]-y)**2)
             lGroup.append(np.argwhere(dist == np.min(dist))[0][0])
         return lc, lGroup
 
