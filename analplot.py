@@ -1189,9 +1189,22 @@ class AnalPlot:
         return np.array(lX), np.array(lY)
 
 
-    def group_simple_neighbours(self, dataKeyX, dataKeyY, selCols=None, selRows=None, dataOps='movavg', numOfGroups=4, ax=None):
-        """ Group the specified subset of data from the given data set
-            into few groups based on how near they are to one another
+    def group_simple_neighbours(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, ax=None):
+        """ Group the specified subset of data from the given dataset into few groups
+            based on how near they are to one another.
+
+            dataKeyX, dataKeyY: specify the datasets to use for x and y axis.
+            selCols, selRows: allows one to use a subset of the given dataset, for
+                grouping. The other rows and cols of the datasets are ignored while
+                comparing and grouping.
+
+            diagRatio: the ratio of total data bounding rectangle diagonal distance,
+                which is used to decide whether two pointsOfInterest are neighbours
+                or not. Smaller the ratio more the groups, larger the ratio less the
+                number of groups into which the data is segregated/grouped.
+
+            ax: a plot axes, which can be used to look at a visual view/debug of the
+                underlying logic.
             """
         # 1. The data subset to work on
         dX, dXCH, dXRH = self.get_data_selective(dataKeyX, selCols, selRows)
@@ -1205,7 +1218,7 @@ class AnalPlot:
         # The base distance for neighbours to start with
         xMin, xMax = np.min(theX), np.max(theX)
         yMin, yMax = np.min(theY), np.max(theY)
-        curDist = np.sqrt((xMax-xMin)**2 + (yMax-yMin)**2)/4
+        curDist = np.sqrt((xMax-xMin)**2 + (yMax-yMin)**2)*diagRatio
         print("DBUG:AnalPlot:GSNeighbours:xMin,xMax {},{}:yMin,yMax {},{}:curDist {}".format(xMin,xMax,yMin,yMax,curDist))
         # get the local centers, corresponding to each point of interest
         lcX,lcY = self._localcenters_neighboursDist(theX, theY, curDist)
@@ -1218,6 +1231,7 @@ class AnalPlot:
         # this bit more later.
         lcX,lcY = self._localcenters_neighboursDist(lcX, lcY, curDist*1.2)
         lcX,lcY = self._localcenters_neighboursDist(lcX, lcY, curDist*1.2)
+        print("DBUG:AnalPlot:GSNeighbours:lcX,lcY:{}".format(list(zip(lcX, lcY))))
         if ax != None:
             ax.plot(lcX,lcY, "b.")
             ax.axis('square')
