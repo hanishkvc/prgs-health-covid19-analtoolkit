@@ -1084,12 +1084,10 @@ class AnalPlot:
             ax.plot(dX[selRow,:], dY[selRow,:], ".")
         else:
             cCV = np.array(colorControlVals)
-            theColors = np.ones(len(cCV))
-            iColor = 0
-            for curCLimit in colorControlLimits:
-                theColors[cCV < curCLimit] = iColor
-                iColor += 1
-            theColors[cCV > curCLimit] = iColor
+            theColors = np.zeros(len(cCV))
+            print("DBUG:AnalPlot:plotxy:cCV {}, cCL {} ".format(colorControlVals, colorControlLimits))
+            for iColor in range(len(colorControlLimits)):
+                theColors[cCV > colorControlLimits[iColor]] = iColor+1
             print("DBUG:AnalPlot:plotxy:theColors:{}".format(theColors))
             for i in map(lambda x,y,iC: ax.plot(x,y,colorMarkers[int(iC)]), dX[selRow,:], dY[selRow,:], theColors):
                 pass
@@ -1267,7 +1265,7 @@ def test_groupsimple_neighbours():
     fig, axes = ap.subplots(plt, 2, 2)
     lc, colorControlVals = ap.group_simple_neighbours('MyData>movavg', 'MyData', selCols=None, selRows=None, dataOps='movavg', numOfGroups=4)
     print(lc, colorControlVals)
-    ap.plotxy(axes[0,0], 'MyData>movavg', 'MyData', colorControlVals=colorControlVals, colorControlLimits=list(range(len(colorControlVals))),
+    ap.plotxy(axes[0,0], 'MyData>movavg', 'MyData', colorControlVals=colorControlVals, colorControlLimits=list(range(len(lc))),
                 colorMarkers=['ro','go','bo','mo','vo'][:len(colorControlVals)])
     fig.savefig('/tmp/analplot_test2.png')
     plt.show()
