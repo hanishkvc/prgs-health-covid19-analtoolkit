@@ -1175,10 +1175,19 @@ class AnalPlot:
         return [oCH[selColsP], oCH[~selColsP]], selColsPNumBased
 
 
-    def group_simple_neighbours(self, dataKey, selCols=None, selRows=None, dataOps='movavg', numOfGroups=4):
+    def group_simple_neighbours(self, dataKeyX, dataKeyY, selCols=None, selRows=None, dataOps='movavg', numOfGroups=4):
         """ Group the specified subset of data from the given data set
             into few groups based on how near they are to one another
             """
+        # The data subset to work on
+        dX, dXCH, dXRH = self.get_data_selective(dataKeyX, selCols, selRows)
+        dY, dYCH, dYRH = self.get_data_selective(dataKeyY, selCols, selRows)
+        theX = dX[-1,:]
+        theY = dY[-1,:]
+        # Find local poles
+        for x,y in zip(theX, theY):
+        
+        # Map each point/col to nearest pole
 
 
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
