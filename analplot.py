@@ -640,7 +640,6 @@ class AnalPlot:
                 NOTE: Not just the data, but also their associated col and row
                 header data is also deleted.
             """
-        dprint("DBUG:AnalPlot:del_data:%s"%(dataKey))
         sDKey, sCHKey, sRHKey = self._get_datakeys(dataKey)
         self.data.pop(sDKey)
         self.data.pop(sCHKey)
@@ -650,7 +649,7 @@ class AnalPlot:
             for key in tKeys:
                 if key.startswith(dataKey):
                     self.data.pop(key)
-        print("DBUG:AnalPlot:del_data:%s:%s"%(dataKey, self.data.keys()))
+        dprint("DBUG:AnalPlot:del_data:%s:%s"%(dataKey, self.data.keys()))
 
 
     def plot(self, ax, dataKey, plotSelCols=None, title=None, plotLegend=None, plotXTickGap=None, numXTicks=None, xtickMultOf=1, yscale=None, bTranslucent=False):
