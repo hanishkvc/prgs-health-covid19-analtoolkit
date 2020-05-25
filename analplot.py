@@ -1129,10 +1129,10 @@ class AnalPlot:
 
     def group_simple_percentiles(self, dataKey, selCols=None, selRows=None, dataOps='movavg', percentileRange=[70,100], tempBaseKey="_T_GSP_"):
         """ Group the specified subset of data from the specified data set
-            into few groups based on some simple criteria for now.
-            dataKey: the data set to work on
-            selCols: the list of cols to select
-            selRows: the list of rows to select
+            into few groups based on the simple criteria of percentiles.
+            dataKey: the base data set to work on
+            selCols: the list of cols which belong to the specified subset
+            selRows: the list of rows which belong to the specified subset
             dataOps: dataKey dataOpsChaining notation based set of operations
                 to apply on the selected subset of data.
             percentileRange: select columns which fall into the specified
@@ -1148,7 +1148,9 @@ class AnalPlot:
 
             Returns: It returns info about selected cols which fall in the given
             percentile range in two formats.
-            One consisting of a list of corresponding cols' column header values.
+            One list consisting of
+                the list of corresponding/selected cols' column header values.
+                the list of non selected cols' column header values.
             Another list which is numeric. For positions in selCols list, which
                 correspond to cols in given percentile range, it will contain 1,
                 and in other positions, it will caontain -1.
@@ -1165,12 +1167,12 @@ class AnalPlot:
         self.set_raw(d, rowHdr=dRH, colHdr=dCH, dataKey=tempBaseKey)
         dOpsKey = "%s>%s"%(tempBaseKey, dataOps)
         oD, oCH, oRH = self.get_data(dOpsKey)
-        selCols, selPers = self.selcols_percentiles(dOpsKey, selPers=percentileRange)
-        dprint("DBUG:AnalPlot:group_simple_percentiles:selCols:{}".format(selCols))
-        selColsNumBased = np.ones(len(selCols))
-        selColsNumBased[~selCols] = -1
+        selColsP, selPers = self.selcols_percentiles(dOpsKey, selPers=percentileRange)
+        dprint("DBUG:AnalPlot:group_simple_percentiles:selColsP:{}".format(selColsP))
+        selColsPNumBased = np.ones(len(selColsP))
+        selColsPNumBased[~selColsP] = -1
         self.del_data(tempBaseKey)
-        return oCH[selCols], selColsNumBased
+        return [oCH[selColsP], oCH[~selColsP]], selColsPNumBased
 
 
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
