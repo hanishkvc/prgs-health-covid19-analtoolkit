@@ -1090,7 +1090,8 @@ class AnalPlot:
                 theColors[cCV < curCLimit] = iColor
                 iColor += 1
             theColors[cCV > curCLimit] = iColor
-            for i in map(lambda x,y,i: ax.plot(x,y,colorMarkers[int(i)]), dX[selRow,:], dY[selRow,:], theColors):
+            print("DBUG:AnalPlot:plotxy:theColors:{}".format(theColors))
+            for i in map(lambda x,y,iC: ax.plot(x,y,colorMarkers[int(iC)]), dX[selRow,:], dY[selRow,:], theColors):
                 pass
         #ax.scatter(dX[selRow,:], dY[selRow,:])
         print("DBUG:AnalPlot:plotxy:Cols %s"%(dCHX))
@@ -1199,13 +1200,16 @@ class AnalPlot:
         dY, dYCH, dYRH = self.get_data_selective(dataKeyY, selCols, selRows)
         theX = dX[-1,:]
         theY = dY[-1,:]
+        print("DBUG:AnalPlot:GSNeighbours:theX {}, theY {}".format(theX, theY))
         # 2. Find local centers
         # The base distance for neighbours to start with
         xMin, xMax = np.min(theX), np.max(theX)
         yMin, yMax = np.min(theY), np.max(theY)
         curDist = ((xMax-xMin)**2 + (yMax-yMin)**2)/4
+        print("DBUG:AnalPlot:GSNeighbours:curDist {}".format(curDist))
         # get the local centers, corresponding to each point of interest
         lcX,lcY = self._localcenters_neighboursDist(theX, theY, curDist)
+        print("DBUG:AnalPlot:GSNeighbours:lcX {}, lcY {}".format(lcX, lcY))
         # consolidate local centers, in case they are near to one another.
         # Currently I am not giving weightage to the initial local centers
         # based on how many neighbours it might have. Have to think about
@@ -1259,6 +1263,17 @@ def test_data_simple():
 
 
 
+def test_groupsimple_neighbours():
+    fig, axes = ap.subplots(plt, 2, 2)
+    lc, colorControlVals = ap.group_simple_neighbours('MyData>movavg', 'MyData', selCols=None, selRows=None, dataOps='movavg', numOfGroups=4)
+    print(lc, colorControlVals)
+    ap.plotxy(axes[0,0], 'MyData>movavg', 'MyData', colorControlVals=colorControlVals, colorControlLimits=list(range(len(colorControlVals))),
+                colorMarkers=['ro','go','bo','mo','vo'][:len(colorControlVals)])
+    fig.savefig('/tmp/analplot_test2.png')
+    plt.show()
+
+
+
 if __name__ == "__main__":
 
     import matplotlib.pyplot as plt
@@ -1306,8 +1321,11 @@ if __name__ == "__main__":
     ap.print_data_selective('MyData>a1movavg')
     # Save and Show plots
     fig.set_tight_layout(True)
-    fig.savefig('/tmp/analplot_test.png')
+    fig.savefig('/tmp/analplot_test1.png')
     plt.show()
+
+    test_groupsimple_neighbours()
+
 
 
 # vim: set softtabstop=4 shiftwidth=4 expandtab: #
