@@ -1320,9 +1320,9 @@ def test_groupsimple_neighbours():
     # Limit set based on data space over which random data is generated
     axes[1,0].set_xlim(-10,10)
     axes[1,0].set_ylim(-10,10)
-    print(lc, colorControlVals)
+    print("INFO:GSNeighboursTest:\n\tlc {},\n\t colorControlVals {}".format(lc, colorControlVals))
     ap.plotxy(axes[0,0], 'GSNMyData>movavg', 'GSNMyData', colorControlVals=colorControlVals, colorControlLimits=list(range(len(lc))),
-                colorMarkers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'][:len(lc)])
+                colorMarkers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'])
     fig.savefig('/tmp/analplot_test2.png')
     plt.show()
 
