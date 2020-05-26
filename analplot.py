@@ -1260,9 +1260,6 @@ class AnalPlot:
             print("DBUG:AnalPlot:GSNeighbours:lc:{}".format(lc))
         if ax != None:
             ax.plot(lcX,lcY, "b.")
-            ax.axis('square')
-            ax.set_xlim(-10,10)
-            ax.set_ylim(-10,10)
         # 3. Map each point of interest(i.e a col in the selected subset)
         # to its nearest local center
         lGroup = []
@@ -1310,8 +1307,13 @@ def test_data_simple():
 
 
 def test_groupsimple_neighbours():
+    """ Test groupsimple_neighbours logic by using some random data
+        """
     fig, axes = ap.subplots(plt, 2, 2)
     lc, colorControlVals = ap.groupsimple_neighbours('MyData>movavg', 'MyData', selCols=None, selRows=None, ax=axes[1,0])
+    axes[1,0].axis('square')
+    axes[1,0].set_xlim(-10,10)
+    axes[1,0].set_ylim(-10,10)
     print(lc, colorControlVals)
     ap.plotxy(axes[0,0], 'MyData>movavg', 'MyData', colorControlVals=colorControlVals, colorControlLimits=list(range(len(lc))),
                 colorMarkers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'][:len(lc)])
