@@ -1283,7 +1283,9 @@ class AnalPlot:
             maxTries: How many times one should attempt.
 
             NOTE: It doesnt try to accelerate or declerate the diagRatio delta,
-            based on currently achieved numOfGroups and tries remaining.
+            based on currently achieved numOfGroups and tries remaining. However larger
+            maxTries has better probability of achieving the goal, if things are
+            tight.
 
             NOTE: Do note that the plot based visual debugging of GSNeighbour logic
             doesnt map cleanly to GSNeighboursEx logic, which calls GSN multiple
@@ -1345,9 +1347,10 @@ def test_groupsimple_neighbours():
     """ Test groupsimple_neighbours logic by using some random data
         """
     fig, axes = ap.subplots(plt, 2, 2)
-    t1 = np.random.uniform(-10,10,(20,10))
+    t1 = np.random.uniform(-10,10,(20,20))
     ap.set_raw(t1,dataKey='GSNMyData')
-    lc, markerControlVals = ap.groupsimple_neighbours_ex('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None, ax=axes[1,0])
+    ap.print_data_selective('GSNMyData')
+    lc, markerControlVals = ap.groupsimple_neighbours_ex('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None, maxTries=16, ax=axes[1,0])
     axes[1,0].axis('square')
     # Limit set based on data space over which random data is generated
     axes[1,0].set_xlim(-10,10)
