@@ -1089,8 +1089,9 @@ class AnalPlot:
             for iColor in range(len(colorControlLimits)):
                 theColors[cCV > colorControlLimits[iColor]] = iColor+1
             print("DBUG:AnalPlot:plotxy:theColors:{}".format(theColors))
-            for i in map(lambda x,y,iC: ax.plot(x,y,colorMarkers[int(iC)]), dX[selRow,:], dY[selRow,:], theColors):
-                pass
+            #list(map(lambda x,y,iC: ax.plot(x,y,colorMarkers[int(iC)]), dX[selRow,:], dY[selRow,:], theColors))
+            for  x,y,iC in zip(dX[selRow,:], dY[selRow,:], theColors):
+                ax.plot(x,y,colorMarkers[int(iC)])
         #ax.scatter(dX[selRow,:], dY[selRow,:])
         print("DBUG:AnalPlot:plotxy:Cols %s"%(dCHX))
         if plotLegend != None:
@@ -1191,15 +1192,17 @@ class AnalPlot:
 
     def groupsimple_neighbours(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, ax=None):
         """ Group the specified subset of data from the given dataset into few groups
-            based on how near they are to one another.
+            based on how near they are to one another, based on the values in the
+            two specified subsets.
 
             dataKeyX, dataKeyY: specify the datasets to use for x and y axis. Or put
                 differently are the values of two parameters for a set of objects of
-                the study, which are being relatively compared among themselves as 
+                the study, which are being relatively compared among themselves as
                 well as between them.
             selCols, selRows: allows one to use a subset of the given dataset, for
                 grouping. The other rows and cols of the datasets are ignored while
-                comparing and grouping.
+                comparing and grouping. If there are more than 1 row, in the subset,
+                then the last row's data will be used for comparision and grouping.
 
             diagRatio: the ratio of total data bounding rectangle diagonal distance,
                 which is used to decide whether two pointsOfInterest are neighbours
