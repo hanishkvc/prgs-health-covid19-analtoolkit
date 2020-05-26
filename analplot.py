@@ -1065,13 +1065,13 @@ class AnalPlot:
                 __AUTO__ in title replaced by string "<dataKeyX> vs <dataKeyY>"
 
             Controlling Markers:
-            The array markerControlVals, contains values which control what color
+            The array markerControlVals, contains values which control what marker
             to show based on where they fit wrt the markerControlLimits array.
 
             The vals may fall into groups as discussed below
-                values LESSTHAN CCL[0]
-                values WITHIN CCL[i] and CCL[i+1]; for each pair of values in CCL
-                values GREATERTHAN CCL[-1]
+                values LESSTHAN MCL[0]
+                values WITHIN MCL[i] and MCL[i+1]; for each pair of values in MCL
+                values GREATERTHAN MCL[-1]
             For each group the color and marker to use is given by markers
             """
         if DBG_TEXTXY:
@@ -1083,15 +1083,15 @@ class AnalPlot:
         if type(markerControlVals) == type(None):
             ax.plot(dX[selRow,:], dY[selRow,:], ".")
         else:
-            cCV = np.array(markerControlVals)
-            theColors = np.zeros(len(cCV))
-            print("DBUG:AnalPlot:plotxy:cCV {}, cCL {} ".format(markerControlVals, markerControlLimits))
-            for iColor in range(len(markerControlLimits)):
-                theColors[cCV > markerControlLimits[iColor]] = iColor+1
-            print("DBUG:AnalPlot:plotxy:theColors:{}".format(theColors))
-            #list(map(lambda x,y,iC: ax.plot(x,y,markers[int(iC)]), dX[selRow,:], dY[selRow,:], theColors))
-            for  x,y,iC in zip(dX[selRow,:], dY[selRow,:], theColors):
-                ax.plot(x,y,markers[int(iC)])
+            mCV = np.array(markerControlVals)
+            theMarkers = np.zeros(len(mCV))
+            print("DBUG:AnalPlot:plotxy:mCV {}, mCL {} ".format(markerControlVals, markerControlLimits))
+            for iMarker in range(len(markerControlLimits)):
+                theMarkers[mCV > markerControlLimits[iMarker]] = iMarker+1
+            print("DBUG:AnalPlot:plotxy:theMarkers:{}".format(theMarkers))
+            #list(map(lambda x,y,iM: ax.plot(x,y,markers[int(iM)]), dX[selRow,:], dY[selRow,:], theMarkers))
+            for  x,y,iM in zip(dX[selRow,:], dY[selRow,:], theMarkers):
+                ax.plot(x,y,markers[int(iM)])
         #ax.scatter(dX[selRow,:], dY[selRow,:])
         print("DBUG:AnalPlot:plotxy:Cols %s"%(dCHX))
         if plotLegend != None:
