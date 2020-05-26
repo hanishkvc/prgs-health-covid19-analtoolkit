@@ -1284,15 +1284,24 @@ class AnalPlot:
 
             NOTE: It doesnt try to accelerate or declerate the diagRatio delta,
             based on currently achieved numOfGroups and tries remaining.
+
+            NOTE: Do note that the plot based visual debugging of GSNeighbour logic
+            doesnt map cleanly to GSNeighboursEx logic, which calls GSN multiple
+            times, thus leading to the visual debug data of multiple GSN iterations
+            overlapping onto the same plot.
+
+            However it does give a very very rough idea still. And as always for maxTries
+            of 1 it will still give proper visual debug plot.
             """
         for i in range(maxTries):
-            localCenters, lGroupMap = self.groupsimple_neighbours(dataKeyX, dataKeyY, selCols, selRows, diagRatio=diagRatio, ax)
+            localCenters, lGroupMap = self.groupsimple_neighbours(dataKeyX, dataKeyY, selCols, selRows, diagRatio, ax)
             if len(localCenters) > numOfGroups:
                 diagRatio = diagRatio*1.2
             elif len(localCenters) < numOfGroups:
                 diagRatio = diagRatio*0.8
             else:
                 break
+        return localCenters, lGroupMap
 
 
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
