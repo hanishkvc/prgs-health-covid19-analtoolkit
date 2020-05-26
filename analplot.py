@@ -1272,6 +1272,29 @@ class AnalPlot:
         return lc, lGroup
 
 
+    def groupsimple_neighbours_ex(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, numOfGroups=4, maxTries=8, ax=None):
+        """ Try to group the specified data elements into the specified number of groups,
+            within a given number of attempts.
+
+            This manipulates diagRatio to try and control the number of groups the GSN
+            logic will try to collase/group things into.
+
+            numOfGroups: The number of groups to aim for.
+            maxTries: How many times one should attempt.
+
+            NOTE: It doesnt try to accelerate or declerate the diagRatio delta,
+            based on currently achieved numOfGroups and tries remaining.
+            """
+        for i in range(maxTries):
+            localCenters, lGroupMap = self.groupsimple_neighbours(dataKeyX, dataKeyY, selCols, selRows, diagRatio=diagRatio, ax)
+            if len(localCenters) > numOfGroups:
+                diagRatio = diagRatio*1.2
+            elif len(localCenters) < numOfGroups:
+                diagRatio = diagRatio*0.8
+            else:
+                break
+
+
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
         """ Same as pyplot's subplots, except that this also sets the size
             of the figure, based on how many rows and cols are there.
@@ -1315,7 +1338,7 @@ def test_groupsimple_neighbours():
     fig, axes = ap.subplots(plt, 2, 2)
     t1 = np.random.uniform(-10,10,(20,10))
     ap.set_raw(t1,dataKey='GSNMyData')
-    lc, colorControlVals = ap.groupsimple_neighbours('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None, ax=axes[1,0])
+    lc, colorControlVals = ap.groupsimple_neighbours_ex('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None, ax=axes[1,0])
     axes[1,0].axis('square')
     # Limit set based on data space over which random data is generated
     axes[1,0].set_xlim(-10,10)
