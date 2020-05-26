@@ -1049,7 +1049,7 @@ class AnalPlot:
 
 
     def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None, bTranslucent=False,
-                    markerControlVals=None, markerControlLimits=[0], colorMarkers=['ro','go']):
+                    markerControlVals=None, markerControlLimits=[0], markers=['ro','go']):
         """ Plot the specified subset of cols from two related datasets such that
             values of the selected row of these cols in one of the dataset acts as
             the x value and the values of the selected row of these cols in the
@@ -1064,7 +1064,7 @@ class AnalPlot:
             title: None or title to plot. Specified title can contain "__AUTO__"
                 __AUTO__ in title replaced by string "<dataKeyX> vs <dataKeyY>"
 
-            Controlling color of Markers:
+            Controlling Markers:
             The array markerControlVals, contains values which control what color
             to show based on where they fit wrt the markerControlLimits array.
 
@@ -1072,7 +1072,7 @@ class AnalPlot:
                 values LESSTHAN CCL[0]
                 values WITHIN CCL[i] and CCL[i+1]; for each pair of values in CCL
                 values GREATERTHAN CCL[-1]
-            For each group the color and marker to use is given by colorMarkers
+            For each group the color and marker to use is given by markers
             """
         if DBG_TEXTXY:
             self.dTestPlotXYRect = { 'FR': [0, 1], 'BR': [0, 1] }
@@ -1089,9 +1089,9 @@ class AnalPlot:
             for iColor in range(len(markerControlLimits)):
                 theColors[cCV > markerControlLimits[iColor]] = iColor+1
             print("DBUG:AnalPlot:plotxy:theColors:{}".format(theColors))
-            #list(map(lambda x,y,iC: ax.plot(x,y,colorMarkers[int(iC)]), dX[selRow,:], dY[selRow,:], theColors))
+            #list(map(lambda x,y,iC: ax.plot(x,y,markers[int(iC)]), dX[selRow,:], dY[selRow,:], theColors))
             for  x,y,iC in zip(dX[selRow,:], dY[selRow,:], theColors):
-                ax.plot(x,y,colorMarkers[int(iC)])
+                ax.plot(x,y,markers[int(iC)])
         #ax.scatter(dX[selRow,:], dY[selRow,:])
         print("DBUG:AnalPlot:plotxy:Cols %s"%(dCHX))
         if plotLegend != None:
@@ -1354,7 +1354,7 @@ def test_groupsimple_neighbours():
     axes[1,0].set_ylim(-10,10)
     print("INFO:GSNeighboursTest:\n\tlc {},\n\t markerControlVals {}".format(lc, markerControlVals))
     ap.plotxy(axes[0,0], 'GSNMyData>movavg', 'GSNMyData', markerControlVals=markerControlVals, markerControlLimits=list(range(len(lc))),
-                colorMarkers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'])
+                markers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'])
     fig.savefig('/tmp/analplot_test2.png')
     plt.show()
 
