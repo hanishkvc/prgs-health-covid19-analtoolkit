@@ -1353,8 +1353,13 @@ def test_data_simple():
 
 def test_groupsimple_neighbours():
     """ Test groupsimple_neighbours logic by using some random data
+        Note that this gives only a approximate/rough grouping, and
+        also elements may get grouped to a adjacent pole/center, if
+        the element is too far from its local pole/center.
+        Items get grouped based on their neighbours in general, but
+        for the situation mentioned above.
         """
-    fig, axes = ap.subplots(plt, 2, 2)
+    fig, axes = ap.subplots(plt, 2, 3)
     t1 = np.random.uniform(-10,10,(20,20))
     ap.set_raw(t1,dataKey='GSNMyData')
     ap.print_data_selective('GSNMyData')
@@ -1369,9 +1374,12 @@ def test_groupsimple_neighbours():
     print("INFO:GSNeighboursTest:\n\tlc {},\n\t markerControlVals {}".format(lc, markerControlVals))
     ap.plotxy(axes[0,0], 'GSNMyData>movavg', 'GSNMyData', markerControlVals=markerControlVals, markerControlLimits=list(range(len(lc))),
                 markers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'])
-    lc, markerControlVals = ap.groupsimple_neighbours('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None)
-    ap.plotxy(axes[0,1], 'GSNMyData>movavg', 'GSNMyData', markerControlVals=markerControlVals, markerControlLimits=list(range(len(lc))),
+    lc, markerControlVals = ap.groupsimple_neighbours('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None, diagRatio=0.15, ax=axes[1,2])
+    ap.plotxy(axes[0,2], 'GSNMyData>movavg', 'GSNMyData', markerControlVals=markerControlVals, markerControlLimits=list(range(len(lc))),
                 markers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'])
+    axes[1,2].axis('square')
+    axes[1,2].set_xlim(-10,10)
+    axes[1,2].set_ylim(-10,10)
     fig.savefig('/tmp/analplot_test2.png')
     plt.show()
 
