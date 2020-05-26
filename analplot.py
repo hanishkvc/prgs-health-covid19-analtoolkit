@@ -1247,16 +1247,19 @@ class AnalPlot:
             ax.plot(lcX,lcY, "g*")
             print("DBUG:AnalPlot:GSNeighbours:Initial lcX,lcY:{}".format(list(zip(lcX, lcY))))
         # consolidate local centers, in case they are near to one another.
-        # Currently I am not giving weightage to the initial local centers
-        # based on how many neighbours it might have. Have to think about
-        # this bit more later.
+        # Currently I am not giving weightage to the initial local centers based on how many
+        # neighbours it might have. Have to think about this bit more later. Or rather for
+        # what I am trying to achieve, It doesnt matter.
         iPrevGrps, iCurGrps = -2, -1
-        while iPrevGrps != iCurGrps:
+        iPrevSum, iCurSum = 0, 2**64
+        while (iPrevGrps != iCurGrps) or (iPrevSum != iCurSum):
             iPrevGrps = iCurGrps
+            iPrevSum = iCurSum
             lcX,lcY = self._localcenters_neighboursDist(lcX, lcY, curDist*1.2)
             lc = np.array(list(zip(lcX, lcY)))
             lc = np.unique(lc, axis=0)
             iCurGrps = len(lc)
+            iCurSum = np.sum(lc)
             print("DBUG:AnalPlot:GSNeighbours:lc:{}".format(lc))
         if ax != None:
             ax.plot(lcX,lcY, "b.")
