@@ -1310,12 +1310,15 @@ def test_groupsimple_neighbours():
     """ Test groupsimple_neighbours logic by using some random data
         """
     fig, axes = ap.subplots(plt, 2, 2)
-    lc, colorControlVals = ap.groupsimple_neighbours('MyData>movavg', 'MyData', selCols=None, selRows=None, ax=axes[1,0])
+    t1 = np.random.uniform(-10,10,(20,10))
+    ap.set_raw(t1,dataKey='GSNMyData')
+    lc, colorControlVals = ap.groupsimple_neighbours('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None, ax=axes[1,0])
     axes[1,0].axis('square')
+    # Limit set based on data space over which random data is generated
     axes[1,0].set_xlim(-10,10)
     axes[1,0].set_ylim(-10,10)
     print(lc, colorControlVals)
-    ap.plotxy(axes[0,0], 'MyData>movavg', 'MyData', colorControlVals=colorControlVals, colorControlLimits=list(range(len(lc))),
+    ap.plotxy(axes[0,0], 'GSNMyData>movavg', 'GSNMyData', colorControlVals=colorControlVals, colorControlLimits=list(range(len(lc))),
                 colorMarkers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'][:len(lc)])
     fig.savefig('/tmp/analplot_test2.png')
     plt.show()
