@@ -1193,7 +1193,10 @@ class AnalPlot:
         """ Group the specified subset of data from the given dataset into few groups
             based on how near they are to one another.
 
-            dataKeyX, dataKeyY: specify the datasets to use for x and y axis.
+            dataKeyX, dataKeyY: specify the datasets to use for x and y axis. Or put
+                differently are the values of two parameters for a set of objects of
+                the study, which are being relatively compared among themselves as 
+                well as between them.
             selCols, selRows: allows one to use a subset of the given dataset, for
                 grouping. The other rows and cols of the datasets are ignored while
                 comparing and grouping.
@@ -1206,7 +1209,7 @@ class AnalPlot:
             ax: a plot axes, which can be used to look at a visual view/debug of the
                 underlying logic.
 
-            NOTE: Now the local centers identified are cross-checked to see if they
+            NOTE1: Now the local centers identified are cross-checked to see if they
             are near enough to merge into a new local center. And this testis done,
             till we no longer get new collased/merged local centers.
 
@@ -1214,6 +1217,11 @@ class AnalPlot:
             from the edges, through merging. And this can in some cases, lead to the
             edge point(s) becoming nearer and inturn assigned to a previously unrelated
             but relatively speaking near in a way local center.
+
+            NOTE2: The cols of the given datasets are the anchors/entities/objects
+            being studied. Each dataset is the values of some property(s) relating to
+            them. All rows could represent the values of the same property or values
+            of different properties or values of some operation(s) on property(s).
             """
         # 1. The data subset to work on
         dX, dXCH, dXRH = self.get_data_selective(dataKeyX, selCols, selRows)
@@ -1222,18 +1230,19 @@ class AnalPlot:
         theY = dY[-1,:]
         if ax != None:
             ax.plot(theX,theY, "ro")
-        print("DBUG:AnalPlot:GSNeighbours:theX,theY:{}".format(list(zip(theX, theY))))
+            print("DBUG:AnalPlot:GSNeighbours:theX,theY:{}".format(list(zip(theX, theY))))
         # 2. Find local centers
-        # The base distance for neighbours to start with
+        # The data space adjusted base distance for neighbours to start with
         xMin, xMax = np.min(theX), np.max(theX)
         yMin, yMax = np.min(theY), np.max(theY)
         curDist = np.sqrt((xMax-xMin)**2 + (yMax-yMin)**2)*diagRatio
-        print("DBUG:AnalPlot:GSNeighbours:xMin,xMax {},{}:yMin,yMax {},{}:curDist {}".format(xMin,xMax,yMin,yMax,curDist))
+        if ax != None:
+            print("DBUG:AnalPlot:GSNeighbours:xMin,xMax {},{}:yMin,yMax {},{}:curDist {}".format(xMin,xMax,yMin,yMax,curDist))
         # get the local centers, corresponding to each point of interest
         lcX,lcY = self._localcenters_neighboursDist(theX, theY, curDist)
         if ax != None:
             ax.plot(lcX,lcY, "g*")
-        print("DBUG:AnalPlot:GSNeighbours:lcX,lcY:{}".format(list(zip(lcX, lcY))))
+            print("DBUG:AnalPlot:GSNeighbours:Initial lcX,lcY:{}".format(list(zip(lcX, lcY))))
         # consolidate local centers, in case they are near to one another.
         # Currently I am not giving weightage to the initial local centers
         # based on how many neighbours it might have. Have to think about
@@ -1245,7 +1254,7 @@ class AnalPlot:
             lc = np.array(list(zip(lcX, lcY)))
             lc = np.unique(lc, axis=0)
             iCurGrps = len(lc)
-        print("DBUG:AnalPlot:GSNeighbours:lcX,lcY:{}".format(list(zip(lcX, lcY))))
+            print("DBUG:AnalPlot:GSNeighbours:lc:{}".format(lc))
         if ax != None:
             ax.plot(lcX,lcY, "b.")
             ax.axis('square')
