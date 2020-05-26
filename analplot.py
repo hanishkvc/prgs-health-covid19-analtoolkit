@@ -1126,7 +1126,7 @@ class AnalPlot:
                 t.set_alpha(0.4)
 
 
-    def group_simple_percentiles(self, dataKey, selCols=None, selRows=None, dataOps='movavg', percentileRange=[70,100], tempBaseKey="_T_GSP_"):
+    def groupsimple_percentiles(self, dataKey, selCols=None, selRows=None, dataOps='movavg', percentileRange=[70,100], tempBaseKey="_T_GSP_"):
         """ Group the specified subset of data from the specified data set
             into few groups based on the simple criteria of percentiles.
             dataKey: the base data set to work on
@@ -1167,7 +1167,7 @@ class AnalPlot:
         dOpsKey = "%s>%s"%(tempBaseKey, dataOps)
         oD, oCH, oRH = self.get_data(dOpsKey)
         selColsP, selPers = self.selcols_percentiles(dOpsKey, selPers=percentileRange)
-        dprint("DBUG:AnalPlot:group_simple_percentiles:selColsP:{}".format(selColsP))
+        dprint("DBUG:AnalPlot:groupsimple_percentiles:selColsP:{}".format(selColsP))
         selColsPNumBased = np.ones(len(selColsP))
         selColsPNumBased[~selColsP] = -1
         self.del_data(tempBaseKey)
@@ -1189,7 +1189,7 @@ class AnalPlot:
         return np.array(lX), np.array(lY)
 
 
-    def group_simple_neighbours(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, ax=None):
+    def groupsimple_neighbours(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, ax=None):
         """ Group the specified subset of data from the given dataset into few groups
             based on how near they are to one another.
 
@@ -1299,7 +1299,7 @@ def test_data_simple():
 
 def test_groupsimple_neighbours():
     fig, axes = ap.subplots(plt, 2, 2)
-    lc, colorControlVals = ap.group_simple_neighbours('MyData>movavg', 'MyData', selCols=None, selRows=None, ax=axes[1,0])
+    lc, colorControlVals = ap.groupsimple_neighbours('MyData>movavg', 'MyData', selCols=None, selRows=None, ax=axes[1,0])
     print(lc, colorControlVals)
     ap.plotxy(axes[0,0], 'MyData>movavg', 'MyData', colorControlVals=colorControlVals, colorControlLimits=list(range(len(lc))),
                 colorMarkers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'][:len(lc)])
