@@ -1272,7 +1272,7 @@ class AnalPlot:
         return lc, lGroup
 
 
-    def groupsimple_neighbours_ex(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, numOfGroups=4, maxTries=8, ax=None):
+    def groupsimple_neighbours_ex(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, numOfGroups=4, maxTries=8, ax=None, ax0=None):
         """ Try to group the specified data elements into the specified number of groups,
             within a given number of attempts.
 
@@ -1281,6 +1281,10 @@ class AnalPlot:
 
             numOfGroups: The number of groups to aim for.
             maxTries: How many times one should attempt.
+
+            ax: axes to plot visual debug data in general.
+            ax0: axes to which to plot the visual debug data for the 1st run of GSN,
+                if it is provided. Else even this data will be plotted to ax.
 
             NOTE: It doesnt try to accelerate or declerate the diagRatio delta,
             based on currently achieved numOfGroups and tries remaining. However larger
@@ -1296,7 +1300,11 @@ class AnalPlot:
             of 1 it will still give proper visual debug plot.
             """
         for i in range(maxTries):
-            localCenters, lGroupMap = self.groupsimple_neighbours(dataKeyX, dataKeyY, selCols, selRows, diagRatio, ax)
+            if (i == 0) and (ax0 != None):
+                tax = ax0
+            else:
+                tax = ax
+            localCenters, lGroupMap = self.groupsimple_neighbours(dataKeyX, dataKeyY, selCols, selRows, diagRatio, tax)
             if len(localCenters) > numOfGroups:
                 diagRatio = diagRatio*1.2
             elif len(localCenters) < numOfGroups:
@@ -1350,13 +1358,19 @@ def test_groupsimple_neighbours():
     t1 = np.random.uniform(-10,10,(20,20))
     ap.set_raw(t1,dataKey='GSNMyData')
     ap.print_data_selective('GSNMyData')
-    lc, markerControlVals = ap.groupsimple_neighbours_ex('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None, maxTries=16, ax=axes[1,0])
+    lc, markerControlVals = ap.groupsimple_neighbours_ex('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None, maxTries=16, ax=axes[1,0], ax0=axes[1,1])
     axes[1,0].axis('square')
     # Limit set based on data space over which random data is generated
     axes[1,0].set_xlim(-10,10)
     axes[1,0].set_ylim(-10,10)
+    axes[1,1].axis('square')
+    axes[1,1].set_xlim(-10,10)
+    axes[1,1].set_ylim(-10,10)
     print("INFO:GSNeighboursTest:\n\tlc {},\n\t markerControlVals {}".format(lc, markerControlVals))
     ap.plotxy(axes[0,0], 'GSNMyData>movavg', 'GSNMyData', markerControlVals=markerControlVals, markerControlLimits=list(range(len(lc))),
+                markers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'])
+    lc, markerControlVals = ap.groupsimple_neighbours('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None)
+    ap.plotxy(axes[0,1], 'GSNMyData>movavg', 'GSNMyData', markerControlVals=markerControlVals, markerControlLimits=list(range(len(lc))),
                 markers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'])
     fig.savefig('/tmp/analplot_test2.png')
     plt.show()
