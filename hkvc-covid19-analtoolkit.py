@@ -74,7 +74,7 @@ def plot_xy(ds, ap, axes, iARow, iACol, dataKey, topNCS, topND, inSelIds):
         theGSCols, markerControlVals = ap.groupsimple_percentiles(dataKey, selCols, dataOps="diff>movavg(T=2)")
         dprint("DBUG:Main:plot_xy:selCols:{}; GroupSimpleCols:{}".format(selCols, theGSCols))
     ap.plotxy(axes[iARow,iACol], "%s>cumsum"%(dataKey), "%s>movavg"%(dataKey), plotSelCols=selCols,
-                title=theTitle, xscale="log", yscale="log", plotLegend=True, markerControlVals=markerControlVals, markers=['g.','ro'])
+                title=theTitle, xscale="log", yscale="log", plotLegend=True, markerControlVals=markerControlVals, markers=['b.','ro'])
     inset = axes[iARow,iACol].inset_axes([0.6,0.10,0.4,0.4])
     if bMODE_SCALEDIFF:
         ap.calc_scale("%s>diff>movavg(T=2)"%(dataKey), axis=1)
