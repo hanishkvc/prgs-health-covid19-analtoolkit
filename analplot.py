@@ -1049,7 +1049,7 @@ class AnalPlot:
 
 
     def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None, bTranslucent=False,
-                    colorControlVals=None, colorControlLimits=[0], colorMarkers=['ro','go']):
+                    markerControlVals=None, markerControlLimits=[0], colorMarkers=['ro','go']):
         """ Plot the specified subset of cols from two related datasets such that
             values of the selected row of these cols in one of the dataset acts as
             the x value and the values of the selected row of these cols in the
@@ -1065,8 +1065,8 @@ class AnalPlot:
                 __AUTO__ in title replaced by string "<dataKeyX> vs <dataKeyY>"
 
             Controlling color of Markers:
-            The array colorControlVals, contains values which control what color
-            to show based on where they fit wrt the colorControlLimits array.
+            The array markerControlVals, contains values which control what color
+            to show based on where they fit wrt the markerControlLimits array.
 
             The vals may fall into groups as discussed below
                 values LESSTHAN CCL[0]
@@ -1080,14 +1080,14 @@ class AnalPlot:
             self.dTestPlotXYRect = {}
         dX, dCHX, dRHX = self.get_data_selective(dataKeyX, plotSelCols)
         dY, dCHY, dRHY = self.get_data_selective(dataKeyY, plotSelCols)
-        if type(colorControlVals) == type(None):
+        if type(markerControlVals) == type(None):
             ax.plot(dX[selRow,:], dY[selRow,:], ".")
         else:
-            cCV = np.array(colorControlVals)
+            cCV = np.array(markerControlVals)
             theColors = np.zeros(len(cCV))
-            print("DBUG:AnalPlot:plotxy:cCV {}, cCL {} ".format(colorControlVals, colorControlLimits))
-            for iColor in range(len(colorControlLimits)):
-                theColors[cCV > colorControlLimits[iColor]] = iColor+1
+            print("DBUG:AnalPlot:plotxy:cCV {}, cCL {} ".format(markerControlVals, markerControlLimits))
+            for iColor in range(len(markerControlLimits)):
+                theColors[cCV > markerControlLimits[iColor]] = iColor+1
             print("DBUG:AnalPlot:plotxy:theColors:{}".format(theColors))
             #list(map(lambda x,y,iC: ax.plot(x,y,colorMarkers[int(iC)]), dX[selRow,:], dY[selRow,:], theColors))
             for  x,y,iC in zip(dX[selRow,:], dY[selRow,:], theColors):
@@ -1347,13 +1347,13 @@ def test_groupsimple_neighbours():
     fig, axes = ap.subplots(plt, 2, 2)
     t1 = np.random.uniform(-10,10,(20,10))
     ap.set_raw(t1,dataKey='GSNMyData')
-    lc, colorControlVals = ap.groupsimple_neighbours_ex('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None, ax=axes[1,0])
+    lc, markerControlVals = ap.groupsimple_neighbours_ex('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None, ax=axes[1,0])
     axes[1,0].axis('square')
     # Limit set based on data space over which random data is generated
     axes[1,0].set_xlim(-10,10)
     axes[1,0].set_ylim(-10,10)
-    print("INFO:GSNeighboursTest:\n\tlc {},\n\t colorControlVals {}".format(lc, colorControlVals))
-    ap.plotxy(axes[0,0], 'GSNMyData>movavg', 'GSNMyData', colorControlVals=colorControlVals, colorControlLimits=list(range(len(lc))),
+    print("INFO:GSNeighboursTest:\n\tlc {},\n\t markerControlVals {}".format(lc, markerControlVals))
+    ap.plotxy(axes[0,0], 'GSNMyData>movavg', 'GSNMyData', markerControlVals=markerControlVals, markerControlLimits=list(range(len(lc))),
                 colorMarkers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'])
     fig.savefig('/tmp/analplot_test2.png')
     plt.show()
