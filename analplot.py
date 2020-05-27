@@ -1175,6 +1175,10 @@ class AnalPlot:
         return [oCH[selColsP], oCH[~selColsP]], selColsPNumBased
 
 
+    def _distance(x1,y1,x2,y2):
+        return np.sqrt((x2-x1)**2 + (y2-y1)**2)
+
+
     def _localcenters_neighboursDist(self, theX, theY, theDist):
         lX, lY = [], []
         for x,y in zip(theX, theY):
@@ -1190,7 +1194,7 @@ class AnalPlot:
         return np.array(lX), np.array(lY)
 
 
-    def groupsimple_neighbours(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, ax=None):
+    def groupsimple_neighbours(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, bSort=True, ax=None):
         """ Group the specified subset of data from the given dataset into few groups
             based on how near they are to one another, based on the values in the
             two specified subsets.
@@ -1199,6 +1203,7 @@ class AnalPlot:
                 differently are the values of two parameters for a set of objects of
                 the study, which are being relatively compared among themselves as
                 well as between them.
+
             selCols, selRows: allows one to use a subset of the given dataset, for
                 grouping. The other rows and cols of the datasets are ignored while
                 comparing and grouping. If there are more than 1 row, in the subset,
@@ -1209,11 +1214,20 @@ class AnalPlot:
                 or not. Smaller the ratio more the groups, larger the ratio less the
                 number of groups into which the data is segregated/grouped.
 
+            bSort=True: sort the array of localCenters identified, in ascending order
+                based on how near they are to the minimum x and y data values in a 2D
+                space. i.e from nearest to the farthest.
+
             ax: a plot axes, which can be used to look at a visual view/debug of the
                 underlying logic.
 
-            NOTE1: Now the local centers identified are cross-checked to see if they
-            are near enough to merge into a new local center. And this testis done,
+            It returns
+                Array of localCenters, i.e data space center points for each local group
+                identified by the logic. If bSort is True, then this will be sorted.
+                Array mapping each given x,y point to its group/localCenter.
+
+            NOTE1: The local centers identified are cross-checked to see if they
+            are near enough to merge into a new local center. And this test is done,
             till we no longer get new collased/merged local centers.
 
             However this also has the side-effect that, local centers can move away
@@ -1263,6 +1277,11 @@ class AnalPlot:
             print("DBUG:AnalPlot:GSNeighbours:lc:{}".format(lc))
         if ax != None:
             ax.plot(lcX,lcY, "b.")
+        # Sort the localCenters in ascending order of distance from xMin,yMin
+        if bSort:
+            tDist = self._distance(xMin,yMin,lc[:,0],lc[:,1])
+            lcNew = lc[np.argsort(tDist),:]
+            lc = lcNew
         # 3. Map each point of interest(i.e a col in the selected subset)
         # to its nearest local center
         lGroup = []
@@ -1272,7 +1291,7 @@ class AnalPlot:
         return lc, lGroup
 
 
-    def groupsimple_neighbours_ex(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, numOfGroups=4, maxTries=8, ax=None, ax0=None):
+    def groupsimple_neighbours_ex(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, bSort=True, numOfGroups=4, maxTries=8, ax=None, ax0=None):
         """ Try to group the specified data elements into the specified number of groups,
             within a given number of attempts.
 
@@ -1304,7 +1323,7 @@ class AnalPlot:
                 tax = ax0
             else:
                 tax = ax
-            localCenters, lGroupMap = self.groupsimple_neighbours(dataKeyX, dataKeyY, selCols, selRows, diagRatio, tax)
+            localCenters, lGroupMap = self.groupsimple_neighbours(dataKeyX, dataKeyY, selCols, selRows, diagRatio, bSort, tax)
             if len(localCenters) > numOfGroups:
                 diagRatio = diagRatio*1.2
             elif len(localCenters) < numOfGroups:
