@@ -436,6 +436,29 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
+    def _call_calc_log10(self, inDataKey, outDataKey, lArgNames, lArgVals):
+        """ Helper routine to call calc_log10 related to dataKey DataOpsChaining
+            """
+        axis = 0
+        for arg in lArgNames:
+            print("WARN:AnalPlot:callCalcLog10:Unknown arg[%s]"%(arg))
+        self.dCalcFuncsWithArgs['log10'][0](self, dataKey=inDataKey, outDataKey=outDataKey)
+
+
+    def calc_log10(self, dataKey="raw", outDataKey="__AUTO__"):
+        """ Calculate the log10 for values in the dataset.
+            dataKey: the key used to access the data to operate on.
+            outDataKey: key used to identify/store the results of operation.
+            NOTE: It can work with 2D datasets.
+            """
+        d, dCH, dRH = self.get_data(dataKey)
+        theOutDataKey = self._outdatakey(outDataKey, "log10", dataKey)
+        newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
+        self.data[newDKey] = np.log10(d)
+        self.data[newRHKey] = dRH
+        self.data[newCHKey] = dCH
+
+
     def calc_movavg_old(self, dataKey="raw", avgOver=7, outDataKey="__AUTO__", axis=0):
         """ Calculate sliding window averages for values in the dataset
             along each row (axis=1) or column (axis=0).
@@ -582,6 +605,7 @@ class AnalPlot:
         "scale": [calc_scale, _call_calc_scale],
         "diff": [calc_diff, _call_calc_diff],
         "cumsum": [calc_cumsum, _call_calc_cumsum],
+        "log10": [calc_log10, _call_calc_log10],
         "movavg": [calc_movavg, _call_calc_movavg],
         "rel2mean": [calc_rel2mean, _call_calc_rel2mean],
         "rel2sum": [calc_rel2sum, _call_calc_rel2sum],
