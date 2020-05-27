@@ -74,7 +74,7 @@ def plot_xy(ds, ap, axes, iARow, iACol, dataKey, topNCS, topND, inSelIds):
         theGSCols, markerControlVals = ap.groupsimple_percentiles(dataKey, selCols, dataOps="diff>movavg(T=2)")
         mCL = [0]
         dprint("DBUG:Main:plot_xy:selCols:{}; GroupSimpleCols:{}".format(selCols, theGSCols))
-        gsnKey = "%s>diff>movavg(T=2)"%(dataKey)
+        gsnKey = "%s>rel2sum>movavg(T=2)"%(dataKey)
         lc, markerControlVals = ap.groupsimple_neighbours_ex(gsnKey, gsnKey, selCols=selCols, selRows=None, numOfGroups=6, maxTries=24)
         mCL = list(range(len(lc)))
     ap.plotxy(axes[iARow,iACol], "%s>cumsum"%(dataKey), "%s>movavg"%(dataKey), plotSelCols=selCols,
