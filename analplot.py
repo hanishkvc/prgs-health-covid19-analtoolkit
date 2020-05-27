@@ -1471,7 +1471,7 @@ def test_groupsimple_neighbours_02():
     # A dataset, which shows points jumping from their relatively distant neighbourhood localCenter to a nearer localCenter of a different neighbourhood
     t20 = np.array([(-1.1243568, -9.556299123915071), (1.20270282, 2.5741433949433272), (-0.01453492, 7.163730208273641), (1.71737311, 6.415658922378679), (0.34382862, -4.035998605834974), (0.26935563, -2.302733559646586), (1.86703974, 9.352336394666295), (1.81799634, -6.742155833194314), (2.36875021, 3.896492437056878), (0.33945876, -4.927323424108348), (1.98106115, -7.187367470274754), (4.95938511, 8.63987773133265), (-0.3718285, 0.20406459974523727), (-2.04956294, -5.470857746296048), (-1.75747134, -0.12601825665060673), (-1.51138858, -7.785862301800448), (-0.51437958, -5.621517008397554), (-0.76253538, -7.448603420051656), (-1.25721607, -5.354062276092324), (-0.73862023, 2.383906911957096)])
 
-    tD = t20
+    tD = t10
     ap.set_raw(tD[:,0].reshape(1,tD.shape[0]), dataKey='GSNMyDataX')
     ap.set_raw(tD[:,1].reshape(1,tD.shape[0]), dataKey='GSNMyDataY')
     lc, markerControlVals = ap.groupsimple_neighbours('GSNMyDataX', 'GSNMyDataY', selCols=None, selRows=None, diagRatio=0.15, ax=axes[1,0])
@@ -1536,7 +1536,7 @@ if __name__ == "__main__":
     plt.show()
 
     test_groupsimple_neighbours()
-    test_groupsimple_neighbours_02()
+    #test_groupsimple_neighbours_02()
 
 
 
