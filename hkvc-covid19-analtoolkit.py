@@ -132,11 +132,17 @@ def boxplot_data_movavgTopN(ds, ap, axes, iARow, iACol, dataKey="cases/day", top
     return iARow+1
 
 
+bPLOTSEL_PARTIAL=False
 def plot_sel(allDS, allSel):
     """ Plot a set of interesting/informative/... plots
         Uses the new auto calc as required functionality of AnalPlot
         """
-    fig, axes = ap.subplots(plt,4,len(allDS))
+    numRows = 4
+    sGMsgSuffix = ""
+    if bPLOTSEL_PARTIAL:
+        sGMsgSuffix = "part"
+        numRows = 2
+    fig, axes = ap.subplots(plt,numRows,len(allDS))
     iCurDS = 0
     sGlobalMsg = ""
     for ds in allDS:
@@ -153,12 +159,14 @@ def plot_sel(allDS, allSel):
         iARow = plot_xy(ds, ap, axes, iARow, iCurDS, "cases/day", 25, 8, theSelIds)
         # Boxplot Raw data based on Cases/Day>MovingAvg TopN
         iARow = boxplot_data_movavgTopN(ds, ap, axes, iARow, iCurDS, "cases/day", 25, theSelIds)
-        # Plot data based on Cases/Day>MovingAvg TopN
-        iARow = plot_data_movavgTopN(ds, ap, axes, iARow, iCurDS, "cases/day", 8, theSelIds)
-        # Plot data based on Cases/Day>Diff>MovingAvg TopN
-        iARow = plot_data_diffTopN(ds, ap, axes, iARow, iCurDS, "cases/day", 8, theSelIds)
+        if not bPLOTSEL_PARTIAL:
+            # Plot data based on Cases/Day>MovingAvg TopN
+            iARow = plot_data_movavgTopN(ds, ap, axes, iARow, iCurDS, "cases/day", 8, theSelIds)
+            # Plot data based on Cases/Day>Diff>MovingAvg TopN
+            iARow = plot_data_diffTopN(ds, ap, axes, iARow, iCurDS, "cases/day", 8, theSelIds)
         sGlobalMsg += "{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         iCurDS += 1
+    sGlobalMsg += sGMsgSuffix
     save_fig(fig, sGlobalMsg)
 
 
@@ -230,6 +238,7 @@ def processargs_and_load(args):
     global bMODE_SCALEDIFF
     global bTEST_MIXMATCH
     global sPLOTXY_GSTYPE
+    global bPLOTSEL_PARTIAL
     iArg = 1
     dsAll = []
     selAll = {}
@@ -264,6 +273,9 @@ def processargs_and_load(args):
             iArg += 1
         elif args[iArg] == "--plotxy_gsn":
             sPLOTXY_GSTYPE = "gsn"
+            iArg += 1
+        elif args[iArg] == "--plotsel_partial":
+            bPLOTSEL_PARTIAL = True
             iArg += 1
         else:
             print("ERRR:Main:load_fromargs:UnknownArg:%s"%(args[iArg]))

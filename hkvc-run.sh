@@ -44,6 +44,7 @@ function test_run() {
 
 	sDate=`date +%Y%m%d`
 	./hkvc-covid19-analtoolkit.py
+	./hkvc-covid19-analtoolkit.py --plotsel_partial
 	./hkvc-covid19-analtoolkit.py --cov19in data/Cov19In-$sDate-confirmed.csv --euworld data/EUWorld-$sDate.csv --sel EUWorld IN IE UK AE CA US RU BR --sel Cov19In KL KA DL MH GJ MP BR
 
 }
