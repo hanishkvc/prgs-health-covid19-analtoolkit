@@ -61,6 +61,7 @@ def sel_cols(dataKey, topN, inSelIds, baseTitle, selTitle, bSelInclusive=True):
 # because plotxy will keep 0 out of its plot window using its
 # axis_adjust logic.
 bMODE_SCALEDIFF=True
+sPLOTXY_GSTYPE="gsn"
 def plot_xy(ds, ap, axes, iARow, iACol, dataKey, topNCS, topND, inSelIds):
     """ PlotXY data based on cumsum and diff.movavg topN
         It also highlights the regions where cases/day is changing
@@ -71,14 +72,18 @@ def plot_xy(ds, ap, axes, iARow, iACol, dataKey, topNCS, topND, inSelIds):
         markerControlVals = np.ones(ap.data[dataKey].shape[1])
         markerControlVals[0:int(len(markerControlVals)/2)] = -1
     else:
-        theGSCols, markerControlVals = ap.groupsimple_percentiles(dataKey, selCols, dataOps="diff>movavg(T=2)")
-        mCL = [0]
-        dprint("DBUG:Main:plot_xy:selCols:{}; GroupSimpleCols:{}".format(selCols, theGSCols))
-        gsnKey = "%s>rel2sum>movavg(T=2)"%(dataKey)
-        lc, markerControlVals = ap.groupsimple_neighbours_ex(gsnKey, gsnKey, selCols=selCols, selRows=None, numOfGroups=6, maxTries=24)
-        mCL = list(range(len(lc)))
+        if sPLOTXY_GSTYPE == "gsp":
+            theGSCols, markerControlVals = ap.groupsimple_percentiles(dataKey, selCols, dataOps="diff>movavg(T=2)")
+            mCL = [0]
+            markers = ['c.','ro']
+            dprint("DBUG:Main:plot_xy:selCols:{}; GroupSimpleCols:{}".format(selCols, theGSCols))
+        else:
+            gsnKey = "%s>rel2sum>movavg(T=2)"%(dataKey)
+            lc, markerControlVals = ap.groupsimple_neighbours_ex(gsnKey, gsnKey, selCols=selCols, selRows=None, numOfGroups=6, maxTries=24)
+            mCL = list(range(len(lc)))
+            markers = ['g.','c.','c*','r.','r*','ro']
     ap.plotxy(axes[iARow,iACol], "%s>cumsum"%(dataKey), "%s>movavg"%(dataKey), plotSelCols=selCols,
-                title=theTitle, xscale="log", yscale="log", plotLegend=True, markerControlVals=markerControlVals, markerControlLimits=mCL, markers=['g.','b.','m*','r.','r*','ro'])
+                title=theTitle, xscale="log", yscale="log", plotLegend=True, markerControlVals=markerControlVals, markerControlLimits=mCL, markers=markers)
     inset = axes[iARow,iACol].inset_axes([0.6,0.10,0.4,0.4])
     if bMODE_SCALEDIFF:
         ap.calc_scale("%s>diff>movavg(T=2)"%(dataKey), axis=1)
@@ -224,6 +229,7 @@ def processargs_sel(args, iArg):
 def processargs_and_load(args):
     global bMODE_SCALEDIFF
     global bTEST_MIXMATCH
+    global sPLOTXY_GSTYPE
     iArg = 1
     dsAll = []
     selAll = {}
@@ -252,6 +258,12 @@ def processargs_and_load(args):
             iArg += 1
         elif args[iArg] == "--test_mixmatch":
             bTEST_MIXMATCH = True
+            iArg += 1
+        elif args[iArg] == "--plotxy_gsp":
+            sPLOTXY_GSTYPE = "gsp"
+            iArg += 1
+        elif args[iArg] == "--plotxy_gsn":
+            sPLOTXY_GSTYPE = "gsn"
             iArg += 1
         else:
             print("ERRR:Main:load_fromargs:UnknownArg:%s"%(args[iArg]))
