@@ -1176,6 +1176,9 @@ class AnalPlot:
 
 
     def _distance(x1,y1,x2,y2):
+        """ Find the distance between two given points in 2D space.
+            NOTE: A class and not a instance function.
+            """
         return np.sqrt((x2-x1)**2 + (y2-y1)**2)
 
 
@@ -1279,9 +1282,10 @@ class AnalPlot:
             ax.plot(lcX,lcY, "b.")
         # Sort the localCenters in ascending order of distance from xMin,yMin
         if bSort:
-            tDist = self._distance(xMin,yMin,lc[:,0],lc[:,1])
+            tDist = AnalPlot._distance(xMin,yMin,lc[:,0],lc[:,1])
             lcNew = lc[np.argsort(tDist),:]
             lc = lcNew
+            print("DBUG:AnalPlot:GSNeighbours:lcSorted:{}".format(lc))
         # 3. Map each point of interest(i.e a col in the selected subset)
         # to its nearest local center
         lGroup = []
@@ -1404,6 +1408,24 @@ def test_groupsimple_neighbours():
 
 
 
+def test_groupsimple_neighbours_02():
+    fig, axes = ap.subplots(plt, 2, 2)
+    t0 = np.array( [(0.71805245, 4.3674268912635394), (1.12279323, 6.331216482546981), (3.49666178, 8.94456780003376), (-0.61835946, 0.8843062942454676), (-0.42931355, 1.920275866344598), (2.41893535, -9.393896554702511), (0.24037447, 7.121282727218052), (-1.96246575, 3.0373948672975803), (-1.81848503, 2.085348377966678), (5.08896599, 2.941583368849548), (3.80797239, 7.618738504461753), (3.87388894, 5.209598963438184), (0.44057882, -2.319113331956184), (1.97738117, -0.8312025036501431), (-3.5468434, -2.610638606867182), (2.65484543, 3.3952730758673084), (0.4089489, 8.346675159673246), (-2.62250663, -1.2572170072617777), (1.46871665, -3.63062742474445), (-0.87425065, -1.4222756730635417)] )
+    t1 = np.array( [[-0.95858018,  0.140883  ], [-0.0391844,   1.55142882], [ 0.64937234,  4.30485681], [ 1.75247925,  5.71540262], [ 2.41893535, -9.39389655]] )
+    t2 = np.array( [[-0.49888229,  0.84615591], [-0.15460392,  2.22286991], [ 0.85664742,  3.63341572], [ 1.20092579,  5.01012972], [ 2.41893535, -9.39389655],] )
+    ap.set_raw(t0[:,0].reshape(1,t0.shape[0]), dataKey='GSNMyDataX')
+    ap.set_raw(t0[:,1].reshape(1,t0.shape[0]), dataKey='GSNMyDataY')
+    lc, markerControlVals = ap.groupsimple_neighbours('GSNMyDataX', 'GSNMyDataY', selCols=None, selRows=None, diagRatio=0.15, ax=axes[1,0])
+    ap.plotxy(axes[0,0], 'GSNMyDataX', 'GSNMyDataY', markerControlVals=markerControlVals, markerControlLimits=list(range(len(lc))),
+                markers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'])
+    axes[1,0].axis('square')
+    axes[1,0].set_xlim(-10,10)
+    axes[1,0].set_ylim(-10,10)
+    fig.savefig('/tmp/analplot_test3.png')
+    plt.show()
+
+
+
 if __name__ == "__main__":
 
     import matplotlib.pyplot as plt
@@ -1455,6 +1477,7 @@ if __name__ == "__main__":
     plt.show()
 
     test_groupsimple_neighbours()
+    test_groupsimple_neighbours_02()
 
 
 
