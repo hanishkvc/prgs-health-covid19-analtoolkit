@@ -1,6 +1,6 @@
 # COVID19 Data Analysis
 Author: HanishKVC
-Version: v20200521IST1528
+Version: v20200527IST1852
 
 ## Covid19 Analtoolkit, Branch:master WIP
 
@@ -92,6 +92,11 @@ Note: Replace YYYY, MM and DD with the date one is interested in. It will contai
 
 --scalediff : scale the diff data used in plotxy inset.
 
+--plotxy_gsp : group the plotxy regions using Top30% percentile
+
+--plotxy_gsn : group the plotxy regions based on whether they are neighbours or not.
+
+--plotsel_partial : plot only the top two rows, which are summary plots.
 
 
 ## DataSrc/AnalPlot classes/Modules
