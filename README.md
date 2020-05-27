@@ -40,6 +40,14 @@ hkvc-covid19-analtoolkit.py --sel Cov19In  KL KA DL MH --sel EUWorld IN US IE AE
 
 ### logic to keep in mind
 
+#### Caching of downloaded files
+
+DataSrc and inturn Cov19In caches the downloaded file, such that it
+downloads only one file in a given day. However Cov19In data online
+can change at anytime, potentially, so if you want to refetch the
+latest available data, remember to remove the downloaded and inturn
+saved Cov19In csv file, before running the program.
+
 #### EUWorld xls to csv conversion
 
 ##### date field
@@ -57,9 +65,9 @@ libreoffice to DD/MM/YYYY format.
 
 The logic uses libreoffice internally to help with the xls to csv
 conversion. So when the program is run for the first time in a given
-user session, it may take more time than what is currently accounted
-for the libreoffice to start up. In which case, the logic will timeout
-and exit. So one is required to rerun the program a 2nd time to get
+user session, it may take more time than usual waiting for libreoffice
+to start up. If it takes too much time, logic will timeout and exit.
+In which case one is required to rerun the program a 2nd time to get
 it to do its job. With the latest update the underlying program uses
 a better way of connecting to libreoffice, so chances of this issue
 creeping up should be less. The current default timeout is around
