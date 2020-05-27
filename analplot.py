@@ -1221,7 +1221,7 @@ class AnalPlot:
         return np.array(lX), np.array(lY)
 
 
-    def groupsimple_neighbours(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, bSort=True, ax=None):
+    def groupsimple_neighbours(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, bSort=True, bLocalCenterNearest=False, ax=None):
         """ Group the specified subset of data from the given dataset into few groups
             based on how near they are to one another, based on the values in the
             two specified subsets.
@@ -1245,6 +1245,17 @@ class AnalPlot:
                 based on how near they are to the minimum x and y data values in a 2D
                 space. i.e from nearest to the farthest.
 
+            bLocalCenterNearest=True:
+                Map each x,y point to its nearest localCenter, even if that localCenter
+                belongs to a different neighbour group. Here localCenters identified
+                using neighbourhood considerations, but mapping points to localCenters
+                decided based on which is nearest.
+                Else map them to their neighbours' localCenter (visually feels better).
+
+                Based on the end usecase decide whether you want data points to remain
+                loyal to their neighbourhood, or jump to different adjacent localCenter
+                provided its nearer.
+
             ax: a plot axes, which can be used to look at a visual view/debug of the
                 underlying logic.
 
@@ -1260,7 +1271,8 @@ class AnalPlot:
             However this also has the side-effect that, local centers can move away
             from the edges, through merging. And this can in some cases, lead to the
             edge point(s) becoming nearer and inturn assigned to a previously unrelated
-            but relatively speaking near in a way local center.
+            but relatively speaking near in a way local center. i.e provided the boolean
+            bLocalCenterNearest is True.
 
             NOTE2: The cols of the given datasets are the anchors/entities/objects
             being studied. Each dataset is the values of some property(s) relating to
@@ -1297,11 +1309,12 @@ class AnalPlot:
             iPrevGrps = iCurGrps
             iPrevSum = iCurSum
             lcX,lcY = self._localcenters_neighboursDist(lcX, lcY, curDist*1.2)
-            lc = np.array(list(zip(lcX, lcY)))
-            lc = np.unique(lc, axis=0)
+            lcRaw = np.array(list(zip(lcX, lcY)))
+            lc = np.unique(lcRaw, axis=0)
             iCurGrps = len(lc)
             iCurSum = np.sum(np.cumsum(lc))
             print("DBUG:AnalPlot:GSNeighbours:lc:{}".format(lc))
+        print("DBUG:AnalPlot:GSNeighbours:lcRaw:{}".format(lcRaw))
         if ax != None:
             ax.plot(lcX,lcY, "b.")
         # Sort the localCenters in ascending order of distance from xMin,yMin
@@ -1311,15 +1324,24 @@ class AnalPlot:
             lc = lcNew
             print("DBUG:AnalPlot:GSNeighbours:lcSorted:{}".format(lc))
         # 3. Map each point of interest(i.e a col in the selected subset)
-        # to its nearest local center
-        lGroup = []
-        for x,y in zip(theX, theY):
-            dist = np.sqrt((lc[:,0]-x)**2 + (lc[:,1]-y)**2)
-            lGroup.append(np.argwhere(dist == np.min(dist))[0][0])
+        if bLocalCenterNearest:
+            # to its nearest local center
+            lGroup = []
+            for x,y in zip(theX, theY):
+                dist = np.sqrt((lc[:,0]-x)**2 + (lc[:,1]-y)**2)
+                lGroup.append(np.argwhere(dist == np.min(dist))[0][0])
+        else:
+            # to all of its distance based reachable neighbours and their neighbours' local center
+            lGroup = np.ones(lcRaw.shape[0])*-1
+            for i in range(lc.shape[0]):
+                lGroup[ (lcRaw[:,0] == lc[i,0]) & (lcRaw[:,1] == lc[i,1]) ] = i
+            if np.any(lGroup == -1):
+                input("DBUG:AnalPlot:GSNeighbours:Missing:lGroup {}, lc {}, lcRaw {}".format(lGroup, lc, lcRaw))
+            lGroup = list(lGroup)
         return lc, lGroup
 
 
-    def groupsimple_neighbours_ex(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, bSort=True, numOfGroups=4, maxTries=8, ax=None, ax0=None):
+    def groupsimple_neighbours_ex(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, bSort=True, bLocalCenterNearest=False, numOfGroups=4, maxTries=8, ax=None, ax0=None):
         """ Try to group the specified data elements into the specified number of groups,
             within a given number of attempts.
 
@@ -1351,7 +1373,7 @@ class AnalPlot:
                 tax = ax0
             else:
                 tax = ax
-            localCenters, lGroupMap = self.groupsimple_neighbours(dataKeyX, dataKeyY, selCols, selRows, diagRatio, bSort, tax)
+            localCenters, lGroupMap = self.groupsimple_neighbours(dataKeyX, dataKeyY, selCols, selRows, diagRatio, bSort, bLocalCenterNearest, tax)
             if len(localCenters) > numOfGroups:
                 diagRatio = diagRatio*1.2
             elif len(localCenters) < numOfGroups:
