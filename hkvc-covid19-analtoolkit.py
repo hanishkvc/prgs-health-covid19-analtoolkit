@@ -75,10 +75,10 @@ def plot_xy(ds, ap, axes, iARow, iACol, dataKey, topNCS, topND, inSelIds):
         mCL = [0]
         dprint("DBUG:Main:plot_xy:selCols:{}; GroupSimpleCols:{}".format(selCols, theGSCols))
         gsnKey = "%s>diff>movavg(T=2)"%(dataKey)
-        lc, markerControlVals = ap.groupsimple_neighbours_ex(gsnKey, gsnKey, selCols=selCols, selRows=None, numOfGroups=3, maxTries=36)
+        lc, markerControlVals = ap.groupsimple_neighbours_ex(gsnKey, gsnKey, selCols=selCols, selRows=None, numOfGroups=6, maxTries=24)
         mCL = list(range(len(lc)))
     ap.plotxy(axes[iARow,iACol], "%s>cumsum"%(dataKey), "%s>movavg"%(dataKey), plotSelCols=selCols,
-                title=theTitle, xscale="log", yscale="log", plotLegend=True, markerControlVals=markerControlVals, markerControlLimits=mCL, markers=['g.','b.','y.','r.','ro'])
+                title=theTitle, xscale="log", yscale="log", plotLegend=True, markerControlVals=markerControlVals, markerControlLimits=mCL, markers=['g.','b.','m*','r.','r*','ro'])
     inset = axes[iARow,iACol].inset_axes([0.6,0.10,0.4,0.4])
     if bMODE_SCALEDIFF:
         ap.calc_scale("%s>diff>movavg(T=2)"%(dataKey), axis=1)
