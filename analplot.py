@@ -1313,16 +1313,18 @@ class AnalPlot:
             lc = np.unique(lcRaw, axis=0)
             iCurGrps = len(lc)
             iCurSum = np.sum(np.cumsum(lc))
-            print("DBUG:AnalPlot:GSNeighbours:lc:{}".format(lc))
-        print("DBUG:AnalPlot:GSNeighbours:lcRaw:{}".format(lcRaw))
+            if ax != None:
+                print("DBUG:AnalPlot:GSNeighbours:lc:{}".format(lc))
         if ax != None:
+            print("DBUG:AnalPlot:GSNeighbours:lcRaw:{}".format(lcRaw))
             ax.plot(lcX,lcY, "b.")
         # Sort the localCenters in ascending order of distance from xMin,yMin
         if bSort:
             tDist = AnalPlot._distance(xMin,yMin,lc[:,0],lc[:,1])
             lcNew = lc[np.argsort(tDist),:]
             lc = lcNew
-            print("DBUG:AnalPlot:GSNeighbours:lcSorted:{}".format(lc))
+            if ax != None:
+                print("DBUG:AnalPlot:GSNeighbours:lcSorted:{}".format(lc))
         # 3. Map each point of interest(i.e a col in the selected subset)
         if bLocalCenterNearest:
             # to its nearest local center
@@ -1336,7 +1338,7 @@ class AnalPlot:
             for i in range(lc.shape[0]):
                 lGroup[ (lcRaw[:,0] == lc[i,0]) & (lcRaw[:,1] == lc[i,1]) ] = i
             if np.any(lGroup == -1):
-                input("DBUG:AnalPlot:GSNeighbours:Missing:lGroup {}, lc {}, lcRaw {}".format(lGroup, lc, lcRaw))
+                print("DBUG:ERROR?:AnalPlot:GSNeighbours:Missing:lGroup {}, lc {}, lcRaw {}".format(lGroup, lc, lcRaw))
             lGroup = list(lGroup)
         return lc, lGroup
 
