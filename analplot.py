@@ -1155,8 +1155,10 @@ class AnalPlot:
 
 
     def groupsimple_percentiles(self, dataKey, selCols=None, selRows=None, dataOps='movavg', percentileRange=[70,100], tempBaseKey="_T_GSP_"):
-        """ Group the specified subset of data from the specified data set
-            into few groups based on the simple criteria of percentiles.
+        """ Group the specified subset of data from the given data set
+            into two groups based on whether they fall within the specified
+            range or outside it.
+
             dataKey: the base data set to work on
             selCols: the list of cols which belong to the specified subset
             selRows: the list of rows which belong to the specified subset
@@ -1192,7 +1194,10 @@ class AnalPlot:
             """
         d, dCH, dRH = self.get_data_selective(dataKey, selCols, selRows)
         self.set_raw(d, rowHdr=dRH, colHdr=dCH, dataKey=tempBaseKey)
-        dOpsKey = "%s>%s"%(tempBaseKey, dataOps)
+        if (dataOps == None) or (dataOps == ""):
+            dOpsKey = tempBaseKey
+        else:
+            dOpsKey = "%s>%s"%(tempBaseKey, dataOps)
         oD, oCH, oRH = self.get_data(dOpsKey)
         selColsP, selPers = self.selcols_percentiles(dOpsKey, selPers=percentileRange)
         dprint("DBUG:AnalPlot:groupsimple_percentiles:selColsP:{}".format(selColsP))
