@@ -139,6 +139,8 @@ class AnalPlot:
             rowHdr = np.arange(data.shape[0])
         if type(colHdr) == type(None):
             colHdr = np.arange(data.shape[1])
+        if type(rowHdr) == type(list()):
+            rowHdr = np.array(rowHdr)
         self.data[sRHKey] = rowHdr
         if type(colHdr) == type(list()):
             colHdr = np.array(colHdr)
