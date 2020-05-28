@@ -1270,8 +1270,9 @@ class AnalPlot:
                 underlying logic.
 
             It returns
+                list of arrays containing colHdr values of each local neighbours' groups.
                 Array of localCenters, i.e data space center points for each local group
-                identified by the logic. If bSort is True, then this will be sorted.
+                    identified by the logic. If bSort is True, then this will be sorted.
                 Array mapping each given x,y point to its group/localCenter.
 
             NOTE1: The local centers identified are cross-checked to see if they
