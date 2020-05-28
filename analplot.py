@@ -1236,13 +1236,13 @@ class AnalPlot:
         lGroupCH = []
         lGroupNum = None
         iGroupNum = 0
-        while iP < (len(percentileRange)-1):
-            iPStart = percentileRange[iP]
+        while iP < (len(percentileRanges)-1):
+            iPStart = percentileRanges[iP]
             iP += 1
-            iPEnd = percentileRange[iP]
+            iPEnd = percentileRanges[iP]
             tlGroupCH, tlGroupNum = self.groupsimple_percentiles(dataKey, selCols, selRows, dataOps, percentileRange=[iPStart, iPEnd], tempBaseKey=tempBaseKey)
             lGroupCH.append(tlGroupCH[0])
-            if lGroupNum == None:
+            if type(lGroupNum) == type(None):
                 lGroupNum = tlGroupNum
             tlGroupNum[tlGroupNum == 1] = 123456
             lGroupNum[tlGroupNum == 123456] = iGroupNum

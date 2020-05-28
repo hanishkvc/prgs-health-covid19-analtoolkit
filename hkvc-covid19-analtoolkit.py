@@ -73,9 +73,9 @@ def plot_xy(ds, ap, axes, iARow, iACol, dataKey, topNCS, topND, inSelIds):
         markerControlVals[0:int(len(markerControlVals)/2)] = -1
     else:
         if sPLOTXY_GSTYPE == "gsp":
-            theGSCols, markerControlVals = ap.groupsimple_percentiles(dataKey, selCols, dataOps="diff>movavg(T=2)")
-            mCL = [0]
-            markers = ['c.','ro']
+            theGSCols, markerControlVals = ap.groupsimple_percentiles_ex(dataKey, selCols, dataOps="diff>movavg(T=2)", percentileRanges=[0,30,70,100])
+            mCL = [0,1,2]
+            markers = ['c.','r.','ro']
         else:
             gsnKey = "%s>rel2sum>movavg(T=2)"%(dataKey)
             theGSCols, lc, markerControlVals = ap.groupsimple_neighbours_ex(gsnKey, gsnKey, selCols=selCols, selRows=None, numOfGroups=6, maxTries=24)
