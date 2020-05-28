@@ -617,6 +617,28 @@ class AnalPlot:
     }
 
 
+    def _parse_funcstr(sFunc, dFuncsWithArgs):
+        """ Extract Func and its arguments given in string format into the
+            func name, list of argument names, list of argument values.
+
+            "funcname(arg1=val1,arg2=val2,...)"
+            """
+        lTemp = sFunc.split('(',1)
+        sFName = lTemp[0]
+        lArgNames = []
+        lArgVals = []
+        if sFName in dFuncsWithArgs:
+            if len(lTemp) > 1:
+                lTemp[1] = lTemp[1][:-1]
+                sArgs = lTemp[1]
+                lArgs = sArgs.split(',')
+                for arg in lArgs:
+                    lArgNames.append(arg.split('=')[0])
+                    lArgVals.append(arg.split('=')[1])
+            return sFName, lArgNames, lArgVals
+        return None, lArgNames, lArgVals
+
+
     def get_data(self, dataKey="raw"):
         """ Return the specified data and its col and row headers
             Create them by calling required calc functions, if required and possible.
@@ -634,18 +656,8 @@ class AnalPlot:
             self.dCalcSimpleFuncs[sCmd](self, sBDKey)
             return self._get_data(dataKey)
         # Handle funcs with arguments using the new syntax
-        lTemp = sCmd.split('(',1)
-        sFName = lTemp[0]
-        if sFName in self.dCalcFuncsWithArgs:
-            lArgNames = []
-            lArgVals = []
-            if len(lTemp) > 1:
-                lTemp[1] = lTemp[1][:-1]
-                sArgs = lTemp[1]
-                lArgs = sArgs.split(',')
-                for arg in lArgs:
-                    lArgNames.append(arg.split('=')[0])
-                    lArgVals.append(arg.split('=')[1])
+        sFName, lArgNames, lArgVals = AnalPlot._parse_funcstr(sCmd, self.dCalcFuncsWithArgs)
+        if sFName != None:
             self.dCalcFuncsWithArgs[sFName][1](self, sBDKey, dataKey, lArgNames, lArgVals)
             return self._get_data(dataKey)
         # Dont understand the data ops function being refered
