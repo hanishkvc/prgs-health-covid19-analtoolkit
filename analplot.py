@@ -1221,6 +1221,35 @@ class AnalPlot:
         return [oCH[selColsP], oCH[~selColsP]], selColsPNumBased
 
 
+    def groupsimple_percentiles_ex(self, dataKey, selCols=None, selRows=None, dataOps='movavg', percentileRanges=[0,30,70,100], tempBaseKey="_T_GSP_"):
+        """ Group specified subset of data from the given dataset into groups
+            based on the given set of chained percentileRanges.
+
+            percentileRanges: entries in this list are chained to create multiple
+            individiual percentileRange which is passed to GSPercentiles.
+            [P1,P2,P3,..,PN] = [P1,P2], [P2,P3], [P3,P4], ..., [PN-1,PN]
+
+            It internally uses groupsimple_percentiles, which works with only
+            a single percentile range.
+            """
+        iP = 0
+        lGroupCH = []
+        lGroupNum = None
+        iGroupNum = 0
+        while iP < (len(percentileRange)-1):
+            iPStart = percentileRange[iP]
+            iP += 1
+            iPEnd = percentileRange[iP]
+            tlGroupCH, tlGroupNum = self.groupsimple_percentiles(dataKey, selCols, selRows, dataOps, percentileRange=[iPStart, iPEnd], tempBaseKey=tempBaseKey)
+            lGroupCH.append(tlGroupCH[0])
+            if lGroupNum == None:
+                lGroupNum = tlGroupNum
+            tlGroupNum[tlGroupNum == 1] = 123456
+            lGroupNum[tlGroupNum == 123456] = iGroupNum
+            iGroupNum += 1
+        return lGroupCH, lGroupNum
+
+
     def _distance(x1,y1,x2,y2):
         """ Find the distance between two given points in 2D space.
             NOTE: A class and not a instance function.
