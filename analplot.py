@@ -1348,7 +1348,11 @@ class AnalPlot:
             if np.any(lGroup == -1):
                 print("DBUG:ERROR?:AnalPlot:GSNeighbours:Missing:lGroup {}, lc {}, lcRaw {}".format(lGroup, lc, lcRaw))
             lGroup = list(lGroup)
-        return lc, lGroup
+        lGroupCH = []
+        ndlGroup = np.array(lGroup)
+        for i in range(len(lc)):
+            lGroupCH.append(dXCH[ndlGroup == i])
+        return lGroupCH, lc, lGroup
 
 
     def groupsimple_neighbours_ex(self, dataKeyX, dataKeyY, selCols=None, selRows=None, diagRatio=0.25, bSort=True, bLocalCenterNearest=False, numOfGroups=4, maxTries=8, ax=None, ax0=None):
@@ -1383,14 +1387,14 @@ class AnalPlot:
                 tax = ax0
             else:
                 tax = ax
-            localCenters, lGroupMap = self.groupsimple_neighbours(dataKeyX, dataKeyY, selCols, selRows, diagRatio, bSort, bLocalCenterNearest, tax)
+            lGroupCH, localCenters, lGroupMap = self.groupsimple_neighbours(dataKeyX, dataKeyY, selCols, selRows, diagRatio, bSort, bLocalCenterNearest, tax)
             if len(localCenters) > numOfGroups:
                 diagRatio = diagRatio*1.2
             elif len(localCenters) < numOfGroups:
                 diagRatio = diagRatio*0.8
             else:
                 break
-        return localCenters, lGroupMap
+        return lGroupCH, localCenters, lGroupMap
 
 
     def subplots(self, plt, pltRows, pltCols, rowHeight=6, colWidth=9):
