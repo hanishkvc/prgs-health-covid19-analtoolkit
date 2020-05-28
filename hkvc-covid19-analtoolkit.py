@@ -201,14 +201,13 @@ def plot_mixmatch(allDS, allSel):
         dprint("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[-2])))
         # The Raw data
         ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
-        # Plot moving avg and raw data (inset)
+        # Plot moving avg of raw data and its processed representations
         topN=8
         theTitle = "%s-__AUTO__"%(ds.name)
         selCols, theTitle = sel_cols("cases/day>movavg", topN, theSelIds, theTitle, "movavg")
-        _plot_movavgs(ap, axes, 0, 0, "cases/day", selCols, theTitle)
-        _plot_movavgs(ap, axes, 0, 1, "cases/day>scale", selCols, theTitle)
-        _plot_movavgs(ap, axes, 0, 2, "cases/day>rel2sum", selCols, theTitle)
-        _plot_movavgs(ap, axes, 0, 3, "cases/day>diff", selCols, theTitle)
+        colDataKeys = [ "cases/day", "cases/day>scale", "cases/day>rel2sum", "cases/day>diff" ]
+        rowDataKeys = [ "", "movavg", "movavg(T=2)", "movavg(T=3)", "movavg(T=4)", "movavg(W=14)", "movavg(W=21)", "movavg(W=28)" ]
+        analplot.plot_matrix(ap, rowDataKeys, colDataKeys, axes, 0, 0, plotSelCols=selCols, title=theTitle, plotLegend=True, axis=0)
         sGlobalMsg = "MMMA-{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         save_fig(fig, sGlobalMsg)
 
