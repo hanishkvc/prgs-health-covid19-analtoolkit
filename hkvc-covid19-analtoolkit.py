@@ -21,6 +21,10 @@ def fetch():
     return [ dsEU, dsC19In ]
 
 
+def ap_setraw(ap, ds, dataKey):
+    ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey=dataKey)
+
+
 def plot_simple(allDS):
     """ Plot few simple plots
         This uses the old call calc logics explicitly mechanism,
@@ -32,7 +36,7 @@ def plot_simple(allDS):
     sGlobalMsg = ""
     for ds in allDS:
         ap.new_dataset()
-        ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
+        ap_setraw(ap, ds, "cases/day")
         ap.plot(axes[0,iCur], "cases/day", numXTicks=4, xtickMultOf=7, title="%s-Cases/Day"%(ds.name))
         ap.calc_rel2mean("cases/day")
         ap.plot(axes[1,iCur], "cases/day>rel2mean", title="%s-Cases/Day_Rel2Mean"%(ds.name))
@@ -153,7 +157,7 @@ def plot_sel(allDS, allSel):
             theSelIds = None
         dprint("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[-2])))
         # The Raw data
-        ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
+        ap_setraw(ap, ds, "cases/day")
         iARow = 0
         # PlotXY data based on cumsum and diff topN
         iARow = plot_xy(ds, ap, axes, iARow, iCurDS, "cases/day", 25, 8, theSelIds)
@@ -200,7 +204,7 @@ def plot_mixmatch(allDS, allSel):
             theSelIds = None
         dprint("DBUG:Main:plot_sel:hdr-type:%s" %(type(ds.hdr[-2])))
         # The Raw data
-        ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey="cases/day")
+        ap_setraw(ap, ds, "cases/day")
         # Plot moving avg of raw data and its processed representations
         topN=8
         theTitle = "%s-__AUTO__"%(ds.name)
