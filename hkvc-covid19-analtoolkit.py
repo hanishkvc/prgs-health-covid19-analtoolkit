@@ -171,12 +171,19 @@ def plot_sel(allDS, allSel):
 
 
 def _plot_movavgs(ap, axes, iRow, iCol, dataKey, selCols, theTitle):
+    """ Plot given data after applying
+            movavg for different number of times on that data
+            movavg with different windowSizes on that data.
+        """
     ap.plot(axes[iRow+0,iCol], dataKey, plotSelCols=selCols, plotLegend=True, title=theTitle)
     ap.plot(axes[iRow+1,iCol], "%s>movavg"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
     ap.plot(axes[iRow+2,iCol], "%s>movavg(T=2)"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
     ap.plot(axes[iRow+3,iCol], "%s>movavg(T=3)"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
     ap.plot(axes[iRow+4,iCol], "%s>movavg(T=4)"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
-    return iRow+5
+    ap.plot(axes[iRow+5,iCol], "%s>movavg(W=14)"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
+    ap.plot(axes[iRow+6,iCol], "%s>movavg(W=21)"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
+    ap.plot(axes[iRow+7,iCol], "%s>movavg(W=28)"%(dataKey), plotSelCols=selCols, plotLegend=True, title=theTitle)
+    return iRow+8
 
 
 bTEST_MIXMATCH=False
@@ -185,7 +192,7 @@ def plot_mixmatch(allDS, allSel):
         Uses the new auto calc as required functionality of AnalPlot
         """
     for ds in allDS:
-        fig, axes = ap.subplots(plt,5,4)
+        fig, axes = ap.subplots(plt,8,4)
         ap.new_dataset()
         if ds.name in allSel:
             theSelIds = allSel[ds.name]
