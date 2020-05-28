@@ -192,7 +192,7 @@ def plot_mixmatch(allDS, allSel):
         Uses the new auto calc as required functionality of AnalPlot
         """
     for ds in allDS:
-        fig, axes = ap.subplots(plt,8,4)
+        fig, axes = ap.subplots(plt,9,4)
         ap.new_dataset()
         if ds.name in allSel:
             theSelIds = allSel[ds.name]
@@ -206,7 +206,7 @@ def plot_mixmatch(allDS, allSel):
         theTitle = "%s-__AUTO__"%(ds.name)
         selCols, theTitle = sel_cols("cases/day>movavg", topN, theSelIds, theTitle, "movavg")
         colDataKeys = [ "cases/day", "cases/day>scale", "cases/day>rel2sum", "cases/day>diff" ]
-        rowDataKeys = [ "", "movavg", "movavg(T=2)", "movavg(T=3)", "movavg(T=4)", "movavg(W=14)", "movavg(W=21)", "movavg(W=28)" ]
+        rowDataKeys = [ "", "movavg", "movavg(T=2)", "movavg(T=3)", "movavg(T=4)", "movavg(W=14)", "movavg(W=21)", "movavg(W=28)", "movavg(W=49)" ]
         analplot.plot_matrix(ap, rowDataKeys, colDataKeys, axes, 0, 0, plotSelCols=selCols, title=theTitle, plotLegend=True, axis=0)
         sGlobalMsg = "MMMA-{}-Data-{}_{}--".format(ds.name, np.min(ds.data[:,0]), np.max(ds.data[:,0]))
         save_fig(fig, sGlobalMsg)
