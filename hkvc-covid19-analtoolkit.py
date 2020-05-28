@@ -85,17 +85,13 @@ def plot_xy(ds, ap, axes, iARow, iACol, dataKey, topNCS, topND, inSelIds):
         markerControlVals[0:int(len(markerControlVals)/2)] = -1
     else:
         if sPLOTXY_GSTYPE == "gsp":
-            theGSCols, markerControlVals = ap.groupsimple_percentiles_ex(dataKey, selCols, dataOps="diff>movavg(T=2)", percentileRanges=[0,10,40,70,100])
-            mCL = [0,1,2,3]
+            gsKey = "%s>diff>movavg(T=2)"%(dataKey)
             markers = ['c.','c*','r*','ro']
         else:
-            gsnKey = "%s>rel2sum>movavg(T=2)"%(dataKey)
-            theGSCols, lc, markerControlVals = ap.groupsimple_neighbours_ex(gsnKey, gsnKey, selCols=selCols, selRows=None, numOfGroups=6, maxTries=24)
-            mCL = list(range(len(lc)))
+            gsKey = "%s>rel2sum>movavg(T=2)"%(dataKey)
             markers = ['g.','c.','c*','r.','r*','ro']
-        print("DBUG:Main:plot_xy:selCols:{}; GroupSimpleCols:{}".format(selCols, theGSCols))
-    ap.plotxy(axes[iARow,iACol], "%s>cumsum"%(dataKey), "%s>movavg"%(dataKey), plotSelCols=selCols,
-                title=theTitle, xscale="log", yscale="log", plotLegend=True, markerControlVals=markerControlVals, markerControlLimits=mCL, markers=markers)
+    ap.plotxy_grouped(axes[iARow,iACol], "%s>cumsum"%(dataKey), "%s>movavg"%(dataKey), plotSelCols=selCols, title=theTitle, xscale="log", yscale="log", plotLegend=True,
+            gType=sPLOTXY_GSTYPE, gDataKey=gsKey, gDiagRatio=0.25, gNumOfGroups=6, gMaxTries=24, gPercentileRanges=[0,10,40,70,100], gMarkers=markers)
     inset = axes[iARow,iACol].inset_axes([0.6,0.10,0.4,0.4])
     if bMODE_SCALEDIFF:
         ap.calc_scale("%s>diff>movavg(T=2)"%(dataKey), axis=1)
