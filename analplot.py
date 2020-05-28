@@ -459,19 +459,19 @@ class AnalPlot:
         self.data[newCHKey] = dCH
 
 
-    def calc_movavg_old(self, dataKey="raw", avgOver=7, outDataKey="__AUTO__", axis=0):
+    def calc_movavg_old(self, dataKey="raw", windowSize=7, outDataKey="__AUTO__", axis=0):
         """ Calculate sliding window averages for values in the dataset
             along each row (axis=1) or column (axis=0).
-            avgOver: the sliding window size
+            windowSize: the sliding window size
             """
         d, dCH, dRH = self.get_data(dataKey)
-        tWeight = np.ones(avgOver)/avgOver
+        tWeight = np.ones(windowSize)/windowSize
         if axis == 0:
-            dataConv = np.zeros((d.shape[0]-(avgOver-1),d.shape[1]))
+            dataConv = np.zeros((d.shape[0]-(windowSize-1),d.shape[1]))
             for i in range(0,d.shape[1]):
                 dataConv[:,i] = np.convolve(d[:,i], tWeight, 'valid')
         else:
-            dataConv = np.zeros((d.shape[0],d.shape[1]-(avgOver-1)))
+            dataConv = np.zeros((d.shape[0],d.shape[1]-(windowSize-1)))
             for i in range(0,d.shape[0]):
                 dataConv[i,:] = np.convolve(d[i,:], tWeight, 'valid')
         theOutDataKey = self._outdatakey(outDataKey, "movavg", dataKey)
@@ -493,34 +493,37 @@ class AnalPlot:
             """
         axis = 0
         times = 1
+        windowSize = 7
         for arg in lArgNames:
             if (arg == "axis") or (arg == "A"):
                 axis = int(lArgVals[lArgNames.index(arg)])
             elif (arg == "times") or (arg == "T"):
                 times = int(lArgVals[lArgNames.index(arg)])
+            elif (arg == "windowSize") or (arg == "W"):
+                windowSize = int(lArgVals[lArgNames.index(arg)])
             else:
                 print("WARN:AnalPlot:callCalcMovAvg:Unknown arg[%s]"%(arg))
-        self.dCalcFuncsWithArgs['movavg'][0](self, dataKey=inDataKey, outDataKey=outDataKey, times=times, axis=axis)
+        self.dCalcFuncsWithArgs['movavg'][0](self, dataKey=inDataKey, outDataKey=outDataKey, windowSize=windowSize, times=times, axis=axis)
 
 
-    def calc_movavg(self, dataKey="raw", avgOver=7, times=1, bRoundToDeci8=True, outDataKey="__AUTO__", axis=0):
+    def calc_movavg(self, dataKey="raw", windowSize=7, times=1, bRoundToDeci8=True, outDataKey="__AUTO__", axis=0):
         """ Calculate sliding window averages for values in the dataset
             along each row (axis=1) or column (axis=0).
-            avgOver: the sliding window size
+            windowSize: the sliding window size
             times: the number of times movavg should be applied to specified data
             bRoundToDeci8: this forces the values to be rounded down to 8 decimal
                 places if required.
             """
         d, dCH, dRH = self.get_data(dataKey)
-        tWeight = np.ones(avgOver)/avgOver
+        tWeight = np.ones(windowSize)/windowSize
         dCur = d
         for time in range(times):
             if axis == 0:
-                dataConv = np.zeros((dCur.shape[0]-(avgOver-1),dCur.shape[1]))
+                dataConv = np.zeros((dCur.shape[0]-(windowSize-1),dCur.shape[1]))
                 for i in range(0,dCur.shape[1]):
                     dataConv[:,i] = np.convolve(dCur[:,i], tWeight, 'valid')
             else:
-                dataConv = np.zeros((dCur.shape[0],dCur.shape[1]-(avgOver-1)))
+                dataConv = np.zeros((dCur.shape[0],dCur.shape[1]-(windowSize-1)))
                 for i in range(0,dCur.shape[0]):
                     dataConv[i,:] = np.convolve(dCur[i,:], tWeight, 'valid')
             dCur = dataConv
@@ -529,7 +532,7 @@ class AnalPlot:
         theOutDataKey = self._outdatakey(outDataKey, "movavg", dataKey)
         newDKey, newCHKey, newRHKey = self._get_datakeys(theOutDataKey)
         self.data[newDKey] = dCur
-        indexDelta = int(((avgOver-1)*times)/2)
+        indexDelta = int(((windowSize-1)*times)/2)
         if axis == 0:
             #self.data[newRHKey] = list(range(dataConv.shape[0]))
             self.data[newRHKey] = dRH[indexDelta:-indexDelta]
