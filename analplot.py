@@ -1173,6 +1173,25 @@ class AnalPlot:
                 t.set_alpha(0.4)
 
 
+    def plotxy_grouped(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None, bTranslucent=False,
+            gType="gsn", gDataKey=None, gDiagRatio=0.25, gNumOfGroups=4, gMaxTries=24, gDataOps="", gPercentileRanges=[0,25,50,75,100], gMarkers=['r*','c*','g*']):
+        """ Group the Cols in the dataset using specified groupsimple on gDataKey
+            and inturn plotxy based on dataKeyX and dataKeyY.
+
+            It uses GSPercentilesEx or GSNeighboursEx followed by plotxy. Look at
+            their documentation to understand the arguments/parameters.
+            """
+        if gType == "gsp":
+            theGSCols, markerControlVals = self.groupsimple_percentiles_ex(gDataKey, plotSelCols, dataOps=gDataOps, percentileRanges=gPercentileRanges)
+            mCL = list(range(len(gPercentileRanges)-1))
+        else:
+            theGSCols, lc, markerControlVals = self.groupsimple_neighbours_ex(gDataKey, gDataKey, selCols=plotSelCols, selRows=None, diagRatio=gDiagRatio, numOfGroups=gNumOfGroups, maxTries=gMaxTries)
+            mCL = list(range(len(lc)))
+        print("DBUG:AnalPlot:plotxyGrouped:GroupSimpleCols:{}".format(theGSCols))
+        self.plotxy(ax, dataKeyX, dataKeyY, plotSelCols=plotSelCols, title=title, xscale=xscale, yscale=yscale, plotLegend=plotLegend, bTranslucent=bTranslucent,
+                markerControlVals=markerControlVals, markerControlLimits=mCL, markers=gMarkers)
+
+
     def groupsimple_percentiles(self, dataKey, selCols=None, selRows=None, dataOps='movavg', percentileRange=[70,100], tempBaseKey="_T_GSP_"):
         """ Group the specified subset of data from the given data set
             into two groups based on whether they fall within the specified
