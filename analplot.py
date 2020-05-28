@@ -591,6 +591,9 @@ class AnalPlot:
             header names are given in colIds list
 
             If colIds is None, then all cols are selected.
+
+            Returns a list of True or False, based on whether the corresponding
+            col is part of the given colIds or not.
             """
         d, dCH, dRH = self.get_data(dataKey)
         if colIds == None:

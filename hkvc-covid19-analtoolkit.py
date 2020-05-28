@@ -23,6 +23,14 @@ def fetch():
 
 def ap_setraw(ap, ds, dataKey):
     ap.set_raw(ds.data[:,2:], ds.data[:,0], ds.hdr[2:], dataKey=dataKey)
+    if ds.name == "Cov19In":
+        lSkip = [ 'UN' ]
+        print("WARN:Main:ap_setraw:%s:Skipping region %s"%(ds.name, lSkip))
+        selCols = ap.selcols_colhdr(dataKey, lSkip)
+        selCols = ~np.array(selCols)
+        d, dCH, dRH = ap.get_data_selective(dataKey, selCols)
+        ap.del_data(dataKey)
+        ap.set_raw(d, dRH, dCH, dataKey)
 
 
 def plot_simple(allDS):
