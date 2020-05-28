@@ -728,7 +728,9 @@ class AnalPlot:
                 title = title.replace("__AUTO__", dataKey)
             ax.set_title(title)
         if plotLegend != None:
-            ax.legend(tDCH)
+            leg = ax.legend(tDCH)
+            for line in leg.get_lines():
+                line.set_linewidth(4.0)
         if (numXTicks != None):
             if plotXTickGap != None:
                 print("WARN:analplot.plot: numXTicks overrides plotXTickGap")
