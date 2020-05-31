@@ -848,8 +848,6 @@ class AnalPlot:
             self.newxyRot = 0
         r = self.newxyRot % 8
         mult = (int(self.newxyRot/16)/16)+1
-        ratioX = 0.01
-        ratioY = ((self.textxyYRange/self.textxyXRange)*ratioX)
         ratioX = self.textxyCharPixRatioX
         ratioY = self.textxyCharPixRatioY
         deltaX = ratioX*self.textxyXRange*mult
@@ -874,9 +872,10 @@ class AnalPlot:
         elif r == 7:
             tX -= deltaX
             tY -= deltaY
-        #tY += deltaY*2
+        """
         dprint("DBUG:AnalPlot:newxy:xRange:%f, yRange:%f; ratioX: %f, ratioY: %f; deltaX: %f, deltaY: %f; %f,%f=>%f,%f"
                 %(self.textxyXRange, self.textxyYRange, ratioX, ratioY, deltaX, deltaY, iX,iY, tX,tY))
+        """
         return tX, tY
 
 
