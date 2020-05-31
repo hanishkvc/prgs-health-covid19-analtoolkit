@@ -1143,15 +1143,15 @@ class AnalPlot:
             textYs: The array of Y locations
             texts : The array of texts to plot.
             """
-        textDX = textXs.copy()
-        textDY = textYs.copy()
+        textNX = textXs.copy()
+        textNY = textYs.copy()
         for i in range(len(texts)):
             tX = textXs[i]
             tY = textYs[i]
             tTxt = texts[i]
-            tNX, tNY = self._textxy_super(ax, i, tX, tY, tTxt, textDX, textDY, xscale, yscale)
-            textDX[i] = tNX
-            textDY[i] = tNY
+            tNX, tNY = self._textxy_super(ax, i, tX, tY, tTxt, textNX, textNY, xscale, yscale)
+            textNX[i] = tNX
+            textNY[i] = tNY
             aXDelta = tNX-tX
             aYDelta = tNY-tY
             print("DBUG:AnalPlot:textxy:arrow:{}:{},{} to {},{}; {},{}".format(tTxt,tX,tY,tNX,tNY,aXDelta,aYDelta))
