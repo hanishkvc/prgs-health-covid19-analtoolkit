@@ -1695,7 +1695,7 @@ def test_groupsimple_neighbours_02():
 
 def test_circlespread():
     fig, axes = ap.subplots(plt, 2, 2)
-    t1 = np.random.uniform(-10,10,(20,360))
+    t1 = np.random.uniform(-10,10,(20,240))
     ap.set_raw(t1,dataKey='CSMyData')
     ap.print_data_selective('CSMyData')
     ap.circlespread(axes[0,0], 'CSMyData')
