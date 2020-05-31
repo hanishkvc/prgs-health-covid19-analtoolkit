@@ -848,10 +848,8 @@ class AnalPlot:
             self.newxyRot = 0
         r = self.newxyRot % 8
         mult = (int(self.newxyRot/8)/16)+1
-        ratioX = self.textxyCharPixRatioX
-        ratioY = self.textxyCharPixRatioY
-        deltaX = ratioX*self.textxyXRange*mult*self.newxyRX[r]
-        deltaY = ratioY*self.textxyYRange*mult*self.newxyRY[r]
+        deltaX = self.charRadX[r]*mult
+        deltaY = self.charRadY[r]*mult
         tX += deltaX
         tY += deltaY
         """
@@ -1048,6 +1046,11 @@ class AnalPlot:
 
         charPlotDataWidth = (xRange/bbox.width)*CHAR_XPIXELS
         charPlotDataHeight = (yRange/bbox.height)*CHAR_YPIXELS
+        if self.newxyRot == 0:
+            radX = np.sin(np.linspace(0,np.pi*2,9))[:-1]
+            radY = np.cos(np.linspace(0,np.pi*2,9))[:-1]
+            self.charRadX = self.textxyCharPixRatioX*self.textxyXRange*radX
+            self.charRadY = charPlotDataHeight*radY
         if textOrientation == "horizontal":
             deltaX = charPlotDataWidth * len(curTxt)
         else:
@@ -1129,8 +1132,6 @@ class AnalPlot:
         lastX = curX
         lastY = curY
         self.newxyRot = 0
-        self.newxyRX = np.sin(np.linspace(0,np.pi*2,9))[:-1]
-        self.newxyRY = np.cos(np.linspace(0,np.pi*2,9))[:-1]
         bRetainSame = True
         for i in range(4096):
             nX, nY = self._textxy(ax, curLoc, lastX, lastY, curTxt, dX, dY, xscale, yscale)
