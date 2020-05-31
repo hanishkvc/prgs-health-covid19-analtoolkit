@@ -779,6 +779,21 @@ class AnalPlot:
             inset.grid(True, axis='y')
 
 
+    def circlespread(self, ax, dataKey, plotSelCols=None):
+        """ Plot values spread out has a circle
+            """
+        tD, tDCH, dRH = self.get_data_selective(dataKey, plotSelCols)
+        fullCircle = np.pi*2
+        tRads = np.linspace(0, fullCircle, len(tDCH))
+        tX = np.sin(tRads)
+        tY = np.cos(tRads)
+        i = 0
+        for x,y in zip(tX,tY):
+            plt.text(x,y,tDCH[i])
+            plt.plot([0,x],[0,y])
+            i += 1
+
+
     def __newxy_randxy(self, tX, tY):
         tX += np.random.uniform(-tX, tX)*0.01
         tY += np.random.uniform(-tY, tY)*0.01
@@ -1626,6 +1641,17 @@ def test_groupsimple_neighbours_02():
 
 
 
+def test_circlespread():
+    fig, axes = ap.subplots(plt, 2, 3)
+    t1 = np.random.uniform(-10,10,(20,20))
+    ap.set_raw(t1,dataKey='CSMyData')
+    ap.print_data_selective('CSMyData')
+    ap.circlespread(axes[0,0], 'CSMyData')
+    fig.savefig('/tmp/analplot_cs.png')
+    plt.show()
+
+
+
 if __name__ == "__main__":
 
     import matplotlib.pyplot as plt
@@ -1679,6 +1705,7 @@ if __name__ == "__main__":
     test_groupsimple_neighbours()
     #test_groupsimple_neighbours_02()
 
+    test_circlespread()
 
 
 # vim: set softtabstop=4 shiftwidth=4 expandtab: #
