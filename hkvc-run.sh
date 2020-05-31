@@ -49,5 +49,11 @@ function test_run() {
 
 }
 
+function _ctags() {
+
+	ctags *py
+
+}
+
 $@
 
