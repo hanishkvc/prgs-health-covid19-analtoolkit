@@ -814,10 +814,10 @@ class AnalPlot:
             tAmp = tD[selRow,:]
         i = 0
         for x,y in zip(tX,tY):
-            plt.text(x,y,tDCH[i])
             plt.plot([0,x],[0,y], color=(0.8,0.8,0.8))
             plt.plot([0,x*tAmp[i]], [0,y*tAmp[i]], "r")
             i += 1
+        self.textxy(ax, tX, tY, tDCH)
 
 
     def __newxy_randxy(self, tX, tY):
@@ -1135,7 +1135,7 @@ class AnalPlot:
         return curX, curY
 
 
-    def textxy(self, ax, textXs, textYs, texts, xscale, yscale):
+    def textxy(self, ax, textXs, textYs, texts, xscale="linear", yscale="linear"):
         """ Plot the list of texts given such that they dont overlap one another, as much
             as possible.
 
