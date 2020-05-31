@@ -847,7 +847,7 @@ class AnalPlot:
         except AttributeError:
             self.newxyRot = 0
         r = self.newxyRot % 8
-        mult = (int(self.newxyRot/8)/16)+1
+        mult = (int(self.newxyRot/8)/8)+1
         deltaX = self.charRadX[r]*mult
         deltaY = self.charRadY[r]*mult
         tX += deltaX
