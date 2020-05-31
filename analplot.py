@@ -817,6 +817,8 @@ class AnalPlot:
             ax.plot([0,x],[0,y], color=(0.8,0.8,0.8))
             ax.plot([0,x*tAmp[i]], [0,y*tAmp[i]], "r")
             i += 1
+        tI = np.arange(tX.shape[0])
+        tX[tI%2 == 0] *= 1.2
         self.textxy(ax, tX, tY, tDCH)
 
 
