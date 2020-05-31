@@ -814,8 +814,8 @@ class AnalPlot:
             tAmp = tD[selRow,:]
         i = 0
         for x,y in zip(tX,tY):
-            plt.plot([0,x],[0,y], color=(0.8,0.8,0.8))
-            plt.plot([0,x*tAmp[i]], [0,y*tAmp[i]], "r")
+            ax.plot([0,x],[0,y], color=(0.8,0.8,0.8))
+            ax.plot([0,x*tAmp[i]], [0,y*tAmp[i]], "r")
             i += 1
         self.textxy(ax, tX, tY, tDCH)
 
@@ -1683,7 +1683,7 @@ def test_groupsimple_neighbours_02():
 
 def test_circlespread():
     fig, axes = ap.subplots(plt, 2, 3)
-    t1 = np.random.uniform(-10,10,(20,40))
+    t1 = np.random.uniform(-10,10,(20,180))
     ap.set_raw(t1,dataKey='CSMyData')
     ap.print_data_selective('CSMyData')
     ap.circlespread(axes[0,0], 'CSMyData')
