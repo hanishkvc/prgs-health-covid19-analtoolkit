@@ -1590,7 +1590,7 @@ def test_groupsimple_neighbours():
     t1 = np.random.uniform(-10,10,(20,20))
     ap.set_raw(t1,dataKey='GSNMyData')
     ap.print_data_selective('GSNMyData')
-    lc, markerControlVals = ap.groupsimple_neighbours_ex('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None, maxTries=16, ax=axes[1,0], ax0=axes[1,1])
+    lGroupedNames, lc, markerControlVals = ap.groupsimple_neighbours_ex('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None, maxTries=16, ax=axes[1,0], ax0=axes[1,1])
     axes[1,0].axis('square')
     # Limit set based on data space over which random data is generated
     axes[1,0].set_xlim(-10,10)
@@ -1601,7 +1601,7 @@ def test_groupsimple_neighbours():
     print("INFO:GSNeighboursTest:\n\tlc {},\n\t markerControlVals {}".format(lc, markerControlVals))
     ap.plotxy(axes[0,0], 'GSNMyData>movavg', 'GSNMyData', markerControlVals=markerControlVals, markerControlLimits=list(range(len(lc))),
                 markers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'])
-    lc, markerControlVals = ap.groupsimple_neighbours('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None, diagRatio=0.15, ax=axes[1,2])
+    lGroupedNames, lc, markerControlVals = ap.groupsimple_neighbours('GSNMyData>movavg', 'GSNMyData', selCols=None, selRows=None, diagRatio=0.15, ax=axes[1,2])
     ap.plotxy(axes[0,2], 'GSNMyData>movavg', 'GSNMyData', markerControlVals=markerControlVals, markerControlLimits=list(range(len(lc))),
                 markers=['ro','r*','r.','yo','y*','y.','b.','b*','bo','g.','g*','go'])
     axes[1,2].axis('square')
