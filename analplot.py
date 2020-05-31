@@ -1135,10 +1135,19 @@ class AnalPlot:
         return curX, curY
 
 
-    def textxy(self, ax, textDX, textDY, texts, xscale, yscale):
+    def textxy(self, ax, textXs, textYs, texts, xscale, yscale):
+        """ Plot the list of texts given such that they dont overlap one another, as much
+            as possible.
+
+            textXs: The array of X locations
+            textYs: The array of Y locations
+            texts : The array of texts to plot.
+            """
+        textDX = textXs.copy()
+        textDY = textYs.copy()
         for i in range(len(texts)):
-            tX = dX[selRow,i]
-            tY = dY[selRow,i]
+            tX = textXs[i]
+            tY = textYs[i]
             tTxt = texts[i]
             tNX, tNY = self._textxy_super(ax, i, tX, tY, tTxt, textDX, textDY, xscale, yscale)
             textDX[i] = tNX
