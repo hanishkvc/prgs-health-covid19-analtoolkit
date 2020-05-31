@@ -779,7 +779,7 @@ class AnalPlot:
             inset.grid(True, axis='y')
 
 
-    def circlespread(self, ax, dataKey, plotSelCols=None):
+    def circlespread(self, ax, dataKey, plotSelCols=None, selRow=-1):
         """ Plot values spread out has a circle
             """
         tD, tDCH, dRH = self.get_data_selective(dataKey, plotSelCols)
@@ -787,10 +787,13 @@ class AnalPlot:
         tRads = np.linspace(0, fullCircle, len(tDCH)+1)[:-1]
         tX = np.sin(tRads)
         tY = np.cos(tRads)
+        tMax = np.max(tD[selRow,:])
+        tAmp = tD[selRow,:]/tMax
         i = 0
         for x,y in zip(tX,tY):
             plt.text(x,y,tDCH[i])
             plt.plot([0,x],[0,y], color=(0.8,0.8,0.8))
+            plt.plot([0,x*tAmp[i]], [0,y*tAmp[i]], "r")
             i += 1
 
 
@@ -1643,7 +1646,7 @@ def test_groupsimple_neighbours_02():
 
 def test_circlespread():
     fig, axes = ap.subplots(plt, 2, 3)
-    t1 = np.random.uniform(-10,10,(20,20))
+    t1 = np.random.uniform(-10,10,(20,40))
     ap.set_raw(t1,dataKey='CSMyData')
     ap.print_data_selective('CSMyData')
     ap.circlespread(axes[0,0], 'CSMyData')
