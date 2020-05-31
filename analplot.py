@@ -784,6 +784,7 @@ class AnalPlot:
             inset.grid(True, axis='y')
 
 
+    b3LevelPlacement = True
     def circlespread(self, ax, dataKey, plotSelCols=None, selRow=-1, adjustMode="relative", tempBaseKey="_T_CSData"):
         """ Plot values spread out has a circle
 
@@ -814,16 +815,21 @@ class AnalPlot:
             tAmp = tD[selRow,:]
         i = 0
         for x,y in zip(tX,tY):
-            ax.plot([0,x],[0,y], color=(0.8,0.8,0.8))
+            if self.b3LevelPlacement and ((i%2)==1):
+                mult = 1.2
+            else:
+                mult = 1
+            ax.plot([0,x*mult],[0,y*mult], color=(0.9,0.9,0.9))
             ax.plot([0,x*tAmp[i]], [0,y*tAmp[i]], "r")
             i += 1
-        tI = np.arange(tX.shape[0])
-        tX[tI%4 == 1] *= 1.2
-        tX[tI%4 == 2] *= 0.8
-        tX[tI%4 == 3] *= 1.2
-        tY[tI%4 == 1] *= 1.2
-        tY[tI%4 == 2] *= 0.8
-        tY[tI%4 == 3] *= 1.2
+        if self.b3LevelPlacement:
+            tI = np.arange(tX.shape[0])
+            tX[tI%4 == 1] *= 1.2
+            tX[tI%4 == 2] *= 0.8
+            tX[tI%4 == 3] *= 1.2
+            tY[tI%4 == 1] *= 1.2
+            tY[tI%4 == 2] *= 0.8
+            tY[tI%4 == 3] *= 1.2
         self.textxy(ax, tX, tY, tDCH)
 
 
