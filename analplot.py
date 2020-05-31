@@ -1000,6 +1000,7 @@ class AnalPlot:
                 this logic like get char pixel size from default font or aspect
                 ratio or ...
             """
+        curTxt = str(curTxt)
         if bAUTO_AXISADJUST:
             self.axis_adjust(ax, dX, dY, xscale, yscale)
         xMin, xMax, yMin, yMax = ax.axis()
