@@ -784,13 +784,13 @@ class AnalPlot:
             """
         tD, tDCH, dRH = self.get_data_selective(dataKey, plotSelCols)
         fullCircle = np.pi*2
-        tRads = np.linspace(0, fullCircle, len(tDCH))
+        tRads = np.linspace(0, fullCircle, len(tDCH)+1)[:-1]
         tX = np.sin(tRads)
         tY = np.cos(tRads)
         i = 0
         for x,y in zip(tX,tY):
             plt.text(x,y,tDCH[i])
-            plt.plot([0,x],[0,y])
+            plt.plot([0,x],[0,y], color=(0.8,0.8,0.8))
             i += 1
 
 
