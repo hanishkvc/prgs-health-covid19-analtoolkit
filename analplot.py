@@ -1135,6 +1135,22 @@ class AnalPlot:
         return curX, curY
 
 
+    def textxy(self, ax, textDX, textDY, texts, xscale, yscale):
+        for i in range(len(texts)):
+            tX = dX[selRow,i]
+            tY = dY[selRow,i]
+            tTxt = texts[i]
+            tNX, tNY = self._textxy_super(ax, i, tX, tY, tTxt, textDX, textDY, xscale, yscale)
+            textDX[i] = tNX
+            textDY[i] = tNY
+            aXDelta = tNX-tX
+            aYDelta = tNY-tY
+            print("DBUG:AnalPlot:textxy:arrow:{}:{},{} to {},{}; {},{}".format(tTxt,tX,tY,tNX,tNY,aXDelta,aYDelta))
+            if not ((aXDelta == 0.0) and (aYDelta == 0.0)):
+                ax.arrow(tX,tY, aXDelta, aYDelta, color=(0,0,1)).set_alpha(0.3)
+            ax.text(tNX, tNY, tTxt)
+
+
     def plotxy(self, ax, dataKeyX, dataKeyY, selRow=-1, plotSelCols=None, title="__AUTO__", xscale="linear", yscale="linear", plotLegend=None, bTranslucent=False,
                     markerControlVals=None, markerControlLimits=[0], markers=['ro','go']):
         """ Plot the specified subset of cols from two related datasets such that
@@ -1184,19 +1200,7 @@ class AnalPlot:
         if plotLegend != None:
             textDX = dX[selRow,:]
             textDY = dY[selRow,:]
-            for i in range(len(dCHX)):
-                tX = dX[selRow,i]
-                tY = dY[selRow,i]
-                tTxt = dCHX[i]
-                tNX, tNY = self._textxy_super(ax, i, tX, tY, tTxt, textDX, textDY, xscale, yscale)
-                textDX[i] = tNX
-                textDY[i] = tNY
-                aXDelta = tNX-tX
-                aYDelta = tNY-tY
-                print("DBUG:AnalPlot:plotxy:arrow:{}:{},{} to {},{}; {},{}".format(tTxt,tX,tY,tNX,tNY,aXDelta,aYDelta))
-                if not ((aXDelta == 0.0) and (aYDelta == 0.0)):
-                    ax.arrow(tX,tY, aXDelta, aYDelta, color=(0,0,1)).set_alpha(0.3)
-                ax.text(tNX, tNY, tTxt)
+            self.textxy(ax, textDX, textDY, dCHX, xscale, yscale)
         if title != None:
             if title.find("__AUTO__") != -1:
                 sAuto = "X%sVsY%s"%(dataKeyX, dataKeyY)
