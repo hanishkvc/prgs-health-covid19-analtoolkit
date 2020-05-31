@@ -132,7 +132,12 @@ class AnalPlot:
             NOTE: If row or col header is not specified, then a numerical
             one is automatically created, which counts from 0 to row or
             col size as required.
+
+            NOTE: If no col and row header is specified and if data is
+            only 1 dimensional, it is reshaped to be 2D data of 1xSize
             """
+        if (data.ndim == 1) and (rowHdr == None) and (colHdr == None):
+            data = data.reshape(1,data.shape[0])
         sDKey, sCHKey, sRHKey = self._get_datakeys(dataKey)
         self.data[sDKey] = data
         if type(rowHdr) == type(None):
@@ -779,16 +784,34 @@ class AnalPlot:
             inset.grid(True, axis='y')
 
 
-    def circlespread(self, ax, dataKey, plotSelCols=None, selRow=-1):
+    def circlespread(self, ax, dataKey, plotSelCols=None, selRow=-1, adjustMode="relative", tempBaseKey="_T_CSData"):
         """ Plot values spread out has a circle
+
+            dataKey: The specified row of data from data belonging to this dataKey
+                will be plotted.
+            plotSelCols: If only a subset of the cols need to be part of the plot.
+            selRow: The row whose data should be plotted.
+
+            adjustMode: If relative, then data in the selected row will be scaled
+                relative to one another in that row. And the resultant data is
+                what is finally plotted.
+                Else, the given data is assumed to be between 0 to 1, otherwise the
+                plot will not be proper.
             """
         tD, tDCH, dRH = self.get_data_selective(dataKey, plotSelCols)
         fullCircle = np.pi*2
         tRads = np.linspace(0, fullCircle, len(tDCH)+1)[:-1]
         tX = np.sin(tRads)
         tY = np.cos(tRads)
-        tMax = np.max(tD[selRow,:])
-        tAmp = tD[selRow,:]/tMax
+        print("DBUG:AnalPlot:CircleSpread:DataRowIn",tD[selRow,:])
+        if adjustMode == "relative":
+            self.set_raw(tD[selRow,:], dataKey=tempBaseKey)
+            tAmp, aCH, aRH = self.get_data("%s>scale(A=1)"%(tempBaseKey))
+            print("DBUG:AnalPlot:CircleSpread:DataRowScaled:",tAmp)
+            tAmp = tAmp[-1,:]
+            self.del_data(tempBaseKey)
+        else:
+            tAmp = tD[selRow,:]
         i = 0
         for x,y in zip(tX,tY):
             plt.text(x,y,tDCH[i])
