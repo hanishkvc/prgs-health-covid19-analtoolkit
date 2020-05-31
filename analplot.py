@@ -847,11 +847,14 @@ class AnalPlot:
         except AttributeError:
             self.newxyRot = 0
         r = self.newxyRot % 8
-        mult = (int(self.newxyRot/16)/16)+1
+        mult = (int(self.newxyRot/8)/16)+1
         ratioX = self.textxyCharPixRatioX
         ratioY = self.textxyCharPixRatioY
-        deltaX = ratioX*self.textxyXRange*mult
-        deltaY = ratioY*self.textxyYRange*mult
+        deltaX = ratioX*self.textxyXRange*mult*self.newxyRX[r]
+        deltaY = ratioY*self.textxyYRange*mult*self.newxyRY[r]
+        tX += deltaX
+        tY += deltaY
+        """
         if r == 0:
             tX += deltaX
         elif r == 1:
@@ -872,7 +875,6 @@ class AnalPlot:
         elif r == 7:
             tX -= deltaX
             tY -= deltaY
-        """
         dprint("DBUG:AnalPlot:newxy:xRange:%f, yRange:%f; ratioX: %f, ratioY: %f; deltaX: %f, deltaY: %f; %f,%f=>%f,%f"
                 %(self.textxyXRange, self.textxyYRange, ratioX, ratioY, deltaX, deltaY, iX,iY, tX,tY))
         """
@@ -1127,6 +1129,8 @@ class AnalPlot:
         lastX = curX
         lastY = curY
         self.newxyRot = 0
+        self.newxyRX = np.sin(np.linspace(0,np.pi*2,9))[:-1]
+        self.newxyRY = np.cos(np.linspace(0,np.pi*2,9))[:-1]
         bRetainSame = True
         for i in range(4096):
             nX, nY = self._textxy(ax, curLoc, lastX, lastY, curTxt, dX, dY, xscale, yscale)
@@ -1689,8 +1693,8 @@ def test_groupsimple_neighbours_02():
 
 
 def test_circlespread():
-    fig, axes = ap.subplots(plt, 2, 3)
-    t1 = np.random.uniform(-10,10,(20,180))
+    fig, axes = ap.subplots(plt, 2, 2)
+    t1 = np.random.uniform(-10,10,(20,360))
     ap.set_raw(t1,dataKey='CSMyData')
     ap.print_data_selective('CSMyData')
     ap.circlespread(axes[0,0], 'CSMyData')
