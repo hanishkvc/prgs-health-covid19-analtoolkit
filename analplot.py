@@ -839,20 +839,15 @@ class AnalPlot:
         return tX, tY
 
 
-    def __newxy_rotate(self, ax, tX, tY, mode=None):
+    def __newxy_rotate(self, ax, tX, tY):
         iX = tX
         iY = tY
-        if mode == None:
-            mode = "rand"
-        if mode == "rand":
-            r = np.random.randint(8)
-        elif mode == "seq":
-            try:
-                self.newxyRot += 1
-            except AttributeError:
-                self.newxyRot = 0
-            r = self.newxyRot % 8
-            mult = (int(self.newxyRot/16)/16)+1
+        try:
+            self.newxyRot += 1
+        except AttributeError:
+            self.newxyRot = 0
+        r = self.newxyRot % 8
+        mult = (int(self.newxyRot/16)/16)+1
         ratioX = 0.01
         ratioY = ((self.textxyYRange/self.textxyXRange)*ratioX)
         ratioX = self.textxyCharPixRatioX
@@ -1098,7 +1093,7 @@ class AnalPlot:
         overlap,tX,tY,tList = self._textxy_checkoverlap(ax, curLoc, curX, curY, curTxt, dX, dY, xscale, yscale, textOrientation)
         if overlap:
             dprint("DBUG:AnalPlot:textxy:{}: tx {}, ty {}: tList {}".format(curTxt, tX, tY, tList))
-            tX, tY = self.__newxy_rotate(ax, tX, tY, "seq")
+            tX, tY = self.__newxy_rotate(ax, tX, tY)
             dprint("\tNew: {}, {}".format(tX, tY))
             if xscale == "log":
                 curX = 10**tX
