@@ -150,10 +150,7 @@ def plot_sel(allDS, allSel):
     if bPLOTSEL_PARTIAL:
         sGMsgSuffix = "part"
         numRows = 2
-    numCols = len(allDS)
-    if numCols < 2:
-        numCols = 2
-    fig, axes = ap.subplots(plt,numRows,numCols)
+    fig, axes = ap.subplots(plt,numRows,len(allDS))
     iCurDS = 0
     sGlobalMsg = ""
     for ds in allDS:
@@ -305,7 +302,6 @@ allDS, allSel = processargs_and_load(sys.argv)
 if len(allDS) == 0:
     allDS = fetch()
 
-#breakpoint()
 ap = analplot.AnalPlot()
 #plot_simple(allDS)
 plot_sel(allDS, allSel)
